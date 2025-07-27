@@ -24,7 +24,8 @@ type Props = {
   params: {locale: string};
 };
 
-export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = params;
   const t = await getTranslations({ locale, namespace: 'Metadata' });
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
@@ -80,11 +81,12 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
 
 export default async function LocaleLayout({
   children,
-  params: {locale}
+  params
 }: Readonly<{
   children: React.ReactNode;
   params: {locale: string};
 }>) {
+  const { locale } = params;
   const messages = await getMessages();
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
