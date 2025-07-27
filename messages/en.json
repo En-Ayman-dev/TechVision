@@ -175,10 +175,6 @@
     "subtitle": "Have questions? We have answers.",
     "items": {
       "q1": "What is the typical project timeline?",
-      "a1": "Project timelines vary depending on the scope and complexity. A standard website may take 4-6 weeks, while a complex web application can take several months. We provide a detailed timeline after our initial consultation."
-    },
-    "items": {
-      "q1": "What is the typical project timeline?",
       "a1": "Project timelines vary depending on the scope and complexity. A standard website may take 4-6 weeks, while a complex web application can take several months. We provide a detailed timeline after our initial consultation.",
       "q2": "How do you handle project management?",
       "a2": "We use agile methodologies and tools like Jira or Trello to manage projects. You'll have a dedicated project manager and regular check-ins to keep you updated on progress.",

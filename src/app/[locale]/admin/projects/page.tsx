@@ -43,6 +43,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 export default function ProjectsPage() {
@@ -130,18 +131,21 @@ export default function ProjectsPage() {
                 </TableHead>
                 <TableHead>Title</TableHead>
                 <TableHead>Category</TableHead>
-                <TableHead>
-                  <span className="sr-only">Actions</span>
-                </TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isPending ? (
-                <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center">
-                    Loading...
-                  </TableCell>
-                </TableRow>
+                 Array.from({ length: 5 }).map((_, i) => (
+                    <TableRow key={i}>
+                        <TableCell className="hidden sm:table-cell">
+                            <Skeleton className="h-16 w-16 rounded-md" />
+                        </TableCell>
+                        <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                        <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                        <TableCell className="text-right"><Skeleton className="h-8 w-8" /></TableCell>
+                    </TableRow>
+                 ))
               ) : projects.length > 0 ? (
                 projects.map((project) => (
                   <TableRow key={project.id}>

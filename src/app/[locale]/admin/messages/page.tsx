@@ -88,7 +88,7 @@ export default function MessagesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {isPending && messages.length === 0 ? (
+              {isPending ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={i}>
                     <TableCell>

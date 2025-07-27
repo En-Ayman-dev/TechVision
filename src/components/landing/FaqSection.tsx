@@ -9,25 +9,14 @@ import { useTranslations } from "next-intl";
 
 export default function FaqSection() {
   const t = useTranslations('FaqSection');
+  const tItems = useTranslations('FaqSection.items');
+  const keys = ['q1', 'q2', 'q3', 'q4'] as const;
+  
+  const faqItems: FaqItem[] = keys.map(key => ({
+      question: tItems(`${key}`),
+      answer: tItems(key.replace('q', 'a') as any)
+  }));
 
-  const faqItems: FaqItem[] = [
-    {
-      question: t('items.q1'),
-      answer: t('items.a1')
-    },
-    {
-      question: t('items.q2'),
-      answer: t('items.a2')
-    },
-    {
-      question: t('items.q3'),
-      answer: t('items.a3')
-    },
-    {
-      question: t('items.q4'),
-      answer: t('items.a4')
-    }
-  ];
 
   return (
     <section id="faq" className="bg-background">

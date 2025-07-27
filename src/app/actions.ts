@@ -160,7 +160,7 @@ export async function addProjectAction(data: z.infer<typeof projectSchema>) {
     const projects = await readJsonFile<Project>(projectsFilePath);
     await createItem<Project>(projectsFilePath, validatedFields.data, projects);
     revalidatePath("/admin/projects");
-    revalidatePath("/", "layout");
+    revalidatePath("/");
     revalidatePath("/admin");
     return { success: true, message: "Project added successfully." };
   } catch (error) {
@@ -176,7 +176,7 @@ export async function updateProjectAction(data: z.infer<typeof projectSchema>) {
     const projects = await readJsonFile<Project>(projectsFilePath);
     await updateItem<Project>(projectsFilePath, validatedFields.data, projects);
     revalidatePath("/admin/projects");
-    revalidatePath("/", "layout");
+    revalidatePath("/");
     return { success: true, message: "Project updated successfully." };
   } catch (error) {
     return { success: false, message: "Failed to update project." };
@@ -188,7 +188,7 @@ export async function deleteProjectAction(id: number) {
     const projects = await readJsonFile<Project>(projectsFilePath);
     await deleteItem(projectsFilePath, id, projects);
     revalidatePath("/admin/projects");
-    revalidatePath("/", "layout");
+    revalidatePath("/");
     revalidatePath("/admin");
     return { success: true, message: "Project deleted." };
   } catch (error) {
@@ -210,7 +210,7 @@ export async function addTeamMemberAction(data: z.infer<typeof teamMemberSchema>
         const teamMembers = await readJsonFile<TeamMember>(teamFilePath);
         await createItem<TeamMember>(teamFilePath, validatedFields.data, teamMembers);
         revalidatePath("/admin/team");
-        revalidatePath("/", "layout");
+        revalidatePath("/");
         revalidatePath("/admin");
         return { success: true, message: "Team member added successfully." };
     } catch (error) {
@@ -226,7 +226,7 @@ export async function updateTeamMemberAction(data: z.infer<typeof teamMemberSche
         const teamMembers = await readJsonFile<TeamMember>(teamFilePath);
         await updateItem<TeamMember>(teamFilePath, validatedFields.data, teamMembers);
         revalidatePath("/admin/team");
-        revalidatePath("/", "layout");
+        revalidatePath("/");
         return { success: true, message: "Team member updated successfully." };
     } catch (error) {
         return { success: false, message: "Failed to update team member." };
@@ -238,7 +238,7 @@ export async function deleteTeamMemberAction(id: number) {
         const teamMembers = await readJsonFile<TeamMember>(teamFilePath);
         await deleteItem(teamFilePath, id, teamMembers);
         revalidatePath("/admin/team");
-        revalidatePath("/", "layout");
+        revalidatePath("/");
         revalidatePath("/admin");
         return { success: true, message: "Team member deleted." };
     } catch (error) {
