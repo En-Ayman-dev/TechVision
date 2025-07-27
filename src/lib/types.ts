@@ -83,3 +83,16 @@ export interface SiteSettings {
         team: number;
     }
 }
+
+export interface ThemeSettings {
+    light: {
+        background: string;
+        primary: string;
+        accent: string;
+    },
+    dark: {
+        background: string;
+        primary: string;
+        accent: string;
+    }
+}

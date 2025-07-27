@@ -14,6 +14,7 @@ import {
   Star,
   Settings,
   Handshake,
+  Palette,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -30,6 +31,7 @@ const navItems = [
   { href: "/admin/testimonials", icon: Star, label: "Testimonials" },
   { href: "/admin/partners", icon: Handshake, label: "Partners" },
   { href: "/admin/settings", icon: Settings, label: "Site Settings" },
+  { href: "/admin/theme", icon: Palette, label: "Theme" },
 ];
 
 export default function AdminSidebar() {

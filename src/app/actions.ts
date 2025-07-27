@@ -5,7 +5,7 @@ import { z } from "zod";
 import { suggestFaq } from "@/ai/flows/faq-suggestions";
 import { promises as fs } from 'fs';
 import path from 'path';
-import type { Message, Project, TeamMember, Service, Testimonial, SiteSettings, Partner } from "@/lib/types";
+import type { Message, Project, TeamMember, Service, Testimonial, SiteSettings, Partner, ThemeSettings } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
 // Schemas
@@ -54,10 +54,10 @@ const testimonialSchema = z.object({
 
 const siteSettingsSchema = z.object({
     stats: z.object({
-        satisfaction: z.number().min(0).max(100),
-        projects: z.number().min(0),
-        experience: z.number().min(0),
-        team: z.number().min(0),
+        satisfaction: z.coerce.number().min(0).max(100),
+        projects: z.coerce.number().min(0),
+        experience: z.coerce.number().min(0),
+        team: z.coerce.number().min(0),
     })
 });
 
@@ -65,6 +65,21 @@ const partnerSchema = z.object({
   id: z.number().optional(),
   name: z.string().min(2, "Name must be at least 2 characters."),
   logo: z.string().min(2, "Logo name is required."),
+});
+
+const hslColorRegex = /^(\d{1,3})\s+(\d{1,3})%\s+(\d{1,3})%$/;
+
+const themeSettingsSchema = z.object({
+  light: z.object({
+    background: z.string().regex(hslColorRegex, "Invalid HSL format"),
+    primary: z.string().regex(hslColorRegex, "Invalid HSL format"),
+    accent: z.string().regex(hslColorRegex, "Invalid HSL format"),
+  }),
+  dark: z.object({
+    background: z.string().regex(hslColorRegex, "Invalid HSL format"),
+    primary: z.string().regex(hslColorRegex, "Invalid HSL format"),
+    accent: z.string().regex(hslColorRegex, "Invalid HSL format"),
+  }),
 });
 
 
@@ -76,6 +91,8 @@ const servicesFilePath = path.join(process.cwd(), 'data', 'services.json');
 const testimonialsFilePath = path.join(process.cwd(), 'data', 'testimonials.json');
 const settingsFilePath = path.join(process.cwd(), 'data', 'settings.json');
 const partnersFilePath = path.join(process.cwd(), 'data', 'partners.json');
+const globalsCssPath = path.join(process.cwd(), 'src', 'app', 'globals.css');
+
 
 // File System Utilities
 async function ensureFileExists(filePath: string, defaultContent: string) {
@@ -440,4 +457,68 @@ export async function deletePartnerAction(id: number) {
   } catch (error) {
     return { success: false, message: "Failed to delete partner." };
   }
+}
+
+// Theme Settings Actions
+function parseHsl(css: string): ThemeSettings {
+  const settings: ThemeSettings = {
+    light: { background: '', primary: '', accent: '' },
+    dark: { background: '', primary: '', accent: '' },
+  };
+
+  const lightBgMatch = css.match(/--background:\s*([\d\s.%]+);/);
+  if (lightBgMatch) settings.light.background = lightBgMatch[1].trim();
+
+  const lightPrimaryMatch = css.match(/--primary:\s*([\d\s.%]+);/);
+  if (lightPrimaryMatch) settings.light.primary = lightPrimaryMatch[1].trim();
+
+  const lightAccentMatch = css.match(/--accent:\s*([\d\s.%]+);/);
+  if (lightAccentMatch) settings.light.accent = lightAccentMatch[1].trim();
+
+  const darkBlockMatch = css.match(/\.dark\s*\{([^}]+)\}/);
+  if (darkBlockMatch) {
+    const darkCss = darkBlockMatch[1];
+    const darkBgMatch = darkCss.match(/--background:\s*([\d\s.%]+);/);
+    if (darkBgMatch) settings.dark.background = darkBgMatch[1].trim();
+
+    const darkPrimaryMatch = darkCss.match(/--primary:\s*([\d\s.%]+);/);
+    if (darkPrimaryMatch) settings.dark.primary = darkPrimaryMatch[1].trim();
+    
+    const darkAccentMatch = darkCss.match(/--accent:\s*([\d\s.%]+);/);
+    if (darkAccentMatch) settings.dark.accent = darkAccentMatch[1].trim();
+  }
+
+  return settings;
+}
+
+export async function getThemeSettingsAction(): Promise<ThemeSettings> {
+    const cssContent = await fs.readFile(globalsCssPath, 'utf8');
+    return parseHsl(cssContent);
+}
+
+export async function updateThemeSettingsAction(data: z.infer<typeof themeSettingsSchema>) {
+    const validatedFields = themeSettingsSchema.safeParse(data);
+    if (!validatedFields.success) {
+        return { success: false, message: "Validation failed.", errors: validatedFields.error.flatten().fieldErrors };
+    }
+
+    try {
+        let cssContent = await fs.readFile(globalsCssPath, 'utf8');
+        
+        // Update light theme
+        cssContent = cssContent.replace(/(--background:\s*)[^;]+(;)/, `$1${validatedFields.data.light.background}$2`);
+        cssContent = cssContent.replace(/(--primary:\s*)[^;]+(;)/, `$1${validatedFields.data.light.primary}$2`);
+        cssContent = cssContent.replace(/(--accent:\s*)[^;]+(;)/, `$1${validatedFields.data.light.accent}$2`);
+
+        // Update dark theme
+        cssContent = cssContent.replace(/(\.dark\s*\{[^}]*--background:\s*)[^;]+(;[^}]*\})/, `$1${validatedFields.data.dark.background}$2`);
+        cssContent = cssContent.replace(/(\.dark\s*\{[^}]*--primary:\s*)[^;]+(;[^}]*\})/, `$1${validatedFields.data.dark.primary}$2`);
+        cssContent = cssContent.replace(/(\.dark\s*\{[^}]*--accent:\s*)[^;]+(;[^}]*\})/, `$1${validatedFields.data.dark.accent}$2`);
+
+        await fs.writeFile(globalsCssPath, cssContent, 'utf8');
+        revalidatePath("/", "layout");
+        return { success: true, message: "Theme updated successfully." };
+    } catch (error) {
+        return { success: false, message: "Failed to update theme." };
+    }
 }
