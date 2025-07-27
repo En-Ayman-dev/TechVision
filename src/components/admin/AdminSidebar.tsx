@@ -18,9 +18,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { cn } from "@/lib/utils";
-import { ThemeToggle } from "../landing/ThemeToggle";
 import { useLocale } from "next-intl";
+import { ThemeToggle } from "../landing/ThemeToggle";
 
 const navItems = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
