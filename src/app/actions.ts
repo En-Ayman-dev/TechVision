@@ -31,8 +31,8 @@ const teamMemberSchema = z.object({
   role: z.string().min(2, "Role must be at least 2 characters."),
   image: z.string().url("Image must be a valid URL."),
   social: z.object({
-    twitter: z.string().url().or(z.literal("")),
-    linkedin: z.string().url().or(z.literal("")),
+    twitter: z.string().url().or(z.literal("")).or(z.literal("#")),
+    linkedin: z.string().url().or(z.literal("")).or(z.literal("#")),
   }),
   dataAiHint: z.string().optional(),
 });
@@ -469,28 +469,28 @@ function parseHsl(css: string): ThemeSettings {
     dark: { background: '', primary: '', accent: '' },
   };
 
-  const lightBgMatch = css.match(/--background:\s*([\d\s.%]+);/);
+  const lightBgMatch = css.match(/:root\s*\{[^}]*--background:\s*([^;]+);/);
   if (lightBgMatch) settings.light.background = lightBgMatch[1].trim();
-
-  const lightPrimaryMatch = css.match(/--primary:\s*([\d\s.%]+);/);
+  
+  const lightPrimaryMatch = css.match(/:root\s*\{[^}]*--primary:\s*([^;]+);/);
   if (lightPrimaryMatch) settings.light.primary = lightPrimaryMatch[1].trim();
 
-  const lightAccentMatch = css.match(/--accent:\s*([\d\s.%]+);/);
+  const lightAccentMatch = css.match(/:root\s*\{[^}]*--accent:\s*([^;]+);/);
   if (lightAccentMatch) settings.light.accent = lightAccentMatch[1].trim();
 
   const darkBlockMatch = css.match(/\.dark\s*\{([^}]+)\}/);
-  if (darkBlockMatch) {
+    if (darkBlockMatch) {
     const darkCss = darkBlockMatch[1];
-    const darkBgMatch = darkCss.match(/--background:\s*([\d\s.%]+);/);
+    const darkBgMatch = darkCss.match(/--background:\s*([^;]+);/);
     if (darkBgMatch) settings.dark.background = darkBgMatch[1].trim();
 
-    const darkPrimaryMatch = darkCss.match(/--primary:\s*([\d\s.%]+);/);
+    const darkPrimaryMatch = darkCss.match(/--primary:\s*([^;]+);/);
     if (darkPrimaryMatch) settings.dark.primary = darkPrimaryMatch[1].trim();
     
-    const darkAccentMatch = darkCss.match(/--accent:\s*([\d\s.%]+);/);
+    const darkAccentMatch = darkCss.match(/--accent:\s*([^;]+);/);
     if (darkAccentMatch) settings.dark.accent = darkAccentMatch[1].trim();
   }
-
+  
   return settings;
 }
 
@@ -507,22 +507,24 @@ export async function updateThemeSettingsAction(data: z.infer<typeof themeSettin
 
     try {
         let cssContent = await fs.readFile(globalsCssPath, 'utf8');
+        const { light, dark } = validatedFields.data;
         
-        // Update light theme
-        cssContent = cssContent.replace(/(--background:\s*)[^;]+(;)/, `$1${validatedFields.data.light.background}$2`);
-        cssContent = cssContent.replace(/(--primary:\s*)[^;]+(;)/, `$1${validatedFields.data.light.primary}$2`);
-        cssContent = cssContent.replace(/(--accent:\s*)[^;]+(;)/, `$1${validatedFields.data.light.accent}$2`);
+        // Update light theme variables in :root
+        cssContent = cssContent.replace(/(:root\s*\{[\s\S]*?--background:\s*)[^;]+(;[\s\S]*?\})/, `$1${light.background}$2`);
+        cssContent = cssContent.replace(/(:root\s*\{[\s\S]*?--primary:\s*)[^;]+(;[\s\S]*?\})/, `$1${light.primary}$2`);
+        cssContent = cssContent.replace(/(:root\s*\{[\s\S]*?--accent:\s*)[^;]+(;[\s\S]*?\})/, `$1${light.accent}$2`);
 
-        // Update dark theme
-        cssContent = cssContent.replace(/(\.dark\s*\{[^}]*--background:\s*)[^;]+(;[^}]*\})/, `$1${validatedFields.data.dark.background}$2`);
-        cssContent = cssContent.replace(/(\.dark\s*\{[^}]*--primary:\s*)[^;]+(;[^}]*\})/, `$1${validatedFields.data.dark.primary}$2`);
-        cssContent = cssContent.replace(/(\.dark\s*\{[^}]*--accent:\s*)[^;]+(;[^}]*\})/, `$1${validatedFields.data.dark.accent}$2`);
+        // Update dark theme variables in .dark
+        cssContent = cssContent.replace(/(\.dark\s*\{[\s\S]*?--background:\s*)[^;]+(;[\s\S]*?\})/, `$1${dark.background}$2`);
+        cssContent = cssContent.replace(/(\.dark\s*\{[\s\S]*?--primary:\s*)[^;]+(;[\s\S]*?\})/, `$1${dark.primary}$2`);
+        cssContent = cssContent.replace(/(\.dark\s*\{[\s\S]*?--accent:\s*)[^;]+(;[\s\S]*?\})/, `$1${dark.accent}$2`);
 
         await fs.writeFile(globalsCssPath, cssContent, 'utf8');
         revalidatePath("/", "layout");
         return { success: true, message: "Theme updated successfully." };
     } catch (error) {
-        return { success: false, message: "Failed to update theme." };
+        console.error("Error updating theme:", error);
+        return { success: false, message: "Failed to update theme file." };
     }
 }
 
@@ -559,3 +561,4 @@ export async function generateTestimonialQuoteAction(authorName: string) {
     return { success: false, quote: null, message: "AI generation failed." };
   }
 }
+
