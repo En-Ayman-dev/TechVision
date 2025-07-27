@@ -7,6 +7,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import type { Message, Project, TeamMember, Service, Testimonial, SiteSettings, Partner, ThemeSettings } from "@/lib/types";
 import { revalidatePath } from "next/cache";
+import { generateDescription, generateTestimonialQuote } from "@/ai/flows/text-generation";
 
 // Schemas
 const contactSchema = z.object({
@@ -523,4 +524,38 @@ export async function updateThemeSettingsAction(data: z.infer<typeof themeSettin
     } catch (error) {
         return { success: false, message: "Failed to update theme." };
     }
+}
+
+// AI Generation Actions
+export async function generateServiceDescriptionAction(title: string) {
+  if (!title) return { success: false, description: null, message: "Title is required." };
+  try {
+    const result = await generateDescription({ type: 'service', topic: title });
+    return { success: true, description: result.description };
+  } catch (error) {
+    console.error("Error generating service description:", error);
+    return { success: false, description: null, message: "AI generation failed." };
+  }
+}
+
+export async function generateProjectDescriptionAction(title: string) {
+  if (!title) return { success: false, description: null, message: "Title is required." };
+  try {
+    const result = await generateDescription({ type: 'project', topic: title });
+    return { success: true, description: result.description };
+  } catch (error) {
+    console.error("Error generating project description:", error);
+    return { success: false, description: null, message: "AI generation failed." };
+  }
+}
+
+export async function generateTestimonialQuoteAction(authorName: string) {
+  if (!authorName) return { success: false, quote: null, message: "Author name is required." };
+  try {
+    const result = await generateTestimonialQuote({ authorName });
+    return { success: true, quote: result.quote };
+  } catch (error) {
+    console.error("Error generating testimonial quote:", error);
+    return { success: false, quote: null, message: "AI generation failed." };
+  }
 }

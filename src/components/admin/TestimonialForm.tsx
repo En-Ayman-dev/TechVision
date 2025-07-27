@@ -18,9 +18,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { Testimonial } from "@/lib/types";
 import { useEffect, useTransition } from "react";
-import { addTestimonialAction, updateTestimonialAction } from "@/app/actions";
+import { addTestimonialAction, updateTestimonialAction, generateTestimonialQuoteAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Wand2 } from "lucide-react";
 
 interface TestimonialFormProps {
   isOpen: boolean;
@@ -40,6 +40,7 @@ const testimonialSchema = z.object({
 
 export function TestimonialForm({ isOpen, onOpenChange, testimonial, onSubmit }: TestimonialFormProps) {
   const [isPending, startTransition] = useTransition();
+  const [isGenerating, startGeneratingTransition] = useTransition();
   const { toast } = useToast();
   const form = useForm<z.infer<typeof testimonialSchema>>({
     resolver: zodResolver(testimonialSchema),
@@ -65,6 +66,34 @@ export function TestimonialForm({ isOpen, onOpenChange, testimonial, onSubmit }:
       });
     }
   }, [testimonial, form, isOpen]);
+  
+  const handleGenerateQuote = () => {
+    const author = form.getValues("author");
+    if (!author || author.length < 2) {
+      toast({
+        title: "Author Name Required",
+        description: "Please enter an author's name to generate a quote.",
+        variant: "destructive",
+      });
+      return;
+    }
+    startGeneratingTransition(async () => {
+      const result = await generateTestimonialQuoteAction(author);
+      if (result.success && result.quote) {
+        form.setValue("quote", result.quote, { shouldValidate: true });
+        toast({
+          title: "Quote Generated",
+          description: "An AI-powered quote has been generated for you.",
+        });
+      } else {
+        toast({
+          title: "Generation Failed",
+          description: result.message || "Could not generate a quote at this time.",
+          variant: "destructive",
+        });
+      }
+    });
+  };
 
   const handleSubmit = (values: z.infer<typeof testimonialSchema>) => {
     startTransition(async () => {
@@ -107,7 +136,13 @@ export function TestimonialForm({ isOpen, onOpenChange, testimonial, onSubmit }:
             {form.formState.errors.role && <p className="text-destructive text-sm">{form.formState.errors.role.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="quote">Quote</Label>
+            <div className="flex justify-between items-center">
+              <Label htmlFor="quote">Quote</Label>
+               <Button type="button" size="sm" variant="outline" onClick={handleGenerateQuote} disabled={isGenerating}>
+                  {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+                  Generate
+                </Button>
+            </div>
             <Textarea id="quote" {...form.register("quote")} />
             {form.formState.errors.quote && <p className="text-destructive text-sm">{form.formState.errors.quote.message}</p>}
           </div>

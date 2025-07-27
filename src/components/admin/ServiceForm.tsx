@@ -18,9 +18,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { Service } from "@/lib/types";
 import { useEffect, useTransition } from "react";
-import { addServiceAction, updateServiceAction } from "@/app/actions";
+import { addServiceAction, updateServiceAction, generateServiceDescriptionAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Wand2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 interface ServiceFormProps {
@@ -42,6 +42,7 @@ const iconOptions = ["Code", "Cloud", "PenTool", "Database", "Shield", "LineChar
 
 export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: ServiceFormProps) {
   const [isPending, startTransition] = useTransition();
+  const [isGenerating, startGeneratingTransition] = useTransition();
   const { toast } = useToast();
   const form = useForm<z.infer<typeof serviceSchema>>({
     resolver: zodResolver(serviceSchema),
@@ -65,6 +66,34 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
       });
     }
   }, [service, form, isOpen]);
+
+  const handleGenerateDescription = () => {
+    const title = form.getValues("title");
+    if (!title || title.length < 2) {
+      toast({
+        title: "Title Required",
+        description: "Please enter a title to generate a description.",
+        variant: "destructive",
+      });
+      return;
+    }
+    startGeneratingTransition(async () => {
+      const result = await generateServiceDescriptionAction(title);
+      if (result.success && result.description) {
+        form.setValue("description", result.description, { shouldValidate: true });
+        toast({
+          title: "Description Generated",
+          description: "An AI-powered description has been generated for you.",
+        });
+      } else {
+        toast({
+          title: "Generation Failed",
+          description: result.message || "Could not generate a description at this time.",
+          variant: "destructive",
+        });
+      }
+    });
+  };
 
   const handleSubmit = (values: z.infer<typeof serviceSchema>) => {
     startTransition(async () => {
@@ -116,7 +145,13 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
             {form.formState.errors.icon && <p className="text-destructive text-sm">{form.formState.errors.icon.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="description">Description</Label>
+            <div className="flex justify-between items-center">
+              <Label htmlFor="description">Description</Label>
+              <Button type="button" size="sm" variant="outline" onClick={handleGenerateDescription} disabled={isGenerating}>
+                  {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+                  Generate
+                </Button>
+            </div>
             <Textarea id="description" {...form.register("description")} />
             {form.formState.errors.description && <p className="text-destructive text-sm">{form.formState.errors.description.message}</p>}
           </div>

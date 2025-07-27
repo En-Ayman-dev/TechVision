@@ -18,9 +18,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { Project } from "@/lib/types";
 import { useEffect, useTransition } from "react";
-import { addProjectAction, updateProjectAction } from "@/app/actions";
+import { addProjectAction, updateProjectAction, generateProjectDescriptionAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Wand2 } from "lucide-react";
 
 interface ProjectFormProps {
   isOpen: boolean;
@@ -40,6 +40,7 @@ const projectSchema = z.object({
 
 export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: ProjectFormProps) {
   const [isPending, startTransition] = useTransition();
+  const [isGenerating, startGeneratingTransition] = useTransition();
   const { toast } = useToast();
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
@@ -65,6 +66,34 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
       });
     }
   }, [project, form, isOpen]);
+
+  const handleGenerateDescription = () => {
+    const title = form.getValues("title");
+    if (!title || title.length < 2) {
+      toast({
+        title: "Title Required",
+        description: "Please enter a title to generate a description.",
+        variant: "destructive",
+      });
+      return;
+    }
+    startGeneratingTransition(async () => {
+      const result = await generateProjectDescriptionAction(title);
+      if (result.success && result.description) {
+        form.setValue("description", result.description, { shouldValidate: true });
+        toast({
+          title: "Description Generated",
+          description: "An AI-powered description has been generated for you.",
+        });
+      } else {
+        toast({
+          title: "Generation Failed",
+          description: result.message || "Could not generate a description at this time.",
+          variant: "destructive",
+        });
+      }
+    });
+  };
 
   const handleSubmit = (values: z.infer<typeof projectSchema>) => {
     startTransition(async () => {
@@ -107,7 +136,13 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
             {form.formState.errors.category && <p className="text-destructive text-sm">{form.formState.errors.category.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="description">Description</Label>
+             <div className="flex justify-between items-center">
+              <Label htmlFor="description">Description</Label>
+              <Button type="button" size="sm" variant="outline" onClick={handleGenerateDescription} disabled={isGenerating}>
+                  {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+                  Generate
+                </Button>
+            </div>
             <Textarea id="description" {...form.register("description")} />
             {form.formState.errors.description && <p className="text-destructive text-sm">{form.formState.errors.description.message}</p>}
           </div>
