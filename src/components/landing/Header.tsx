@@ -2,26 +2,24 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Code } from 'lucide-react';
+import { Menu, X, Code, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './ThemeToggle';
 import { cn } from '@/lib/utils';
 import type { NavItem } from '@/lib/types';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { usePathname } from 'next/navigation';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Header() {
   const t = useTranslations('Header');
   const pathname = usePathname();
-  const currentLocale = pathname.split('/')[1] || 'en';
-  const otherLocale = currentLocale === 'en' ? 'ar' : 'en';
-
-  // Make sure to remove the locale prefix for the new pathname
-  const pathWithoutLocale = pathname.startsWith(`/${currentLocale}`) 
-    ? pathname.substring(`/${currentLocale}`.length)
-    : pathname;
-  const newPathname = `/${otherLocale}${pathWithoutLocale || '/'}`;
-
+  const currentLocale = useLocale();
 
   const navItems: NavItem[] = [
     { label: t('about'), href: '#about' },
@@ -40,6 +38,12 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const pathWithoutLocale = pathname.startsWith(`/${currentLocale}`)
+    ? pathname.substring(`/${currentLocale}`.length)
+    : pathname;
+  const enPath = `/en${pathWithoutLocale || '/'}`;
+  const arPath = `/ar${pathWithoutLocale || '/'}`;
 
   return (
     <header className={cn(
@@ -60,11 +64,22 @@ export default function Header() {
             ))}
           </nav>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1">
-              <Link href={newPathname} className={cn("text-sm font-medium", )}>EN</Link>
-              <span>/</span>
-              <Link href={newPathname} className="text-sm font-medium">AR</Link>
-            </div>
+             <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Globe className="h-[1.2rem] w-[1.2rem]" />
+                  <span className="sr-only">Change language</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link href={enPath} hrefLang="en">English</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                   <Link href={arPath} hrefLang="ar">العربية</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <ThemeToggle />
             <Button className="hidden md:flex" asChild>
               <Link href="#contact">{t('getAQuote')}</Link>
