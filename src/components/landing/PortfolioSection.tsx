@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import type { Project } from '@/lib/types';
 import { getProjectsAction } from '@/app/actions';
 import { useTranslations } from 'next-intl';
+import { Skeleton } from '../ui/skeleton';
 
 export default function PortfolioSection() {
   const t = useTranslations('PortfolioSection');
@@ -68,10 +69,10 @@ export default function PortfolioSection() {
              Array.from({ length: 6 }).map((_, i) => (
                 <Card key={i} className="overflow-hidden group">
                     <CardContent className="p-0">
-                        <div className="w-full h-[250px] bg-muted animate-pulse" />
+                        <Skeleton className="w-full h-[250px]" />
                         <div className="p-6">
-                            <div className="h-6 w-3/4 bg-muted animate-pulse rounded-md" />
-                            <div className="mt-2 h-4 w-full bg-muted animate-pulse rounded-md" />
+                            <Skeleton className="h-6 w-3/4 rounded-md" />
+                            <Skeleton className="mt-2 h-4 w-full rounded-md" />
                         </div>
                     </CardContent>
                 </Card>

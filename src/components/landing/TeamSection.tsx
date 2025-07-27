@@ -10,6 +10,7 @@ import { Twitter, Linkedin } from 'lucide-react';
 import type { TeamMember } from '@/lib/types';
 import { useTranslations } from 'next-intl';
 import { getTeamAction } from '@/app/actions';
+import { Skeleton } from '../ui/skeleton';
 
 export default function TeamSection() {
   const t = useTranslations('TeamSection');
@@ -41,9 +42,9 @@ export default function TeamSection() {
              Array.from({ length: 4 }).map((_, i) => (
                 <Card key={i} className="text-center">
                     <CardContent className="p-6">
-                        <div className="w-[150px] h-[150px] rounded-full mx-auto mb-4 bg-muted animate-pulse" />
-                        <div className="h-6 w-3/4 mx-auto bg-muted animate-pulse rounded-md" />
-                        <div className="mt-2 h-4 w-1/2 mx-auto bg-muted animate-pulse rounded-md" />
+                        <Skeleton className="w-[150px] h-[150px] rounded-full mx-auto mb-4" />
+                        <Skeleton className="h-6 w-3/4 mx-auto rounded-md" />
+                        <Skeleton className="mt-2 h-4 w-1/2 mx-auto rounded-md" />
                     </CardContent>
                 </Card>
              ))
