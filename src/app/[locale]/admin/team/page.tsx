@@ -1,4 +1,6 @@
 
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,7 +17,7 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { getTeamAction } from "@/app/actions";
+import { deleteTeamMemberAction, getTeamAction } from "@/app/actions";
 import { PlusCircle, MoreHorizontal, FilePen, Trash2 } from "lucide-react";
 import Image from "next/image";
 
@@ -25,20 +27,92 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import { useEffect, useState, useTransition } from "react";
+import type { TeamMember } from "@/lib/types";
+import { TeamMemberForm } from "@/components/admin/TeamMemberForm";
+import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
-export default async function TeamPage() {
-  const teamMembers = await getTeamAction();
+export default function TeamPage() {
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [isPending, startTransition] = useTransition();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const { toast } = useToast();
+
+  const fetchTeamMembers = () => {
+    startTransition(async () => {
+      const fetchedMembers = await getTeamAction();
+      setTeamMembers(fetchedMembers);
+    });
+  };
+
+  useEffect(() => {
+    fetchTeamMembers();
+  }, []);
+
+  const handleAddClick = () => {
+    setSelectedMember(null);
+    setIsFormOpen(true);
+  };
+
+  const handleEditClick = (member: TeamMember) => {
+    setSelectedMember(member);
+    setIsFormOpen(true);
+  };
+
+  const handleDelete = (id: number) => {
+     startTransition(async () => {
+      const result = await deleteTeamMemberAction(id);
+      if (result.success) {
+        fetchTeamMembers();
+        toast({
+          title: "Team Member Deleted",
+          description: "The team member has been successfully deleted.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    });
+  }
+
+  const onFormSubmit = () => {
+    fetchTeamMembers();
+    setIsFormOpen(false);
+  };
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Manage Team</h1>
-        <Button>
+        <Button onClick={handleAddClick}>
           <PlusCircle className="mr-2 h-5 w-5" />
           Add Member
         </Button>
       </div>
+      
+      <TeamMemberForm
+        isOpen={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        member={selectedMember}
+        onSubmit={onFormSubmit}
+      />
+
       <Card>
         <CardHeader>
           <CardTitle>Team Members</CardTitle>
@@ -61,7 +135,13 @@ export default async function TeamPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {teamMembers.length > 0 ? (
+              {isPending ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="h-24 text-center">
+                    Loading...
+                  </TableCell>
+                </TableRow>
+              ) : teamMembers.length > 0 ? (
                 teamMembers.map((member) => (
                   <TableRow key={member.id}>
                     <TableCell className="hidden sm:table-cell">
@@ -73,11 +153,9 @@ export default async function TeamPage() {
                         width="64"
                       />
                     </TableCell>
-                    <TableCell className="font-medium">
-                      {member.name}
-                    </TableCell>
+                    <TableCell className="font-medium">{member.name}</TableCell>
                     <TableCell>{member.role}</TableCell>
-                    <TableCell>
+                    <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
@@ -91,14 +169,32 @@ export default async function TeamPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem>
-                            <FilePen className="mr-2 h-4 w-4"/>
+                          <DropdownMenuItem onClick={() => handleEditClick(member)}>
+                            <FilePen className="mr-2 h-4 w-4" />
                             Edit
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                             <Trash2 className="mr-2 h-4 w-4"/>
-                            Delete
-                          </DropdownMenuItem>
+                           <AlertDialog>
+                             <AlertDialogTrigger asChild>
+                                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  Delete
+                                </DropdownMenuItem>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This action cannot be undone. This will permanently delete the team member.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDelete(member.id)}>
+                                  Continue
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
