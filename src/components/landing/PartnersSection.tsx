@@ -2,7 +2,7 @@
 "use client";
 
 import type { Partner } from '@/lib/types';
-import { Globe, CircuitBoard, Rocket, Bot } from 'lucide-react';
+import { Globe, CircuitBoard, Rocket, Bot, Building } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { getPartnersAction } from '@/app/actions';
 import { useEffect, useState } from 'react';
@@ -12,7 +12,8 @@ const iconMap: { [key: string]: React.ElementType } = {
   Globe,
   CircuitBoard,
   Rocket,
-  Bot
+  Bot,
+  Building,
 };
 
 export default function PartnersSection() {
