@@ -5,7 +5,7 @@ import { z } from "zod";
 import { suggestFaq } from "@/ai/flows/faq-suggestions";
 import { promises as fs } from 'fs';
 import path from 'path';
-import type { Message, Project, TeamMember, Service, Testimonial, SiteSettings } from "@/lib/types";
+import type { Message, Project, TeamMember, Service, Testimonial, SiteSettings, Partner } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
 // Schemas
@@ -61,6 +61,12 @@ const siteSettingsSchema = z.object({
     })
 });
 
+const partnerSchema = z.object({
+  id: z.number().optional(),
+  name: z.string().min(2, "Name must be at least 2 characters."),
+  logo: z.string().min(2, "Logo name is required."),
+});
+
 
 // File Paths
 const messagesFilePath = path.join(process.cwd(), 'data', 'messages.json');
@@ -69,6 +75,7 @@ const teamFilePath = path.join(process.cwd(), 'data', 'team.json');
 const servicesFilePath = path.join(process.cwd(), 'data', 'services.json');
 const testimonialsFilePath = path.join(process.cwd(), 'data', 'testimonials.json');
 const settingsFilePath = path.join(process.cwd(), 'data', 'settings.json');
+const partnersFilePath = path.join(process.cwd(), 'data', 'partners.json');
 
 // File System Utilities
 async function ensureFileExists(filePath: string, defaultContent: string) {
@@ -386,4 +393,51 @@ export async function updateSiteSettingsAction(data: z.infer<typeof siteSettings
     } catch (error) {
         return { success: false, message: "Failed to update settings." };
     }
+}
+
+// Partner Actions
+export async function getPartnersAction(): Promise<Partner[]> {
+  return await readJsonFile<Partner[]>(partnersFilePath);
+}
+
+export async function addPartnerAction(data: z.infer<typeof partnerSchema>) {
+  const validatedFields = partnerSchema.safeParse(data);
+  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+
+  try {
+    const partners = await readJsonFile<Partner[]>(partnersFilePath);
+    await createItem<Partner>(partnersFilePath, validatedFields.data, partners);
+    revalidatePath("/admin/partners");
+    revalidatePath("/");
+    return { success: true, message: "Partner added successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to add partner." };
+  }
+}
+
+export async function updatePartnerAction(data: z.infer<typeof partnerSchema>) {
+  const validatedFields = partnerSchema.safeParse(data);
+  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+
+  try {
+    const partners = await readJsonFile<Partner[]>(partnersFilePath);
+    await updateItem<Partner>(partnersFilePath, validatedFields.data, partners);
+    revalidatePath("/admin/partners");
+    revalidatePath("/");
+    return { success: true, message: "Partner updated successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to update partner." };
+  }
+}
+
+export async function deletePartnerAction(id: number) {
+  try {
+    const partners = await readJsonFile<Partner[]>(partnersFilePath);
+    await deleteItem(partnersFilePath, id, partners);
+    revalidatePath("/admin/partners");
+    revalidatePath("/");
+    return { success: true, message: "Partner deleted." };
+  } catch (error) {
+    return { success: false, message: "Failed to delete partner." };
+  }
 }

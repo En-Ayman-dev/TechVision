@@ -53,6 +53,7 @@ export interface FaqItem {
 }
 
 export interface Partner {
+  id: number;
   name: string;
   logo: string;
 }

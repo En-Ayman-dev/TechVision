@@ -13,6 +13,7 @@ import {
   Sparkles,
   Star,
   Settings,
+  Handshake,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -27,6 +28,7 @@ const navItems = [
   { href: "/admin/team", icon: Users, label: "Team" },
   { href: "/admin/services", icon: Sparkles, label: "Services" },
   { href: "/admin/testimonials", icon: Star, label: "Testimonials" },
+  { href: "/admin/partners", icon: Handshake, label: "Partners" },
   { href: "/admin/settings", icon: Settings, label: "Site Settings" },
 ];
 
