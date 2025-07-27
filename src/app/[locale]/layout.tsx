@@ -7,6 +7,7 @@ import WelcomeNotification from '@/components/landing/WelcomeNotification';
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages, getTranslations} from 'next-intl/server';
 import { Inter, Space_Grotesk } from 'next/font/google'
+import Script from 'next/script';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -106,9 +107,14 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <head>
-        <script
+        {/* <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        /> */}
+            <Script
+          id="structured-data-script" // معرف فريد للسكربت
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
       <body className="font-body antialiased">

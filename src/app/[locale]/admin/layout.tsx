@@ -9,25 +9,25 @@ import AdminShell from "@/components/admin/AdminShell";
 import Login from "@/components/admin/Login";
 
 function AdminAuthenticatedLayout({ children }: { children: React.ReactNode }) {
-    const { user, loading } = useAuth();
+  const { user, loading } = useAuth();
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                Loading...
-            </div>
-        );
-    }
-
-    if (!user) {
-        return <Login />;
-    }
-
+  if (loading) {
     return (
-        <AdminShell>
-          {children}
-        </AdminShell>
+      <div className="flex items-center justify-center min-h-screen">
+        Loading...
+      </div>
     );
+  }
+
+  if (!user) {
+    return <Login />;
+  }
+
+  return (
+    <AdminShell>
+      {children}
+    </AdminShell>
+  );
 }
 
 export default function AdminLayout({
@@ -36,22 +36,21 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>
-            <AdminAuthenticatedLayout>
-                {children}
-            </AdminAuthenticatedLayout>
-            <Toaster />
-          </AuthProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+    <div className="admin-dashboard-layout">
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <AuthProvider>
+          <AdminAuthenticatedLayout>
+            {children}
+          </AdminAuthenticatedLayout>
+          <Toaster />
+        </AuthProvider>
+      </ThemeProvider>
+    </div>
   );
+
 }
