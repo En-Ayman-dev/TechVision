@@ -1,8 +1,11 @@
-
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Briefcase, MessageSquare, Users } from "lucide-react";
+import { getMessagesAction } from "@/app/actions";
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const messages = await getMessagesAction();
+  const messageCount = messages.length;
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
@@ -13,7 +16,7 @@ export default function Dashboard() {
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold">{messageCount}</div>
             <p className="text-xs text-muted-foreground">
               Total messages received
             </p>

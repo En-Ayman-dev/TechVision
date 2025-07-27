@@ -53,3 +53,11 @@ export interface Partner {
   name: string;
   logo: string;
 }
+
+export interface Message {
+  id: number;
+  name: string;
+  email: string;
+  message: string;
+  submittedAt: string;
+}

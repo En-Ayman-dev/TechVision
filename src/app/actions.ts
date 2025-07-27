@@ -4,6 +4,7 @@ import { z } from "zod";
 import { suggestFaq } from "@/ai/flows/faq-suggestions";
 import { promises as fs } from 'fs';
 import path from 'path';
+import type { Message } from "@/lib/types";
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -25,6 +26,19 @@ async function ensureMessagesFileExists() {
     await fs.access(messagesFilePath);
   } catch {
     await fs.writeFile(messagesFilePath, '[]', 'utf8');
+  }
+}
+
+export async function getMessagesAction(): Promise<Message[]> {
+  await ensureMessagesFileExists();
+  try {
+    const fileContent = await fs.readFile(messagesFilePath, 'utf8');
+    const messages = JSON.parse(fileContent) as Message[];
+    // Sort messages by submission date, newest first
+    return messages.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+  } catch (error) {
+    console.error("Error reading messages:", error);
+    return [];
   }
 }
 
