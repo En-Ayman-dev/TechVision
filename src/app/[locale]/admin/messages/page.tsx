@@ -88,8 +88,8 @@ export default function MessagesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {isPending ? (
-                Array.from({ length: 3 }).map((_, i) => (
+              {isPending && messages.length === 0 ? (
+                Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={i}>
                     <TableCell>
                       <Skeleton className="h-5 w-24 mb-1" />
