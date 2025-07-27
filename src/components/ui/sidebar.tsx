@@ -57,7 +57,7 @@ const SidebarProvider = React.forwardRef<
 >(
   (
     {
-      defaultOpen = true,
+      defaultOpen,
       open: openProp,
       onOpenChange: setOpenProp,
       className,
@@ -70,17 +70,23 @@ const SidebarProvider = React.forwardRef<
     const isMobile = useIsMobile()
     const [openMobile, setOpenMobile] = React.useState(false)
 
-    // This is the internal state of the sidebar.
-    // We use openProp and setOpenProp for control from outside the component.
-    const [_open, _setOpen] = React.useState(defaultOpen)
-    const open = openProp ?? _open
-    const setOpen = React.useCallback(
+    // Set the initial state from cookies or default prop
+    const [open, setOpen] = React.useState(() => {
+        if (typeof document === 'undefined') return defaultOpen ?? true;
+        const cookieValue = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith(`${SIDEBAR_COOKIE_NAME}=`))
+            ?.split("=")[1];
+        return cookieValue ? cookieValue === 'true' : defaultOpen ?? true;
+    });
+
+    const setOpenWithCookie = React.useCallback(
       (value: boolean | ((value: boolean) => boolean)) => {
         const openState = typeof value === "function" ? value(open) : value
         if (setOpenProp) {
           setOpenProp(openState)
         } else {
-          _setOpen(openState)
+          setOpen(openState)
         }
 
         // This sets the cookie to keep the sidebar state.
@@ -93,8 +99,8 @@ const SidebarProvider = React.forwardRef<
     const toggleSidebar = React.useCallback(() => {
       return isMobile
         ? setOpenMobile((open) => !open)
-        : setOpen((open) => !open)
-    }, [isMobile, setOpen, setOpenMobile])
+        : setOpenWithCookie((open) => !open)
+    }, [isMobile, setOpenWithCookie, setOpenMobile])
 
     // Adds a keyboard shortcut to toggle the sidebar.
     React.useEffect(() => {
@@ -120,13 +126,13 @@ const SidebarProvider = React.forwardRef<
       () => ({
         state,
         open,
-        setOpen,
+        setOpen: setOpenWithCookie,
         isMobile,
         openMobile,
         setOpenMobile,
         toggleSidebar,
       }),
-      [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+      [state, open, setOpenWithCookie, isMobile, openMobile, setOpenMobile, toggleSidebar]
     )
 
     return (
