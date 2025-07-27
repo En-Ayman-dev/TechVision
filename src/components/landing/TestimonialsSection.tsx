@@ -10,39 +10,42 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import type { Testimonial } from '@/lib/types';
-
-const testimonials: Testimonial[] = [
-  {
-    quote: "TechVision transformed our business. Their team is professional, knowledgeable, and dedicated to delivering results. We couldn't be happier with our new platform.",
-    author: 'Alex Johnson',
-    role: 'CEO, InnovateCorp',
-    image: 'https://placehold.co/100x100.png',
-    dataAiHint: "happy client"
-  },
-  {
-    quote: "The best tech partner we've ever worked with. Their attention to detail and commitment to quality is unparalleled. Highly recommended!",
-    author: 'Sarah Lee',
-    role: 'CTO, QuantumLeap',
-    image: 'https://placehold.co/100x100.png',
-    dataAiHint: "satisfied customer"
-  },
-  {
-    quote: "From UI/UX design to backend development, TechVision delivered excellence at every stage. They are true experts in their field.",
-    author: 'David Chen',
-    role: 'Founder, Stellar Solutions',
-    image: 'https://placehold.co/100x100.png',
-    dataAiHint: "smiling person"
-  },
-];
+import { useTranslations } from 'next-intl';
 
 export default function TestimonialsSection() {
+  const t = useTranslations('TestimonialsSection');
+
+  const testimonials: Testimonial[] = [
+    {
+      quote: t('testimonials.alex.quote'),
+      author: t('testimonials.alex.author'),
+      role: t('testimonials.alex.role'),
+      image: 'https://placehold.co/100x100.png',
+      dataAiHint: "happy client"
+    },
+    {
+      quote: t('testimonials.sarah.quote'),
+      author: t('testimonials.sarah.author'),
+      role: t('testimonials.sarah.role'),
+      image: 'https://placehold.co/100x100.png',
+      dataAiHint: "satisfied customer"
+    },
+    {
+      quote: t('testimonials.david.quote'),
+      author: t('testimonials.david.author'),
+      role: t('testimonials.david.role'),
+      image: 'https://placehold.co/100x100.png',
+      dataAiHint: "smiling person"
+    },
+  ];
+
   return (
     <section id="testimonials" className="bg-secondary/50">
       <div className="container mx-auto px-4">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">What Our Clients Say</h2>
+          <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">{t('title')}</h2>
           <p className="mt-4 max-w-2xl mx-auto text-lg leading-8 text-muted-foreground">
-            We've helped businesses of all sizes achieve their goals. Here's what they have to say.
+            {t('subtitle')}
           </p>
         </div>
         <Carousel

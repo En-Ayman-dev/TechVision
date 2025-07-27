@@ -6,33 +6,36 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import type { PortfolioItem } from '@/lib/types';
 import { cn } from '@/lib/utils';
-
-const allProjects: PortfolioItem[] = [
-  { id: 1, category: 'Web', title: 'E-commerce Platform', image: 'https://placehold.co/600x400.png', description: 'A scalable online store with a modern UI.', dataAiHint: "ecommerce website" },
-  { id: 2, category: 'Cloud', title: 'Cloud Migration', image: 'https://placehold.co/600x400.png', description: 'Migrated legacy systems to a public cloud.', dataAiHint: "cloud servers" },
-  { id: 3, category: 'Design', title: 'Mobile App UI/UX', image: 'https://placehold.co/600x400.png', description: 'Redesigned a popular fitness application.', dataAiHint: "mobile app" },
-  { id: 4, category: 'Data', title: 'Analytics Dashboard', image: 'https://placehold.co/600x400.png', description: 'A real-time data visualization tool.', dataAiHint: "dashboard chart" },
-  { id: 5, category: 'Web', title: 'Corporate Website', image: 'https://placehold.co/600x400.png', description: 'A sleek and professional site for a finance firm.', dataAiHint: "corporate website" },
-  { id: 6, category: 'Security', title: 'Security Audit', image: 'https://placehold.co/600x400.png', description: 'Comprehensive security audit for a fintech startup.', dataAiHint: "cyber security" },
-];
-
-const categories = ['All', 'Web', 'Cloud', 'Design', 'Data', 'Security'];
+import { useTranslations } from 'next-intl';
 
 export default function PortfolioSection() {
-  const [filter, setFilter] = useState('All');
+  const t = useTranslations('PortfolioSection');
+
+  const allProjects: PortfolioItem[] = [
+    { id: 1, category: t('categories.web'), title: t('projects.ecommerce.title'), image: 'https://placehold.co/600x400.png', description: t('projects.ecommerce.description'), dataAiHint: "ecommerce website" },
+    { id: 2, category: t('categories.cloud'), title: t('projects.cloud.title'), image: 'https://placehold.co/600x400.png', description: t('projects.cloud.description'), dataAiHint: "cloud servers" },
+    { id: 3, category: t('categories.design'), title: t('projects.design.title'), image: 'https://placehold.co/600x400.png', description: t('projects.design.description'), dataAiHint: "mobile app" },
+    { id: 4, category: t('categories.data'), title: t('projects.data.title'), image: 'https://placehold.co/600x400.png', description: t('projects.data.description'), dataAiHint: "dashboard chart" },
+    { id: 5, category: t('categories.web'), title: t('projects.corp.title'), image: 'https://placehold.co/600x400.png', description: t('projects.corp.description'), dataAiHint: "corporate website" },
+    { id: 6, category: t('categories.security'), title: t('projects.security.title'), image: 'https://placehold.co/600x400.png', description: t('projects.security.description'), dataAiHint: "cyber security" },
+  ];
+  
+  const categories = [t('categories.all'), t('categories.web'), t('categories.cloud'), t('categories.design'), t('categories.data'), t('categories.security')];
+
+  const [filter, setFilter] = useState(t('categories.all'));
 
   const filteredProjects = useMemo(() => {
-    if (filter === 'All') return allProjects;
+    if (filter === t('categories.all')) return allProjects;
     return allProjects.filter((project) => project.category === filter);
-  }, [filter]);
+  }, [filter, t]);
 
   return (
     <section id="portfolio" className="bg-secondary/50">
       <div className="container mx-auto px-4">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">Our Work</h2>
+          <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">{t('title')}</h2>
           <p className="mt-4 max-w-2xl mx-auto text-lg leading-8 text-muted-foreground">
-            We are proud of the solutions we've delivered. Explore some of our recent projects.
+            {t('subtitle')}
           </p>
         </div>
         <div className="mt-8 flex justify-center flex-wrap gap-2">

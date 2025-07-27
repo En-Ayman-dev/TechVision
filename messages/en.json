@@ -15,5 +15,221 @@
   "Footer": {
     "companyName": "TechVision",
     "rightsReserved": "All rights reserved."
+  },
+  "PartnersSection": {
+    "title": "Trusted by the world’s most innovative teams",
+    "partners": {
+      "innovateCorp": "InnovateCorp",
+      "quantumLeap": "QuantumLeap",
+      "stellarSolutions": "Stellar Solutions",
+      "synthAI": "SynthAI",
+      "futureWorks": "FutureWorks"
+    }
+  },
+  "AboutSection": {
+    "title": "About TechVision",
+    "paragraph": "We are a team of passionate developers, designers, and strategists dedicated to crafting exceptional digital experiences. Our mission is to empower businesses with technology that is not only powerful but also intuitive and elegant.",
+    "visionTitle": "Our Vision",
+    "visionText": "To be a leading force in digital innovation, shaping the future of technology for businesses worldwide.",
+    "valuesTitle": "Our Values",
+    "valuesText": "Integrity, Collaboration, and a relentless pursuit of Excellence.",
+    "imageAlt": "Our team at work"
+  },
+  "ServicesSection": {
+    "title": "Our Services",
+    "subtitle": "We offer a comprehensive suite of technology services designed to help you achieve your business goals.",
+    "services": {
+      "web": {
+        "title": "Web Development",
+        "description": "Creating responsive and high-performance websites and web applications tailored to your needs."
+      },
+      "cloud": {
+        "title": "Cloud Solutions",
+        "description": "Leveraging cloud infrastructure for scalable, secure, and efficient business operations."
+      },
+      "design": {
+        "title": "UI/UX Design",
+        "description": "Designing intuitive and beautiful user interfaces that enhance user engagement and satisfaction."
+      },
+      "data": {
+        "title": "Data Engineering",
+        "description": "Building robust data pipelines and architectures to turn raw data into actionable insights."
+      },
+      "security": {
+        "title": "Cybersecurity",
+        "description": "Protecting your digital assets with advanced security protocols and threat mitigation strategies."
+      },
+      "analytics": {
+        "title": "Business Analytics",
+        "description": "Providing data-driven insights to help you make informed decisions and drive business growth."
+      }
+    }
+  },
+  "WhyChooseUsSection": {
+    "title": "Why Choose TechVision?",
+    "subtitle": "We don't just build products; we build partnerships. Our commitment to excellence and innovation sets us apart.",
+    "reasons": {
+      "quality": {
+        "title": "Quality First",
+        "description": "We adhere to the highest standards to deliver robust and reliable solutions."
+      },
+      "agile": {
+        "title": "Agile & Fast",
+        "description": "Our agile methodology ensures fast-paced development and on-time delivery."
+      },
+      "customer": {
+        "title": "Customer-Centric",
+        "description": "We work closely with you to understand your vision and bring it to life."
+      }
+    },
+    "stats": {
+      "satisfaction": "Client Satisfaction",
+      "projects": "Projects Completed",
+      "experience": "Years of Experience",
+      "team": "Expert Team Members"
+    }
+  },
+  "PortfolioSection": {
+    "title": "Our Work",
+    "subtitle": "We are proud of the solutions we've delivered. Explore some of our recent projects.",
+    "categories": {
+      "all": "All",
+      "web": "Web",
+      "cloud": "Cloud",
+      "design": "Design",
+      "data": "Data",
+      "security": "Security"
+    },
+    "projects": {
+      "ecommerce": {
+        "title": "E-commerce Platform",
+        "description": "A scalable online store with a modern UI."
+      },
+      "cloud": {
+        "title": "Cloud Migration",
+        "description": "Migrated legacy systems to a public cloud."
+      },
+      "design": {
+        "title": "Mobile App UI/UX",
+        "description": "Redesigned a popular fitness application."
+      },
+      "data": {
+        "title": "Analytics Dashboard",
+        "description": "A real-time data visualization tool."
+      },
+      "corp": {
+        "title": "Corporate Website",
+        "description": "A sleek and professional site for a finance firm."
+      },
+      "security": {
+        "title": "Security Audit",
+        "description": "Comprehensive security audit for a fintech startup."
+      }
+    }
+  },
+  "TeamSection": {
+    "title": "Meet Our Team",
+    "subtitle": "The brilliant minds behind our success.",
+    "members": {
+      "jane": {
+        "name": "Jane Doe",
+        "role": "CEO & Founder"
+      },
+      "john": {
+        "name": "John Smith",
+        "role": "CTO"
+      },
+      "emily": {
+        "name": "Emily White",
+        "role": "Lead Designer"
+      },
+      "michael": {
+        "name": "Michael Brown",
+        "role": "Lead Developer"
+      }
+    }
+  },
+  "TestimonialsSection": {
+    "title": "What Our Clients Say",
+    "subtitle": "We've helped businesses of all sizes achieve their goals. Here's what they have to say.",
+    "testimonials": {
+      "alex": {
+        "quote": "TechVision transformed our business. Their team is professional, knowledgeable, and dedicated to delivering results. We couldn't be happier with our new platform.",
+        "author": "Alex Johnson",
+        "role": "CEO, InnovateCorp"
+      },
+      "sarah": {
+        "quote": "The best tech partner we've ever worked with. Their attention to detail and commitment to quality is unparalleled. Highly recommended!",
+        "author": "Sarah Lee",
+        "role": "CTO, QuantumLeap"
+      },
+      "david": {
+        "quote": "From UI/UX design to backend development, TechVision delivered excellence at every stage. They are true experts in their field.",
+        "author": "David Chen",
+        "role": "Founder, Stellar Solutions"
+      }
+    }
+  },
+  "FaqSection": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Have questions? We have answers.",
+    "items": {
+      "q1": "What is the typical project timeline?",
+      "a1": "Project timelines vary depending on the scope and complexity. A standard website may take 4-6 weeks, while a complex web application can take several months. We provide a detailed timeline after our initial consultation."
+    },
+    "items": {
+      "q1": "What is the typical project timeline?",
+      "a1": "Project timelines vary depending on the scope and complexity. A standard website may take 4-6 weeks, while a complex web application can take several months. We provide a detailed timeline after our initial consultation.",
+      "q2": "How do you handle project management?",
+      "a2": "We use agile methodologies and tools like Jira or Trello to manage projects. You'll have a dedicated project manager and regular check-ins to keep you updated on progress.",
+      "q3": "Do you provide support after the project is completed?",
+      "a3": "Yes, we offer various support and maintenance packages to ensure your application remains secure, updated, and running smoothly.",
+      "q4": "What technologies do you specialize in?",
+      "a4": "We specialize in modern web technologies including React, Next.js, Node.js, and various cloud platforms like AWS and Google Cloud. We choose the best tech stack for your specific needs."
+    }
+  },
+  "CtaSection": {
+    "title": "Ready to Start Your Next Project?",
+    "subtitle": "Let's build something amazing together. Contact us today for a free consultation and quote.",
+    "button": "Get in Touch"
+  },
+  "ContactSection": {
+    "title": "Contact Us",
+    "subtitle": "We'd love to hear from you. Fill out the form, and we'll get back to you as soon as possible.",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Your Name",
+      "email": "Email",
+      "emailPlaceholder": "your.email@example.com",
+      "message": "Message",
+      "messagePlaceholder": "How can we help you?",
+      "aiButton": "Get AI Suggestions",
+      "submitButton": "Send Message"
+    },
+    "validation": {
+        "name": "Name must be at least 2 characters.",
+        "email": "Please enter a valid email address.",
+        "message": "Message must be at least 10 characters."
+    },
+    "toast": {
+        "successTitle": "Message Sent!",
+        "errorTitle": "Error",
+        "errorMessage": "Something went wrong.",
+        "suggestTitle": "Enter a message",
+        "suggestMessage": "Please type at least 10 characters in your message to get suggestions.",
+        "suggestErrorTitle": "Could not get suggestions",
+        "suggestErrorMessage": "The AI assistant is currently unavailable. Please try again later."
+    },
+    "suggestions": {
+        "title": "Suggested FAQs",
+        "description": "Based on your message, these FAQs might help:"
+    }
+  },
+  "LoadingScreen": {
+    "message": "Initializing innovative solutions..."
+  },
+  "WelcomeNotification": {
+    "title": "Welcome to TechVision!",
+    "description": "We're glad to have you here. Explore our work and services."
   }
 }

@@ -12,14 +12,17 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { sendContactMessageAction, suggestFaqAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Wand2, Lightbulb } from "lucide-react";
-
-const contactSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
-  message: z.string().min(10, { message: "Message must be at least 10 characters." }),
-});
+import { useTranslations } from "next-intl";
 
 export default function ContactSection() {
+  const t = useTranslations('ContactSection');
+  
+  const contactSchema = z.object({
+    name: z.string().min(2, { message: t('validation.name') }),
+    email: z.string().email({ message: t('validation.email') }),
+    message: z.string().min(10, { message: t('validation.message') }),
+  });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuggesting, setIsSuggesting] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -39,15 +42,15 @@ export default function ContactSection() {
     const result = await sendContactMessageAction(values);
     if (result.success) {
       toast({
-        title: "Message Sent!",
+        title: t('toast.successTitle'),
         description: result.message,
       });
       form.reset();
       setSuggestions([]);
     } else {
       toast({
-        title: "Error",
-        description: result.message || "Something went wrong.",
+        title: t('toast.errorTitle'),
+        description: result.message || t('toast.errorMessage'),
         variant: "destructive",
       });
     }
@@ -58,8 +61,8 @@ export default function ContactSection() {
     const message = form.getValues("message");
     if (!message || message.length < 10) {
       toast({
-        title: "Enter a message",
-        description: "Please type at least 10 characters in your message to get suggestions.",
+        title: t('toast.suggestTitle'),
+        description: t('toast.suggestMessage'),
         variant: "destructive",
       });
       return;
@@ -71,8 +74,8 @@ export default function ContactSection() {
       setSuggestions(result.suggestions);
     } else {
       toast({
-        title: "Could not get suggestions",
-        description: "The AI assistant is currently unavailable. Please try again later.",
+        title: t('toast.suggestErrorTitle'),
+        description: t('toast.suggestErrorMessage'),
         variant: "destructive",
       });
     }
@@ -84,9 +87,9 @@ export default function ContactSection() {
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">Contact Us</h2>
+            <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">{t('title')}</h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              We'd love to hear from you. Fill out the form, and we'll get back to you as soon as possible.
+              {t('subtitle')}
             </p>
             <div className="mt-8">
               {suggestions.length > 0 && (
@@ -94,9 +97,9 @@ export default function ContactSection() {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Lightbulb className="h-5 w-5 text-yellow-400" />
-                      <span>Suggested FAQs</span>
+                      <span>{t('suggestions.title')}</span>
                     </CardTitle>
-                    <CardDescription>Based on your message, these FAQs might help:</CardDescription>
+                    <CardDescription>{t('suggestions.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-sm list-disc pl-5">
@@ -116,9 +119,9 @@ export default function ContactSection() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>{t('form.name')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="Your Name" {...field} />
+                          <Input placeholder={t('form.namePlaceholder')} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -129,9 +132,9 @@ export default function ContactSection() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>{t('form.email')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="your.email@example.com" {...field} />
+                          <Input placeholder={t('form.emailPlaceholder')} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -142,9 +145,9 @@ export default function ContactSection() {
                     name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Message</FormLabel>
+                        <FormLabel>{t('form.message')}</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="How can we help you?" {...field} rows={6} />
+                          <Textarea placeholder={t('form.messagePlaceholder')} {...field} rows={6} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -157,11 +160,11 @@ export default function ContactSection() {
                       ) : (
                         <Wand2 className="mr-2 h-4 w-4" />
                       )}
-                      Get AI Suggestions
+                      {t('form.aiButton')}
                     </Button>
                     <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
                       {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      Send Message
+                      {t('form.submitButton')}
                     </Button>
                   </div>
                 </form>

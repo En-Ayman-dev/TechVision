@@ -4,46 +4,49 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Twitter, Linkedin } from 'lucide-react';
 import type { TeamMember } from '@/lib/types';
-
-const teamMembers: TeamMember[] = [
-  {
-    name: 'Jane Doe',
-    role: 'CEO & Founder',
-    image: 'https://placehold.co/400x400.png',
-    social: { twitter: '#', linkedin: '#' },
-    dataAiHint: "professional woman"
-  },
-  {
-    name: 'John Smith',
-    role: 'CTO',
-    image: 'https://placehold.co/400x400.png',
-    social: { twitter: '#', linkedin: '#' },
-    dataAiHint: "professional man"
-  },
-  {
-    name: 'Emily White',
-    role: 'Lead Designer',
-    image: 'https://placehold.co/400x400.png',
-    social: { twitter: '#', linkedin: '#' },
-    dataAiHint: "designer woman"
-  },
-  {
-    name: 'Michael Brown',
-    role: 'Lead Developer',
-    image: 'https://placehold.co/400x400.png',
-    social: { twitter: '#', linkedin: '#' },
-    dataAiHint: "developer man"
-  },
-];
+import { useTranslations } from 'next-intl';
 
 export default function TeamSection() {
+  const t = useTranslations('TeamSection');
+
+  const teamMembers: TeamMember[] = [
+    {
+      name: t('members.jane.name'),
+      role: t('members.jane.role'),
+      image: 'https://placehold.co/400x400.png',
+      social: { twitter: '#', linkedin: '#' },
+      dataAiHint: "professional woman"
+    },
+    {
+      name: t('members.john.name'),
+      role: t('members.john.role'),
+      image: 'https://placehold.co/400x400.png',
+      social: { twitter: '#', linkedin: '#' },
+      dataAiHint: "professional man"
+    },
+    {
+      name: t('members.emily.name'),
+      role: t('members.emily.role'),
+      image: 'https://placehold.co/400x400.png',
+      social: { twitter: '#', linkedin: '#' },
+      dataAiHint: "designer woman"
+    },
+    {
+      name: t('members.michael.name'),
+      role: t('members.michael.role'),
+      image: 'https://placehold.co/400x400.png',
+      social: { twitter: '#', linkedin: '#' },
+      dataAiHint: "developer man"
+    },
+  ];
+
   return (
     <section id="team" className="bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">Meet Our Team</h2>
+          <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">{t('title')}</h2>
           <p className="mt-4 max-w-2xl mx-auto text-lg leading-8 text-muted-foreground">
-            The brilliant minds behind our success.
+            {t('subtitle')}
           </p>
         </div>
         <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">

@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import { Code } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 export default function LoadingScreen() {
+  const t = useTranslations('LoadingScreen');
   const [isMounted, setIsMounted] = useState(true);
   const [progress, setProgress] = useState(0);
   const [isFadingOut, setIsFadingOut] = useState(false);
@@ -59,7 +61,7 @@ export default function LoadingScreen() {
           <span>TechVision</span>
         </div>
         <Progress value={progress} className="h-2" />
-        <p className="text-sm text-muted-foreground">Initializing innovative solutions...</p>
+        <p className="text-sm text-muted-foreground">{t('message')}</p>
       </div>
     </div>
   );
