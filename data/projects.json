@@ -1,0 +1,51 @@
+
+[
+    { 
+      "id": 1, 
+      "category": "Web", 
+      "title": "E-commerce Platform", 
+      "image": "https://placehold.co/600x400.png", 
+      "description": "A scalable online store with a modern UI.", 
+      "dataAiHint": "ecommerce website" 
+    },
+    { 
+      "id": 2, 
+      "category": "Cloud", 
+      "title": "Cloud Migration", 
+      "image": "https://placehold.co/600x400.png", 
+      "description": "Migrated legacy systems to a public cloud.", 
+      "dataAiHint": "cloud servers" 
+    },
+    { 
+      "id": 3, 
+      "category": "Design", 
+      "title": "Mobile App UI/UX", 
+      "image": "https://placehold.co/600x400.png", 
+      "description": "Redesigned a popular fitness application.", 
+      "dataAiHint": "mobile app" 
+    },
+    { 
+      "id": 4, 
+      "category": "Data", 
+      "title": "Analytics Dashboard", 
+      "image": "https://placehold.co/600x400.png", 
+      "description": "A real-time data visualization tool.", 
+      "dataAiHint": "dashboard chart" 
+    },
+    { 
+      "id": 5, 
+      "category": "Web", 
+      "title": "Corporate Website", 
+      "image": "https://placehold.co/600x400.png", 
+      "description": "A sleek and professional site for a finance firm.", 
+      "dataAiHint": "corporate website" 
+    },
+    { 
+      "id": 6, 
+      "category": "Security", 
+      "title": "Security Audit", 
+      "image": "https://placehold.co/600x400.png", 
+      "description": "Comprehensive security audit for a fintech startup.", 
+      "dataAiHint": "cyber security" 
+    }
+]

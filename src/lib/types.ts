@@ -26,6 +26,7 @@ export interface PortfolioItem {
 }
 
 export interface TeamMember {
+  id: number;
   name: string;
   role: string;
   image: string;
@@ -60,4 +61,13 @@ export interface Message {
   email: string;
   message: string;
   submittedAt: string;
+}
+
+export interface Project {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  image: string;
+  dataAiHint?: string;
 }

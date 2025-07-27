@@ -1,0 +1,35 @@
+
+[
+    {
+      "id": 1,
+      "name": "Jane Doe",
+      "role": "CEO & Founder",
+      "image": "https://placehold.co/400x400.png",
+      "social": { "twitter": "#", "linkedin": "#" },
+      "dataAiHint": "professional woman"
+    },
+    {
+      "id": 2,
+      "name": "John Smith",
+      "role": "CTO",
+      "image": "https://placehold.co/400x400.png",
+      "social": { "twitter": "#", "linkedin": "#" },
+      "dataAiHint": "professional man"
+    },
+    {
+      "id": 3,
+      "name": "Emily White",
+      "role": "Lead Designer",
+      "image": "https://placehold.co/400x400.png",
+      "social": { "twitter": "#", "linkedin": "#" },
+      "dataAiHint": "designer woman"
+    },
+    {
+      "id": 4,
+      "name": "Michael Brown",
+      "role": "Lead Developer",
+      "image": "https://placehold.co/400x400.png",
+      "social": { "twitter": "#", "linkedin": "#" },
+      "dataAiHint": "developer man"
+    }
+]

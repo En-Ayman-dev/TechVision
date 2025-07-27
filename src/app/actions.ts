@@ -4,7 +4,7 @@ import { z } from "zod";
 import { suggestFaq } from "@/ai/flows/faq-suggestions";
 import { promises as fs } from 'fs';
 import path from 'path';
-import type { Message } from "@/lib/types";
+import type { Message, Project, TeamMember } from "@/lib/types";
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -12,29 +12,33 @@ const contactSchema = z.object({
   message: z.string().min(10, { message: "Message must be at least 10 characters." }),
 });
 
-// The path should be relative to the project root
 const messagesFilePath = path.join(process.cwd(), 'data', 'messages.json');
+const projectsFilePath = path.join(process.cwd(), 'data', 'projects.json');
+const teamFilePath = path.join(process.cwd(), 'data', 'team.json');
 
-// Ensure the data directory and messages.json file exist
-async function ensureMessagesFileExists() {
+
+async function ensureFileExists(filePath: string, defaultContent: string) {
   try {
-    await fs.access(path.dirname(messagesFilePath));
+    await fs.access(path.dirname(filePath));
   } catch {
-    await fs.mkdir(path.dirname(messagesFilePath), { recursive: true });
+    await fs.mkdir(path.dirname(filePath), { recursive: true });
   }
   try {
-    await fs.access(messagesFilePath);
+    await fs.access(filePath);
   } catch {
-    await fs.writeFile(messagesFilePath, '[]', 'utf8');
+    await fs.writeFile(filePath, defaultContent, 'utf8');
   }
 }
 
+async function readJsonFile<T>(filePath: string): Promise<T[]> {
+    const fileContent = await fs.readFile(filePath, 'utf8');
+    return JSON.parse(fileContent) as T[];
+}
+
 export async function getMessagesAction(): Promise<Message[]> {
-  await ensureMessagesFileExists();
+  await ensureFileExists(messagesFilePath, '[]');
   try {
-    const fileContent = await fs.readFile(messagesFilePath, 'utf8');
-    const messages = JSON.parse(fileContent) as Message[];
-    // Sort messages by submission date, newest first
+    const messages = await readJsonFile<Message>(messagesFilePath);
     return messages.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
   } catch (error) {
     console.error("Error reading messages:", error);
@@ -53,13 +57,12 @@ export async function sendContactMessageAction(data: z.infer<typeof contactSchem
     };
   }
 
-  await ensureMessagesFileExists();
+  await ensureFileExists(messagesFilePath, '[]');
 
   try {
-    const fileContent = await fs.readFile(messagesFilePath, 'utf8');
-    const messages = JSON.parse(fileContent);
+    const messages = await readJsonFile<Message>(messagesFilePath);
 
-    const newMessage = {
+    const newMessage: Message = {
       ...validatedFields.data,
       id: new Date().getTime(),
       submittedAt: new Date().toISOString(),
@@ -93,5 +96,25 @@ export async function suggestFaqAction(userInput: string) {
   } catch (error) {
     console.error("Error suggesting FAQ:", error);
     return { success: false, suggestions: [] };
+  }
+}
+
+export async function getProjectsAction(): Promise<Project[]> {
+  await ensureFileExists(projectsFilePath, '[]');
+  try {
+    return await readJsonFile<Project>(projectsFilePath);
+  } catch (error) {
+    console.error("Error reading projects:", error);
+    return [];
+  }
+}
+
+export async function getTeamAction(): Promise<TeamMember[]> {
+  await ensureFileExists(teamFilePath, '[]');
+  try {
+    return await readJsonFile<TeamMember>(teamFilePath);
+  } catch (error) {
+    console.error("Error reading team members:", error);
+    return [];
   }
 }
