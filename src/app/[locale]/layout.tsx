@@ -27,7 +27,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = params;
   const t = await getTranslations({ locale, namespace: 'Metadata' });
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
 
   return {
     title: t('title'),
@@ -88,7 +88,7 @@ export default async function LocaleLayout({
 }>) {
   const { locale } = params;
   const messages = await getMessages();
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
 
   const structuredData = {
     "@context": "https://schema.org",

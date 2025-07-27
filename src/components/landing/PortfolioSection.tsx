@@ -10,6 +10,10 @@ import { getProjectsAction } from '@/app/actions';
 import { useTranslations } from 'next-intl';
 import { Skeleton } from '../ui/skeleton';
 
+// This component remains a client component because it has interactive filtering logic.
+// However, the initial data fetching could be passed as a prop from a server parent
+// in a more complex app to optimize initial load. For this case, fetching on client is acceptable.
+
 export default function PortfolioSection() {
   const t = useTranslations('PortfolioSection');
   const [allProjects, setAllProjects] = useState<Project[]>([]);
@@ -27,22 +31,33 @@ export default function PortfolioSection() {
   
   const categories = useMemo(() => {
     if (isLoading) return [];
-    return [t('categories.all'), ...Array.from(new Set(allProjects.map(p => p.category)))];
+    const categoryTranslations = t.raw('categories');
+    const projectCategories = [...new Set(allProjects.map(p => p.category.toLowerCase()))];
+    
+    const translatedCategories = {
+        all: categoryTranslations.all,
+        ...projectCategories.reduce((acc, key) => {
+            acc[key] = categoryTranslations[key] || key.charAt(0).toUpperCase() + key.slice(1);
+            return acc;
+        }, {} as Record<string, string>)
+    };
+
+    return Object.entries(translatedCategories).map(([key, value]) => ({ key, value }));
+
   }, [isLoading, allProjects, t]);
 
-  const [filter, setFilter] = useState(t('categories.all'));
+  const [filter, setFilter] = useState('all');
   
-  // Set filter to "All" once categories are loaded
   useEffect(() => {
     if (categories.length > 0) {
-      setFilter(t('categories.all'));
+      setFilter('all');
     }
-  }, [categories, t]);
+  }, [categories]);
 
   const filteredProjects = useMemo(() => {
-    if (filter === t('categories.all')) return allProjects;
-    return allProjects.filter((project) => project.category === filter);
-  }, [filter, allProjects, t]);
+    if (filter === 'all') return allProjects;
+    return allProjects.filter((project) => project.category.toLowerCase() === filter);
+  }, [filter, allProjects]);
 
   return (
     <section id="portfolio" className="bg-secondary/50">
@@ -56,11 +71,11 @@ export default function PortfolioSection() {
         <div className="mt-8 flex justify-center flex-wrap gap-2">
           {categories.map((category) => (
             <Button
-              key={category}
-              variant={filter === category ? 'default' : 'outline'}
-              onClick={() => setFilter(category)}
+              key={category.key}
+              variant={filter === category.key ? 'default' : 'outline'}
+              onClick={() => setFilter(category.key)}
             >
-              {category}
+              {category.value}
             </Button>
           ))}
         </div>

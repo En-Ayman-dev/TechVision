@@ -2,16 +2,18 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import {useTranslations} from 'next-intl';
+import Image from 'next/image';
 
 export default function HeroSection() {
   const t = useTranslations('HeroSection');
 
   return (
     <section id="hero" className="relative overflow-hidden bg-background">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-20rem] left-[-20rem] h-[40rem] w-[40rem] rounded-full bg-primary/10 blur-[150px]" />
-        <div className="absolute bottom-[-20rem] right-[-20rem] h-[40rem] w-[40rem] rounded-full bg-accent/10 blur-[150px]" />
-      </div>
+       <div className="absolute inset-0 z-0 opacity-50">
+         <div className="absolute top-[-20rem] left-[-20rem] h-[40rem] w-[40rem] rounded-full bg-primary/10 blur-[150px]" />
+         <div className="absolute bottom-[-20rem] right-[-20rem] h-[40rem] w-[40rem] rounded-full bg-accent/10 blur-[150px]" />
+       </div>
+
       <div className="container relative z-10 mx-auto px-4 text-center">
         <div className="py-20 md:py-32">
           <div className="mx-auto max-w-4xl">

@@ -14,9 +14,9 @@ export default function Footer() {
             <span className="font-bold text-lg font-headline">{t('companyName')}</span>
           </div>
           <div className="flex gap-4 mt-4 md:mt-0">
-            <Link href="#" className="text-muted-foreground hover:text-primary"><Twitter className="h-5 w-5" /></Link>
-            <Link href="#" className="text-muted-foreground hover:text-primary"><Linkedin className="h-5 w-5" /></Link>
-            <Link href="#" className="text-muted-foreground hover:text-primary"><Github className="h-5 w-5" /></Link>
+            <Link href="#" className="text-muted-foreground hover:text-primary" aria-label="Follow us on Twitter"><Twitter className="h-5 w-5" /></Link>
+            <Link href="#" className="text-muted-foreground hover:text-primary" aria-label="Follow us on LinkedIn"><Linkedin className="h-5 w-5" /></Link>
+            <Link href="#" className="text-muted-foreground hover:text-primary" aria-label="Check out our Github"><Github className="h-5 w-5" /></Link>
           </div>
         </div>
         <div className="mt-8 text-center text-sm text-muted-foreground border-t pt-8">

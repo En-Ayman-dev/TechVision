@@ -34,6 +34,7 @@ export default function AboutSection() {
               height={400}
               className="rounded-lg shadow-xl"
               data-ai-hint="team collaboration"
+              priority
             />
           </div>
         </div>

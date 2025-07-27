@@ -1,6 +1,3 @@
-
-"use client";
-
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -10,26 +7,16 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import type { Testimonial } from '@/lib/types';
-import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { getTranslations } from 'next-intl/server';
 import { getTestimonialsAction } from '@/app/actions';
-import { Skeleton } from '../ui/skeleton';
 
-export default function TestimonialsSection() {
-  const t = useTranslations('TestimonialsSection');
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export default async function TestimonialsSection() {
+  const t = await getTranslations('TestimonialsSection');
+  const testimonials = await getTestimonialsAction();
 
-  useEffect(() => {
-    async function loadTestimonials() {
-      setIsLoading(true);
-      const fetchedTestimonials = await getTestimonialsAction();
-      setTestimonials(fetchedTestimonials);
-      setIsLoading(false);
-    }
-    loadTestimonials();
-  }, []);
+  if (!testimonials || testimonials.length === 0) {
+    return null;
+  }
 
   return (
     <section id="testimonials" className="bg-secondary/50">
@@ -48,45 +35,27 @@ export default function TestimonialsSection() {
           className="w-full max-w-4xl mx-auto mt-12"
         >
           <CarouselContent>
-            {isLoading ? (
-               Array.from({ length: 3 }).map((_, index) => (
-                <CarouselItem key={index}>
-                    <div className="p-1">
-                        <Card>
-                            <CardContent className="flex flex-col items-center text-center p-8">
-                                <Skeleton className="h-20 w-20 rounded-full mb-4" />
-                                <Skeleton className="h-5 w-full mb-4" />
-                                <Skeleton className="h-5 w-3/4 mb-4" />
-                                <Skeleton className="h-6 w-1/3 mb-1" />
-                                <Skeleton className="h-4 w-1/4" />
-                            </CardContent>
-                        </Card>
-                    </div>
-                </CarouselItem>
-               ))
-            ) : (
-                testimonials.map((testimonial, index) => (
-                <CarouselItem key={index}>
-                    <div className="p-1">
-                    <Card>
-                        <CardContent className="flex flex-col items-center text-center p-8">
-                        <Image
-                            src={testimonial.image}
-                            alt={testimonial.author}
-                            width={80}
-                            height={80}
-                            className="rounded-full mb-4"
-                            data-ai-hint={testimonial.dataAiHint}
-                        />
-                        <p className="text-lg italic text-foreground mb-4">"{testimonial.quote}"</p>
-                        <h3 className="font-semibold text-lg font-headline">{testimonial.author}</h3>
-                        <p className="text-muted-foreground">{testimonial.role}</p>
-                        </CardContent>
-                    </Card>
-                    </div>
-                </CarouselItem>
-                ))
-            )}
+            {testimonials.map((testimonial, index) => (
+            <CarouselItem key={index}>
+                <div className="p-1">
+                <Card>
+                    <CardContent className="flex flex-col items-center text-center p-8">
+                    <Image
+                        src={testimonial.image}
+                        alt={testimonial.author}
+                        width={80}
+                        height={80}
+                        className="rounded-full mb-4"
+                        data-ai-hint={testimonial.dataAiHint}
+                    />
+                    <p className="text-lg italic text-foreground mb-4">"{testimonial.quote}"</p>
+                    <h3 className="font-semibold text-lg font-headline">{testimonial.author}</h3>
+                    <p className="text-muted-foreground">{testimonial.role}</p>
+                    </CardContent>
+                </Card>
+                </div>
+            </CarouselItem>
+            ))}
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
