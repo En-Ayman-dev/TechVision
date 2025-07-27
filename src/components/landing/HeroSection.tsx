@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import {useTranslations} from 'next-intl';
 
 export default function HeroSection() {
+  const t = useTranslations('HeroSection');
+
   return (
     <section id="hero" className="relative overflow-hidden bg-background">
       <div className="absolute inset-0 z-0">
@@ -13,20 +16,20 @@ export default function HeroSection() {
         <div className="py-20 md:py-32">
           <div className="mx-auto max-w-4xl">
             <h1 className="text-4xl font-bold tracking-tight font-headline sm:text-5xl md:text-6xl lg:text-7xl">
-              Innovate. Create. Elevate.
+              {t('title')}
             </h1>
             <p className="mt-6 text-lg leading-8 text-muted-foreground sm:text-xl">
-              TechVision is your strategic partner in navigating the digital landscape. We build cutting-edge solutions that drive growth and transform businesses.
+              {t('subtitle')}
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button size="lg" asChild>
                 <Link href="#services">
-                  Explore Our Services
+                  {t('exploreServices')}
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link href="#portfolio">
-                  See Our Work <ArrowRight className="ml-2 h-5 w-5" />
+                  {t('seeOurWork')} <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
             </div>

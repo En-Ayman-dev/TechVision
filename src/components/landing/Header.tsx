@@ -7,15 +7,24 @@ import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './ThemeToggle';
 import { cn } from '@/lib/utils';
 import type { NavItem } from '@/lib/types';
-
-const navItems: NavItem[] = [
-  { label: 'About', href: '#about' },
-  { label: 'Services', href: '#services' },
-  { label: 'Portfolio', href: '#portfolio' },
-  { label: 'Contact', href: '#contact' },
-];
+import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
+  const t = useTranslations('Header');
+  const pathname = usePathname();
+  const currentLocale = pathname.split('/')[1];
+  const otherLocale = currentLocale === 'en' ? 'ar' : 'en';
+  const newPathname = `/${otherLocale}${pathname.substring(3)}`;
+
+
+  const navItems: NavItem[] = [
+    { label: t('about'), href: '#about' },
+    { label: t('services'), href: '#services' },
+    { label: t('portfolio'), href: '#portfolio' },
+    { label: t('contact'), href: '#contact' },
+  ];
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -46,9 +55,14 @@ export default function Header() {
             ))}
           </nav>
           <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1">
+              <Link href={newPathname} locale="en" className={cn("text-sm font-medium", )}>EN</Link>
+              <span>/</span>
+              <Link href={newPathname} locale="ar" className="text-sm font-medium">AR</Link>
+            </div>
             <ThemeToggle />
             <Button className="hidden md:flex" asChild>
-              <Link href="#contact">Get a Quote</Link>
+              <Link href="#contact">{t('getAQuote')}</Link>
             </Button>
             <Button
               variant="ghost"
@@ -76,7 +90,7 @@ export default function Header() {
               </Link>
             ))}
             <Button asChild>
-              <Link href="#contact" onClick={() => setIsMenuOpen(false)}>Get a Quote</Link>
+              <Link href="#contact" onClick={() => setIsMenuOpen(false)}>{t('getAQuote')}</Link>
             </Button>
           </nav>
         </div>
