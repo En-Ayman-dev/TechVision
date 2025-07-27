@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/hooks/use-theme";
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/hooks/use-auth";
 import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminShell from "@/components/admin/AdminShell";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,12 +28,9 @@ export default function AdminLayout({
       disableTransitionOnChange
     >
       <AuthProvider>
-        <div className="flex min-h-screen">
-          <AdminSidebar />
-          <main className="flex-1 p-4 md:p-8 bg-muted/40">
-            {children}
-          </main>
-        </div>
+        <AdminShell>
+          {children}
+        </AdminShell>
         <Toaster />
       </AuthProvider>
     </ThemeProvider>
