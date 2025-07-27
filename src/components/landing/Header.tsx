@@ -13,9 +13,14 @@ import { usePathname } from 'next/navigation';
 export default function Header() {
   const t = useTranslations('Header');
   const pathname = usePathname();
-  const currentLocale = pathname.split('/')[1];
+  const currentLocale = pathname.split('/')[1] || 'en';
   const otherLocale = currentLocale === 'en' ? 'ar' : 'en';
-  const newPathname = `/${otherLocale}${pathname.substring(3)}`;
+
+  // Make sure to remove the locale prefix for the new pathname
+  const pathWithoutLocale = pathname.startsWith(`/${currentLocale}`) 
+    ? pathname.substring(`/${currentLocale}`.length)
+    : pathname;
+  const newPathname = `/${otherLocale}${pathWithoutLocale || '/'}`;
 
 
   const navItems: NavItem[] = [
@@ -56,9 +61,9 @@ export default function Header() {
           </nav>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
-              <Link href={newPathname} locale="en" className={cn("text-sm font-medium", )}>EN</Link>
+              <Link href={newPathname} className={cn("text-sm font-medium", )}>EN</Link>
               <span>/</span>
-              <Link href={newPathname} locale="ar" className="text-sm font-medium">AR</Link>
+              <Link href={newPathname} className="text-sm font-medium">AR</Link>
             </div>
             <ThemeToggle />
             <Button className="hidden md:flex" asChild>
