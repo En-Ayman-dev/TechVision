@@ -17,14 +17,7 @@
     "rightsReserved": "All rights reserved."
   },
   "PartnersSection": {
-    "title": "Trusted by the world’s most innovative teams",
-    "partners": {
-      "innovateCorp": "InnovateCorp",
-      "quantumLeap": "QuantumLeap",
-      "stellarSolutions": "Stellar Solutions",
-      "synthAI": "SynthAI",
-      "futureWorks": "FutureWorks"
-    }
+    "title": "Trusted by the world’s most innovative teams"
   },
   "AboutSection": {
     "title": "About TechVision",
@@ -37,33 +30,7 @@
   },
   "ServicesSection": {
     "title": "Our Services",
-    "subtitle": "We offer a comprehensive suite of technology services designed to help you achieve your business goals.",
-    "services": {
-      "web": {
-        "title": "Web Development",
-        "description": "Creating responsive and high-performance websites and web applications tailored to your needs."
-      },
-      "cloud": {
-        "title": "Cloud Solutions",
-        "description": "Leveraging cloud infrastructure for scalable, secure, and efficient business operations."
-      },
-      "design": {
-        "title": "UI/UX Design",
-        "description": "Designing intuitive and beautiful user interfaces that enhance user engagement and satisfaction."
-      },
-      "data": {
-        "title": "Data Engineering",
-        "description": "Building robust data pipelines and architectures to turn raw data into actionable insights."
-      },
-      "security": {
-        "title": "Cybersecurity",
-        "description": "Protecting your digital assets with advanced security protocols and threat mitigation strategies."
-      },
-      "analytics": {
-        "title": "Business Analytics",
-        "description": "Providing data-driven insights to help you make informed decisions and drive business growth."
-      }
-    }
+    "subtitle": "We offer a comprehensive suite of technology services designed to help you achieve your business goals."
   },
   "WhyChooseUsSection": {
     "title": "Why Choose TechVision?",
@@ -99,76 +66,15 @@
       "design": "Design",
       "data": "Data",
       "security": "Security"
-    },
-    "projects": {
-      "ecommerce": {
-        "title": "E-commerce Platform",
-        "description": "A scalable online store with a modern UI."
-      },
-      "cloud": {
-        "title": "Cloud Migration",
-        "description": "Migrated legacy systems to a public cloud."
-      },
-      "design": {
-        "title": "Mobile App UI/UX",
-        "description": "Redesigned a popular fitness application."
-      },
-      "data": {
-        "title": "Analytics Dashboard",
-        "description": "A real-time data visualization tool."
-      },
-      "corp": {
-        "title": "Corporate Website",
-        "description": "A sleek and professional site for a finance firm."
-      },
-      "security": {
-        "title": "Security Audit",
-        "description": "Comprehensive security audit for a fintech startup."
-      }
     }
   },
   "TeamSection": {
     "title": "Meet Our Team",
-    "subtitle": "The brilliant minds behind our success.",
-    "members": {
-      "jane": {
-        "name": "Jane Doe",
-        "role": "CEO & Founder"
-      },
-      "john": {
-        "name": "John Smith",
-        "role": "CTO"
-      },
-      "emily": {
-        "name": "Emily White",
-        "role": "Lead Designer"
-      },
-      "michael": {
-        "name": "Michael Brown",
-        "role": "Lead Developer"
-      }
-    }
+    "subtitle": "The brilliant minds behind our success."
   },
   "TestimonialsSection": {
     "title": "What Our Clients Say",
-    "subtitle": "We've helped businesses of all sizes achieve their goals. Here's what they have to say.",
-    "testimonials": {
-      "alex": {
-        "quote": "TechVision transformed our business. Their team is professional, knowledgeable, and dedicated to delivering results. We couldn't be happier with our new platform.",
-        "author": "Alex Johnson",
-        "role": "CEO, InnovateCorp"
-      },
-      "sarah": {
-        "quote": "The best tech partner we've ever worked with. Their attention to detail and commitment to quality is unparalleled. Highly recommended!",
-        "author": "Sarah Lee",
-        "role": "CTO, QuantumLeap"
-      },
-      "david": {
-        "quote": "From UI/UX design to backend development, TechVision delivered excellence at every stage. They are true experts in their field.",
-        "author": "David Chen",
-        "role": "Founder, Stellar Solutions"
-      }
-    }
+    "subtitle": "We've helped businesses of all sizes achieve their goals. Here's what they have to say."
   },
   "FaqSection": {
     "title": "Frequently Asked Questions",

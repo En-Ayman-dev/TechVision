@@ -33,9 +33,10 @@ const partnerSchema = z.object({
   id: z.number().optional(),
   name: z.string().min(2, "Name must be at least 2 characters."),
   logo: z.string().min(1, "Logo is required."),
+  dataAiHint: z.string().optional(),
 });
 
-const iconOptions = ["Globe", "CircuitBoard", "Rocket", "Bot"];
+const iconOptions = ["Globe", "CircuitBoard", "Rocket", "Bot", "Building"];
 
 export function PartnerForm({ isOpen, onOpenChange, partner, onSubmit }: PartnerFormProps) {
   const [isPending, startTransition] = useTransition();
@@ -45,6 +46,7 @@ export function PartnerForm({ isOpen, onOpenChange, partner, onSubmit }: Partner
     defaultValues: {
       name: "",
       logo: "Globe",
+      dataAiHint: "",
     },
   });
 
@@ -55,6 +57,7 @@ export function PartnerForm({ isOpen, onOpenChange, partner, onSubmit }: Partner
       form.reset({
         name: "",
         logo: "Globe",
+        dataAiHint: "",
       });
     }
   }, [partner, form, isOpen]);
@@ -107,6 +110,10 @@ export function PartnerForm({ isOpen, onOpenChange, partner, onSubmit }: Partner
                 </SelectContent>
             </Select>
             {form.formState.errors.logo && <p className="text-destructive text-sm">{form.formState.errors.logo.message}</p>}
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="dataAiHint">AI Image Hint</Label>
+            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder="e.g., 'corporate building'"/>
           </div>
           <DialogFooter>
             <Button type="submit" disabled={isPending}>

@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   MessageSquare,
-  Briefcase,
   Users,
   LogOut,
   Code,
@@ -15,6 +14,8 @@ import {
   Settings,
   Handshake,
   Palette,
+  LayoutTemplate,
+  Briefcase
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -24,9 +25,9 @@ import { ThemeToggle } from "../landing/ThemeToggle";
 const navItems = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/admin/messages", icon: MessageSquare, label: "Messages" },
-  { href: "/admin/projects", icon: Briefcase, label: "Projects" },
+  { href: "/admin/projects", icon: LayoutTemplate, label: "Projects" },
   { href: "/admin/team", icon: Users, label: "Team" },
-  { href: "/admin/services", icon: Sparkles, label: "Services" },
+  { href: "/admin/services", icon: Briefcase, label: "Services" },
   { href: "/admin/testimonials", icon: Star, label: "Testimonials" },
   { href: "/admin/partners", icon: Handshake, label: "Partners" },
   { href: "/admin/settings", icon: Settings, label: "Site Settings" },

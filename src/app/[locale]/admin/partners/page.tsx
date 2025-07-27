@@ -18,7 +18,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { deletePartnerAction, getPartnersAction } from "@/app/actions";
-import { PlusCircle, MoreHorizontal, FilePen, Trash2, Globe, CircuitBoard, Rocket, Bot } from "lucide-react";
+import { PlusCircle, MoreHorizontal, FilePen, Trash2, Globe, CircuitBoard, Rocket, Bot, Building } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -48,7 +48,8 @@ const iconMap: { [key: string]: React.ElementType } = {
   Globe,
   CircuitBoard,
   Rocket,
-  Bot
+  Bot,
+  Building,
 };
 
 export default function PartnersPage() {

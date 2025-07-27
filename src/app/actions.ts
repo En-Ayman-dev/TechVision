@@ -41,6 +41,7 @@ const serviceSchema = z.object({
   icon: z.string().min(2, "Icon name is required."),
   title: z.string().min(2, "Title must be at least 2 characters."),
   description: z.string().min(10, "Description must be at least 10 characters."),
+  dataAiHint: z.string().optional(),
 });
 
 const testimonialSchema = z.object({
@@ -65,6 +66,7 @@ const partnerSchema = z.object({
   id: z.number().optional(),
   name: z.string().min(2, "Name must be at least 2 characters."),
   logo: z.string().min(2, "Logo name is required."),
+  dataAiHint: z.string().optional(),
 });
 
 const hslColorRegex = /^(\d{1,3})\s+(\d{1,3})%\s+(\d{1,3})%$/;
@@ -164,8 +166,8 @@ export async function sendContactMessageAction(data: z.infer<typeof contactSchem
     const newMessage: Message = { ...validatedFields.data, id: new Date().getTime(), submittedAt: new Date().toISOString() };
     messages.push(newMessage);
     await writeJsonFile(messagesFilePath, messages);
-    revalidatePath("/admin/messages");
-    revalidatePath("/admin");
+    revalidatePath("/[locale]/admin/messages", "page");
+    revalidatePath("/[locale]/admin", "page");
     return { success: true, message: "Message sent!" };
   } catch (error) {
     return { success: false, message: "An unexpected error occurred." };
@@ -176,8 +178,8 @@ export async function deleteMessageAction(id: number) {
   try {
     const messages = await readJsonFile<Message[]>(messagesFilePath);
     await deleteItem(messagesFilePath, id, messages);
-    revalidatePath("/admin/messages");
-    revalidatePath("/admin");
+    revalidatePath("/[locale]/admin/messages", "page");
+    revalidatePath("/[locale]/admin", "page");
     return { success: true, message: "Message deleted." };
   } catch (error) {
     return { success: false, message: "Failed to delete message." };
@@ -210,9 +212,9 @@ export async function addProjectAction(data: z.infer<typeof projectSchema>) {
   try {
     const projects = await readJsonFile<Project[]>(projectsFilePath);
     await createItem<Project>(projectsFilePath, validatedFields.data, projects);
-    revalidatePath("/admin/projects");
-    revalidatePath("/");
-    revalidatePath("/admin");
+    revalidatePath("/[locale]/admin/projects", "page");
+    revalidatePath("/", "layout");
+    revalidatePath("/[locale]/admin", "page");
     return { success: true, message: "Project added successfully." };
   } catch (error) {
     return { success: false, message: "Failed to add project." };
@@ -226,8 +228,8 @@ export async function updateProjectAction(data: z.infer<typeof projectSchema>) {
   try {
     const projects = await readJsonFile<Project[]>(projectsFilePath);
     await updateItem<Project>(projectsFilePath, validatedFields.data, projects);
-    revalidatePath("/admin/projects");
-    revalidatePath("/");
+    revalidatePath("/[locale]/admin/projects", "page");
+    revalidatePath("/", "layout");
     return { success: true, message: "Project updated successfully." };
   } catch (error) {
     return { success: false, message: "Failed to update project." };
@@ -238,9 +240,9 @@ export async function deleteProjectAction(id: number) {
   try {
     const projects = await readJsonFile<Project[]>(projectsFilePath);
     await deleteItem(projectsFilePath, id, projects);
-    revalidatePath("/admin/projects");
-    revalidatePath("/");
-    revalidatePath("/admin");
+    revalidatePath("/[locale]/admin/projects", "page");
+    revalidatePath("/", "layout");
+    revalidatePath("/[locale]/admin", "page");
     return { success: true, message: "Project deleted." };
   } catch (error) {
     return { success: false, message: "Failed to delete project." };
@@ -260,9 +262,9 @@ export async function addTeamMemberAction(data: z.infer<typeof teamMemberSchema>
     try {
         const teamMembers = await readJsonFile<TeamMember[]>(teamFilePath);
         await createItem<TeamMember>(teamFilePath, validatedFields.data, teamMembers);
-        revalidatePath("/admin/team");
-        revalidatePath("/");
-        revalidatePath("/admin");
+        revalidatePath("/[locale]/admin/team", "page");
+        revalidatePath("/", "layout");
+        revalidatePath("/[locale]/admin", "page");
         return { success: true, message: "Team member added successfully." };
     } catch (error) {
         return { success: false, message: "Failed to add team member." };
@@ -276,8 +278,8 @@ export async function updateTeamMemberAction(data: z.infer<typeof teamMemberSche
     try {
         const teamMembers = await readJsonFile<TeamMember[]>(teamFilePath);
         await updateItem<TeamMember>(teamFilePath, validatedFields.data, teamMembers);
-        revalidatePath("/admin/team");
-        revalidatePath("/");
+        revalidatePath("/[locale]/admin/team", "page");
+        revalidatePath("/", "layout");
         return { success: true, message: "Team member updated successfully." };
     } catch (error) {
         return { success: false, message: "Failed to update team member." };
@@ -288,9 +290,9 @@ export async function deleteTeamMemberAction(id: number) {
     try {
         const teamMembers = await readJsonFile<TeamMember[]>(teamFilePath);
         await deleteItem(teamFilePath, id, teamMembers);
-        revalidatePath("/admin/team");
-        revalidatePath("/");
-        revalidatePath("/admin");
+        revalidatePath("/[locale]/admin/team", "page");
+        revalidatePath("/", "layout");
+        revalidatePath("/[locale]/admin", "page");
         return { success: true, message: "Team member deleted." };
     } catch (error) {
         return { success: false, message: "Failed to delete team member." };
@@ -310,8 +312,8 @@ export async function addServiceAction(data: z.infer<typeof serviceSchema>) {
   try {
     const services = await readJsonFile<Service[]>(servicesFilePath);
     await createItem<Service>(servicesFilePath, validatedFields.data, services);
-    revalidatePath("/admin/services");
-    revalidatePath("/");
+    revalidatePath("/[locale]/admin/services", "page");
+    revalidatePath("/", "layout");
     return { success: true, message: "Service added successfully." };
   } catch (error) {
     return { success: false, message: "Failed to add service." };
@@ -325,8 +327,8 @@ export async function updateServiceAction(data: z.infer<typeof serviceSchema>) {
   try {
     const services = await readJsonFile<Service[]>(servicesFilePath);
     await updateItem<Service>(servicesFilePath, validatedFields.data, services);
-    revalidatePath("/admin/services");
-    revalidatePath("/");
+    revalidatePath("/[locale]/admin/services", "page");
+    revalidatePath("/", "layout");
     return { success: true, message: "Service updated successfully." };
   } catch (error) {
     return { success: false, message: "Failed to update service." };
@@ -337,8 +339,8 @@ export async function deleteServiceAction(id: number) {
   try {
     const services = await readJsonFile<Service[]>(servicesFilePath);
     await deleteItem(servicesFilePath, id, services);
-    revalidatePath("/admin/services");
-    revalidatePath("/");
+    revalidatePath("/[locale]/admin/services", "page");
+    revalidatePath("/", "layout");
     return { success: true, message: "Service deleted." };
   } catch (error) {
     return { success: false, message: "Failed to delete service." };
@@ -357,8 +359,8 @@ export async function addTestimonialAction(data: z.infer<typeof testimonialSchem
     try {
         const testimonials = await readJsonFile<Testimonial[]>(testimonialsFilePath);
         await createItem<Testimonial>(testimonialsFilePath, validatedFields.data, testimonials);
-        revalidatePath("/admin/testimonials");
-        revalidatePath("/");
+        revalidatePath("/[locale]/admin/testimonials", "page");
+        revalidatePath("/", "layout");
         return { success: true, message: "Testimonial added successfully." };
     } catch (error) {
         return { success: false, message: "Failed to add testimonial." };
@@ -372,8 +374,8 @@ export async function updateTestimonialAction(data: z.infer<typeof testimonialSc
     try {
         const testimonials = await readJsonFile<Testimonial[]>(testimonialsFilePath);
         await updateItem<Testimonial>(testimonialsFilePath, validatedFields.data, testimonials);
-        revalidatePath("/admin/testimonials");
-        revalidatePath("/");
+        revalidatePath("/[locale]/admin/testimonials", "page");
+        revalidatePath("/", "layout");
         return { success: true, message: "Testimonial updated successfully." };
     } catch (error) {
         return { success: false, message: "Failed to update testimonial." };
@@ -384,8 +386,8 @@ export async function deleteTestimonialAction(id: number) {
     try {
         const testimonials = await readJsonFile<Testimonial[]>(testimonialsFilePath);
         await deleteItem(testimonialsFilePath, id, testimonials);
-        revalidatePath("/admin/testimonials");
-        revalidatePath("/");
+        revalidatePath("/[locale]/admin/testimonials", "page");
+        revalidatePath("/", "layout");
         return { success: true, message: "Testimonial deleted." };
     } catch (error) {
         return { success: false, message: "Failed to delete testimonial." };
@@ -404,8 +406,8 @@ export async function updateSiteSettingsAction(data: z.infer<typeof siteSettings
 
     try {
         await writeJsonFile<SiteSettings>(settingsFilePath, validatedFields.data);
-        revalidatePath("/admin/settings");
-        revalidatePath("/");
+        revalidatePath("/[locale]/admin/settings", "page");
+        revalidatePath("/", "layout");
         return { success: true, message: "Settings updated successfully." };
     } catch (error) {
         return { success: false, message: "Failed to update settings." };
@@ -424,8 +426,8 @@ export async function addPartnerAction(data: z.infer<typeof partnerSchema>) {
   try {
     const partners = await readJsonFile<Partner[]>(partnersFilePath);
     await createItem<Partner>(partnersFilePath, validatedFields.data, partners);
-    revalidatePath("/admin/partners");
-    revalidatePath("/");
+    revalidatePath("/[locale]/admin/partners", "page");
+    revalidatePath("/", "layout");
     return { success: true, message: "Partner added successfully." };
   } catch (error) {
     return { success: false, message: "Failed to add partner." };
@@ -439,8 +441,8 @@ export async function updatePartnerAction(data: z.infer<typeof partnerSchema>) {
   try {
     const partners = await readJsonFile<Partner[]>(partnersFilePath);
     await updateItem<Partner>(partnersFilePath, validatedFields.data, partners);
-    revalidatePath("/admin/partners");
-    revalidatePath("/");
+    revalidatePath("/[locale]/admin/partners", "page");
+    revalidatePath("/", "layout");
     return { success: true, message: "Partner updated successfully." };
   } catch (error) {
     return { success: false, message: "Failed to update partner." };
@@ -451,8 +453,8 @@ export async function deletePartnerAction(id: number) {
   try {
     const partners = await readJsonFile<Partner[]>(partnersFilePath);
     await deleteItem(partnersFilePath, id, partners);
-    revalidatePath("/admin/partners");
-    revalidatePath("/");
+    revalidatePath("/[locale]/admin/partners", "page");
+    revalidatePath("/", "layout");
     return { success: true, message: "Partner deleted." };
   } catch (error) {
     return { success: false, message: "Failed to delete partner." };

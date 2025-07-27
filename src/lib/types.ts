@@ -10,6 +10,7 @@ export interface Service {
   icon: string;
   title: string;
   description: string;
+  dataAiHint?: string;
 }
 
 export interface Stat {
@@ -56,6 +57,7 @@ export interface Partner {
   id: number;
   name: string;
   logo: string;
+  dataAiHint?: string;
 }
 
 export interface Message {

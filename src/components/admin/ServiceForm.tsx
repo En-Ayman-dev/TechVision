@@ -35,6 +35,7 @@ const serviceSchema = z.object({
   icon: z.string().min(1, "Icon is required."),
   title: z.string().min(2, "Title must be at least 2 characters."),
   description: z.string().min(10, "Description must be at least 10 characters."),
+  dataAiHint: z.string().optional(),
 });
 
 const iconOptions = ["Code", "Cloud", "PenTool", "Database", "Shield", "LineChart"];
@@ -48,6 +49,7 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
       icon: "Code",
       title: "",
       description: "",
+      dataAiHint: "",
     },
   });
 
@@ -59,6 +61,7 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
         icon: "Code",
         title: "",
         description: "",
+        dataAiHint: "",
       });
     }
   }, [service, form, isOpen]);
@@ -116,6 +119,10 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
             <Label htmlFor="description">Description</Label>
             <Textarea id="description" {...form.register("description")} />
             {form.formState.errors.description && <p className="text-destructive text-sm">{form.formState.errors.description.message}</p>}
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="dataAiHint">AI Image Hint</Label>
+            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder="e.g., 'cloud security'"/>
           </div>
           <DialogFooter>
             <Button type="submit" disabled={isPending}>
