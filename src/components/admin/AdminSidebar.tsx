@@ -23,15 +23,15 @@ import { useLocale } from "next-intl";
 import { ThemeToggle } from "../landing/ThemeToggle";
 
 const navItems = [
-  { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/admin/messages", icon: MessageSquare, label: "Messages" },
-  { href: "/admin/projects", icon: LayoutTemplate, label: "Projects" },
-  { href: "/admin/team", icon: Users, label: "Team" },
-  { href: "/admin/services", icon: Briefcase, label: "Services" },
-  { href: "/admin/testimonials", icon: Star, label: "Testimonials" },
-  { href: "/admin/partners", icon: Handshake, label: "Partners" },
-  { href: "/admin/settings", icon: Settings, label: "Site Settings" },
-  { href: "/admin/theme", icon: Palette, label: "Theme" },
+  { href: "/ar/admin", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/ar/admin/messages", icon: MessageSquare, label: "Messages" },
+  { href: "/ar/admin/projects", icon: LayoutTemplate, label: "Projects" },
+  { href: "/ar/admin/team", icon: Users, label: "Team" },
+  { href: "/ar/admin/services", icon: Briefcase, label: "Services" },
+  { href: "/ar/admin/testimonials", icon: Star, label: "Testimonials" },
+  { href: "/ar/admin/partners", icon: Handshake, label: "Partners" },
+  { href: "/ar/admin/settings", icon: Settings, label: "Site Settings" },
+  { href: "/ar/admin/theme", icon: Palette, label: "Theme" },
 ];
 
 export default function AdminSidebar() {
