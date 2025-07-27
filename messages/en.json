@@ -134,5 +134,10 @@
   "WelcomeNotification": {
     "title": "Welcome to TechVision!",
     "description": "We're glad to have you here. Explore our work and services."
+  },
+  "Metadata": {
+    "title": "TechVision | Innovative Technology & Digital Solutions",
+    "description": "TechVision is a leading technology partner specializing in web development, cloud solutions, UI/UX design, and cybersecurity. Let us elevate your business.",
+    "keywords": "TechVision, Web Development, Cloud Solutions, UI/UX Design, Cybersecurity, Next.js, React, Digital Transformation"
   }
 }
