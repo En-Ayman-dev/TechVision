@@ -1,43 +1,37 @@
+
+"use client";
+
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Code, Cloud, PenTool, Database, Shield, LineChart } from 'lucide-react';
+import { Code, Cloud, PenTool, Database, Shield, LineChart, type LucideProps, type LucideIcon } from 'lucide-react';
 import type { Service } from '@/lib/types';
 import { useTranslations } from "next-intl";
+import { getServicesAction } from "@/app/actions";
+import { useEffect, useState } from "react";
+import { Skeleton } from "../ui/skeleton";
+
+const iconMap: { [key: string]: React.ElementType } = {
+  Code,
+  Cloud,
+  PenTool,
+  Database,
+  Shield,
+  LineChart,
+};
 
 export default function ServicesSection() {
   const t = useTranslations('ServicesSection');
+  const [services, setServices] = useState<Service[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const services: Service[] = [
-    {
-      icon: Code,
-      title: t('services.web.title'),
-      description: t('services.web.description'),
-    },
-    {
-      icon: Cloud,
-      title: t('services.cloud.title'),
-      description: t('services.cloud.description'),
-    },
-    {
-      icon: PenTool,
-      title: t('services.design.title'),
-      description: t('services.design.description'),
-    },
-    {
-      icon: Database,
-      title: t('services.data.title'),
-      description: t('services.data.description'),
-    },
-    {
-      icon: Shield,
-      title: t('services.security.title'),
-      description: t('services.security.description'),
-    },
-    {
-      icon: LineChart,
-      title: t('services.analytics.title'),
-      description: t('services.analytics.description'),
-    },
-  ];
+  useEffect(() => {
+    async function loadServices() {
+      setIsLoading(true);
+      const fetchedServices = await getServicesAction();
+      setServices(fetchedServices);
+      setIsLoading(false);
+    }
+    loadServices();
+  }, []);
 
   return (
     <section id="services" className="bg-secondary/50">
@@ -49,17 +43,33 @@ export default function ServicesSection() {
           </p>
         </div>
         <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {services.map((service) => (
-            <Card key={service.title} className="text-center hover:shadow-lg transition-shadow duration-300">
-              <CardHeader>
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4">
-                  <service.icon className="h-6 w-6" />
-                </div>
-                <CardTitle className="font-headline">{service.title}</CardTitle>
-                <CardDescription>{service.description}</CardDescription>
-              </CardHeader>
-            </Card>
-          ))}
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <Card key={i} className="text-center">
+                <CardHeader>
+                    <Skeleton className="h-12 w-12 rounded-full mx-auto mb-4" />
+                    <Skeleton className="h-6 w-3/4 mx-auto mb-2" />
+                    <Skeleton className="h-4 w-full mx-auto" />
+                    <Skeleton className="h-4 w-5/6 mx-auto" />
+                </CardHeader>
+              </Card>
+            ))
+          ) : (
+            services.map((service) => {
+              const IconComponent = iconMap[service.icon] || Code;
+              return (
+                <Card key={service.title} className="text-center hover:shadow-lg transition-shadow duration-300">
+                  <CardHeader>
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4">
+                      <IconComponent className="h-6 w-6" />
+                    </div>
+                    <CardTitle className="font-headline">{service.title}</CardTitle>
+                    <CardDescription>{service.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              );
+            })
+          )}
         </div>
       </div>
     </section>

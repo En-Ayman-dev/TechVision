@@ -1,0 +1,217 @@
+
+"use client";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
+import { deleteServiceAction, getServicesAction } from "@/app/actions";
+import { PlusCircle, MoreHorizontal, FilePen, Trash2, Code, Cloud, PenTool, Database, Shield, LineChart } from "lucide-react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useEffect, useState, useTransition } from "react";
+import type { Service } from "@/lib/types";
+import { ServiceForm } from "@/components/admin/ServiceForm";
+import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const iconMap: { [key: string]: React.ElementType } = {
+  Code,
+  Cloud,
+  PenTool,
+  Database,
+  Shield,
+  LineChart,
+};
+
+export default function ServicesPage() {
+  const [services, setServices] = useState<Service[]>([]);
+  const [isPending, startTransition] = useTransition();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const { toast } = useToast();
+
+  const fetchServices = () => {
+    startTransition(async () => {
+      const fetchedServices = await getServicesAction();
+      setServices(fetchedServices);
+    });
+  };
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const handleAddClick = () => {
+    setSelectedService(null);
+    setIsFormOpen(true);
+  };
+
+  const handleEditClick = (service: Service) => {
+    setSelectedService(service);
+    setIsFormOpen(true);
+  };
+
+  const handleDelete = (id: number) => {
+    startTransition(async () => {
+      const result = await deleteServiceAction(id);
+      if (result.success) {
+        fetchServices();
+        toast({
+          title: "Service Deleted",
+          description: "The service has been successfully deleted.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    });
+  };
+
+  const onFormSubmit = () => {
+    fetchServices();
+    setIsFormOpen(false);
+  };
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Manage Services</h1>
+        <Button onClick={handleAddClick}>
+          <PlusCircle className="mr-2 h-5 w-5" />
+          Add Service
+        </Button>
+      </div>
+
+      <ServiceForm
+        isOpen={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        service={selectedService}
+        onSubmit={onFormSubmit}
+      />
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Services List</CardTitle>
+          <CardDescription>
+            Here are all the services you offer.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[50px]">Icon</TableHead>
+                <TableHead>Title</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isPending ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell><Skeleton className="h-6 w-6" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-full" /></TableCell>
+                    <TableCell className="text-right"><Skeleton className="h-8 w-8" /></TableCell>
+                  </TableRow>
+                ))
+              ) : services.length > 0 ? (
+                services.map((service) => {
+                  const IconComponent = iconMap[service.icon] || Code;
+                  return (
+                    <TableRow key={service.id}>
+                      <TableCell>
+                        <IconComponent className="h-5 w-5" />
+                      </TableCell>
+                      <TableCell className="font-medium">{service.title}</TableCell>
+                      <TableCell>{service.description}</TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button aria-haspopup="true" size="icon" variant="ghost">
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">Toggle menu</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem onClick={() => handleEditClick(service)}>
+                              <FilePen className="mr-2 h-4 w-4" />
+                              Edit
+                            </DropdownMenuItem>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete the service.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => handleDelete(service.id)}>
+                                    Continue
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="h-24 text-center">
+                    No services found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

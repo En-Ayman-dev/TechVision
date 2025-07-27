@@ -10,6 +10,9 @@ import {
   Users,
   LogOut,
   Code,
+  Sparkles,
+  Star,
+  Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -22,6 +25,9 @@ const navItems = [
   { href: "/admin/messages", icon: MessageSquare, label: "Messages" },
   { href: "/admin/projects", icon: Briefcase, label: "Projects" },
   { href: "/admin/team", icon: Users, label: "Team" },
+  { href: "/admin/services", icon: Sparkles, label: "Services" },
+  { href: "/admin/testimonials", icon: Star, label: "Testimonials" },
+  { href: "/admin/settings", icon: Settings, label: "Site Settings" },
 ];
 
 export default function AdminSidebar() {

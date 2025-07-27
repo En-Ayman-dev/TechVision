@@ -6,7 +6,8 @@ export interface NavItem {
 }
 
 export interface Service {
-  icon: LucideIcon;
+  id: number;
+  icon: string;
   title: string;
   description: string;
 }
@@ -38,6 +39,7 @@ export interface TeamMember {
 }
 
 export interface Testimonial {
+  id: number;
   quote: string;
   author: string;
   role: string;
@@ -70,4 +72,13 @@ export interface Project {
   category: string;
   image: string;
   dataAiHint?: string;
+}
+
+export interface SiteSettings {
+    stats: {
+        satisfaction: number;
+        projects: number;
+        experience: number;
+        team: number;
+    }
 }

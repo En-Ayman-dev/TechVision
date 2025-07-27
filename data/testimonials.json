@@ -1,0 +1,27 @@
+
+[
+    {
+        "id": 1,
+        "quote": "TechVision transformed our business. Their team is professional, knowledgeable, and dedicated to delivering results. We couldn't be happier with our new platform.",
+        "author": "Alex Johnson",
+        "role": "CEO, InnovateCorp",
+        "image": "https://placehold.co/100x100.png",
+        "dataAiHint": "happy client"
+    },
+    {
+        "id": 2,
+        "quote": "The best tech partner we've ever worked with. Their attention to detail and commitment to quality is unparalleled. Highly recommended!",
+        "author": "Sarah Lee",
+        "role": "CTO, QuantumLeap",
+        "image": "https://placehold.co/100x100.png",
+        "dataAiHint": "satisfied customer"
+    },
+    {
+        "id": 3,
+        "quote": "From UI/UX design to backend development, TechVision delivered excellence at every stage. They are true experts in their field.",
+        "author": "David Chen",
+        "role": "Founder, Stellar Solutions",
+        "image": "https://placehold.co/100x100.png",
+        "dataAiHint": "smiling person"
+    }
+]

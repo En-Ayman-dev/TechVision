@@ -5,7 +5,7 @@ import { z } from "zod";
 import { suggestFaq } from "@/ai/flows/faq-suggestions";
 import { promises as fs } from 'fs';
 import path from 'path';
-import type { Message, Project, TeamMember } from "@/lib/types";
+import type { Message, Project, TeamMember, Service, Testimonial, SiteSettings } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
 // Schemas
@@ -36,12 +36,39 @@ const teamMemberSchema = z.object({
   dataAiHint: z.string().optional(),
 });
 
+const serviceSchema = z.object({
+  id: z.number().optional(),
+  icon: z.string().min(2, "Icon name is required."),
+  title: z.string().min(2, "Title must be at least 2 characters."),
+  description: z.string().min(10, "Description must be at least 10 characters."),
+});
+
+const testimonialSchema = z.object({
+    id: z.number().optional(),
+    quote: z.string().min(10, "Quote must be at least 10 characters."),
+    author: z.string().min(2, "Author must be at least 2 characters."),
+    role: z.string().min(2, "Role must be at least 2 characters."),
+    image: z.string().url("Image must be a valid URL."),
+    dataAiHint: z.string().optional(),
+});
+
+const siteSettingsSchema = z.object({
+    stats: z.object({
+        satisfaction: z.number().min(0).max(100),
+        projects: z.number().min(0),
+        experience: z.number().min(0),
+        team: z.number().min(0),
+    })
+});
+
 
 // File Paths
 const messagesFilePath = path.join(process.cwd(), 'data', 'messages.json');
 const projectsFilePath = path.join(process.cwd(), 'data', 'projects.json');
 const teamFilePath = path.join(process.cwd(), 'data', 'team.json');
-
+const servicesFilePath = path.join(process.cwd(), 'data', 'services.json');
+const testimonialsFilePath = path.join(process.cwd(), 'data', 'testimonials.json');
+const settingsFilePath = path.join(process.cwd(), 'data', 'settings.json');
 
 // File System Utilities
 async function ensureFileExists(filePath: string, defaultContent: string) {
@@ -57,18 +84,18 @@ async function ensureFileExists(filePath: string, defaultContent: string) {
   }
 }
 
-async function readJsonFile<T>(filePath: string): Promise<T[]> {
-    await ensureFileExists(filePath, '[]');
+async function readJsonFile<T>(filePath: string, isArray = true): Promise<T> {
+    await ensureFileExists(filePath, isArray ? '[]' : '{}');
     try {
         const fileContent = await fs.readFile(filePath, 'utf8');
-        return JSON.parse(fileContent) as T[];
+        return JSON.parse(fileContent) as T;
     } catch (error) {
         console.error(`Error reading ${filePath}:`, error);
-        return [];
+        return (isArray ? [] : {}) as T;
     }
 }
 
-async function writeJsonFile<T>(filePath: string, data: T[]): Promise<void> {
+async function writeJsonFile<T>(filePath: string, data: T): Promise<void> {
     try {
         await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
     } catch (error) {
@@ -100,7 +127,7 @@ async function deleteItem(filePath: string, id: number, items: { id: number }[])
 
 // Message Actions
 export async function getMessagesAction(): Promise<Message[]> {
-  const messages = await readJsonFile<Message>(messagesFilePath);
+  const messages = await readJsonFile<Message[]>(messagesFilePath);
   return messages.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
 }
 
@@ -109,7 +136,7 @@ export async function sendContactMessageAction(data: z.infer<typeof contactSchem
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
-    const messages = await readJsonFile<Message>(messagesFilePath);
+    const messages = await readJsonFile<Message[]>(messagesFilePath);
     const newMessage: Message = { ...validatedFields.data, id: new Date().getTime(), submittedAt: new Date().toISOString() };
     messages.push(newMessage);
     await writeJsonFile(messagesFilePath, messages);
@@ -123,7 +150,7 @@ export async function sendContactMessageAction(data: z.infer<typeof contactSchem
 
 export async function deleteMessageAction(id: number) {
   try {
-    const messages = await readJsonFile<Message>(messagesFilePath);
+    const messages = await readJsonFile<Message[]>(messagesFilePath);
     await deleteItem(messagesFilePath, id, messages);
     revalidatePath("/admin/messages");
     revalidatePath("/admin");
@@ -149,7 +176,7 @@ export async function suggestFaqAction(userInput: string) {
 
 // Project Actions
 export async function getProjectsAction(): Promise<Project[]> {
-  return await readJsonFile<Project>(projectsFilePath);
+  return await readJsonFile<Project[]>(projectsFilePath);
 }
 
 export async function addProjectAction(data: z.infer<typeof projectSchema>) {
@@ -157,7 +184,7 @@ export async function addProjectAction(data: z.infer<typeof projectSchema>) {
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
-    const projects = await readJsonFile<Project>(projectsFilePath);
+    const projects = await readJsonFile<Project[]>(projectsFilePath);
     await createItem<Project>(projectsFilePath, validatedFields.data, projects);
     revalidatePath("/admin/projects");
     revalidatePath("/");
@@ -173,7 +200,7 @@ export async function updateProjectAction(data: z.infer<typeof projectSchema>) {
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
-    const projects = await readJsonFile<Project>(projectsFilePath);
+    const projects = await readJsonFile<Project[]>(projectsFilePath);
     await updateItem<Project>(projectsFilePath, validatedFields.data, projects);
     revalidatePath("/admin/projects");
     revalidatePath("/");
@@ -185,7 +212,7 @@ export async function updateProjectAction(data: z.infer<typeof projectSchema>) {
 
 export async function deleteProjectAction(id: number) {
   try {
-    const projects = await readJsonFile<Project>(projectsFilePath);
+    const projects = await readJsonFile<Project[]>(projectsFilePath);
     await deleteItem(projectsFilePath, id, projects);
     revalidatePath("/admin/projects");
     revalidatePath("/");
@@ -199,7 +226,7 @@ export async function deleteProjectAction(id: number) {
 
 // Team Member Actions
 export async function getTeamAction(): Promise<TeamMember[]> {
-  return await readJsonFile<TeamMember>(teamFilePath);
+  return await readJsonFile<TeamMember[]>(teamFilePath);
 }
 
 export async function addTeamMemberAction(data: z.infer<typeof teamMemberSchema>) {
@@ -207,7 +234,7 @@ export async function addTeamMemberAction(data: z.infer<typeof teamMemberSchema>
     if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
     try {
-        const teamMembers = await readJsonFile<TeamMember>(teamFilePath);
+        const teamMembers = await readJsonFile<TeamMember[]>(teamFilePath);
         await createItem<TeamMember>(teamFilePath, validatedFields.data, teamMembers);
         revalidatePath("/admin/team");
         revalidatePath("/");
@@ -223,7 +250,7 @@ export async function updateTeamMemberAction(data: z.infer<typeof teamMemberSche
     if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
     
     try {
-        const teamMembers = await readJsonFile<TeamMember>(teamFilePath);
+        const teamMembers = await readJsonFile<TeamMember[]>(teamFilePath);
         await updateItem<TeamMember>(teamFilePath, validatedFields.data, teamMembers);
         revalidatePath("/admin/team");
         revalidatePath("/");
@@ -235,7 +262,7 @@ export async function updateTeamMemberAction(data: z.infer<typeof teamMemberSche
 
 export async function deleteTeamMemberAction(id: number) {
     try {
-        const teamMembers = await readJsonFile<TeamMember>(teamFilePath);
+        const teamMembers = await readJsonFile<TeamMember[]>(teamFilePath);
         await deleteItem(teamFilePath, id, teamMembers);
         revalidatePath("/admin/team");
         revalidatePath("/");
@@ -243,5 +270,120 @@ export async function deleteTeamMemberAction(id: number) {
         return { success: true, message: "Team member deleted." };
     } catch (error) {
         return { success: false, message: "Failed to delete team member." };
+    }
+}
+
+
+// Service Actions
+export async function getServicesAction(): Promise<Service[]> {
+  return await readJsonFile<Service[]>(servicesFilePath);
+}
+
+export async function addServiceAction(data: z.infer<typeof serviceSchema>) {
+  const validatedFields = serviceSchema.safeParse(data);
+  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+
+  try {
+    const services = await readJsonFile<Service[]>(servicesFilePath);
+    await createItem<Service>(servicesFilePath, validatedFields.data, services);
+    revalidatePath("/admin/services");
+    revalidatePath("/");
+    return { success: true, message: "Service added successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to add service." };
+  }
+}
+
+export async function updateServiceAction(data: z.infer<typeof serviceSchema>) {
+  const validatedFields = serviceSchema.safeParse(data);
+  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+
+  try {
+    const services = await readJsonFile<Service[]>(servicesFilePath);
+    await updateItem<Service>(servicesFilePath, validatedFields.data, services);
+    revalidatePath("/admin/services");
+    revalidatePath("/");
+    return { success: true, message: "Service updated successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to update service." };
+  }
+}
+
+export async function deleteServiceAction(id: number) {
+  try {
+    const services = await readJsonFile<Service[]>(servicesFilePath);
+    await deleteItem(servicesFilePath, id, services);
+    revalidatePath("/admin/services");
+    revalidatePath("/");
+    return { success: true, message: "Service deleted." };
+  } catch (error) {
+    return { success: false, message: "Failed to delete service." };
+  }
+}
+
+// Testimonial Actions
+export async function getTestimonialsAction(): Promise<Testimonial[]> {
+  return await readJsonFile<Testimonial[]>(testimonialsFilePath);
+}
+
+export async function addTestimonialAction(data: z.infer<typeof testimonialSchema>) {
+    const validatedFields = testimonialSchema.safeParse(data);
+    if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+
+    try {
+        const testimonials = await readJsonFile<Testimonial[]>(testimonialsFilePath);
+        await createItem<Testimonial>(testimonialsFilePath, validatedFields.data, testimonials);
+        revalidatePath("/admin/testimonials");
+        revalidatePath("/");
+        return { success: true, message: "Testimonial added successfully." };
+    } catch (error) {
+        return { success: false, message: "Failed to add testimonial." };
+    }
+}
+
+export async function updateTestimonialAction(data: z.infer<typeof testimonialSchema>) {
+    const validatedFields = testimonialSchema.safeParse(data);
+    if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+
+    try {
+        const testimonials = await readJsonFile<Testimonial[]>(testimonialsFilePath);
+        await updateItem<Testimonial>(testimonialsFilePath, validatedFields.data, testimonials);
+        revalidatePath("/admin/testimonials");
+        revalidatePath("/");
+        return { success: true, message: "Testimonial updated successfully." };
+    } catch (error) {
+        return { success: false, message: "Failed to update testimonial." };
+    }
+}
+
+export async function deleteTestimonialAction(id: number) {
+    try {
+        const testimonials = await readJsonFile<Testimonial[]>(testimonialsFilePath);
+        await deleteItem(testimonialsFilePath, id, testimonials);
+        revalidatePath("/admin/testimonials");
+        revalidatePath("/");
+        return { success: true, message: "Testimonial deleted." };
+    } catch (error) {
+        return { success: false, message: "Failed to delete testimonial." };
+    }
+}
+
+
+// Site Settings Actions
+export async function getSiteSettingsAction(): Promise<SiteSettings> {
+  return await readJsonFile<SiteSettings>(settingsFilePath, false);
+}
+
+export async function updateSiteSettingsAction(data: z.infer<typeof siteSettingsSchema>) {
+    const validatedFields = siteSettingsSchema.safeParse(data);
+    if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+
+    try {
+        await writeJsonFile<SiteSettings>(settingsFilePath, validatedFields.data);
+        revalidatePath("/admin/settings");
+        revalidatePath("/");
+        return { success: true, message: "Settings updated successfully." };
+    } catch (error) {
+        return { success: false, message: "Failed to update settings." };
     }
 }

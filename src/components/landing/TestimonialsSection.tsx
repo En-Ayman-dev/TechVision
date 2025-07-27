@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -11,33 +12,24 @@ import {
 } from "@/components/ui/carousel";
 import type { Testimonial } from '@/lib/types';
 import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
+import { getTestimonialsAction } from '@/app/actions';
+import { Skeleton } from '../ui/skeleton';
 
 export default function TestimonialsSection() {
   const t = useTranslations('TestimonialsSection');
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const testimonials: Testimonial[] = [
-    {
-      quote: t('testimonials.alex.quote'),
-      author: t('testimonials.alex.author'),
-      role: t('testimonials.alex.role'),
-      image: 'https://placehold.co/100x100.png',
-      dataAiHint: "happy client"
-    },
-    {
-      quote: t('testimonials.sarah.quote'),
-      author: t('testimonials.sarah.author'),
-      role: t('testimonials.sarah.role'),
-      image: 'https://placehold.co/100x100.png',
-      dataAiHint: "satisfied customer"
-    },
-    {
-      quote: t('testimonials.david.quote'),
-      author: t('testimonials.david.author'),
-      role: t('testimonials.david.role'),
-      image: 'https://placehold.co/100x100.png',
-      dataAiHint: "smiling person"
-    },
-  ];
+  useEffect(() => {
+    async function loadTestimonials() {
+      setIsLoading(true);
+      const fetchedTestimonials = await getTestimonialsAction();
+      setTestimonials(fetchedTestimonials);
+      setIsLoading(false);
+    }
+    loadTestimonials();
+  }, []);
 
   return (
     <section id="testimonials" className="bg-secondary/50">
@@ -56,27 +48,45 @@ export default function TestimonialsSection() {
           className="w-full max-w-4xl mx-auto mt-12"
         >
           <CarouselContent>
-            {testimonials.map((testimonial, index) => (
-              <CarouselItem key={index}>
-                <div className="p-1">
-                  <Card>
-                    <CardContent className="flex flex-col items-center text-center p-8">
-                      <Image
-                        src={testimonial.image}
-                        alt={testimonial.author}
-                        width={80}
-                        height={80}
-                        className="rounded-full mb-4"
-                        data-ai-hint={testimonial.dataAiHint}
-                      />
-                      <p className="text-lg italic text-foreground mb-4">"{testimonial.quote}"</p>
-                      <h3 className="font-semibold text-lg font-headline">{testimonial.author}</h3>
-                      <p className="text-muted-foreground">{testimonial.role}</p>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CarouselItem>
-            ))}
+            {isLoading ? (
+               Array.from({ length: 3 }).map((_, index) => (
+                <CarouselItem key={index}>
+                    <div className="p-1">
+                        <Card>
+                            <CardContent className="flex flex-col items-center text-center p-8">
+                                <Skeleton className="h-20 w-20 rounded-full mb-4" />
+                                <Skeleton className="h-5 w-full mb-4" />
+                                <Skeleton className="h-5 w-3/4 mb-4" />
+                                <Skeleton className="h-6 w-1/3 mb-1" />
+                                <Skeleton className="h-4 w-1/4" />
+                            </CardContent>
+                        </Card>
+                    </div>
+                </CarouselItem>
+               ))
+            ) : (
+                testimonials.map((testimonial, index) => (
+                <CarouselItem key={index}>
+                    <div className="p-1">
+                    <Card>
+                        <CardContent className="flex flex-col items-center text-center p-8">
+                        <Image
+                            src={testimonial.image}
+                            alt={testimonial.author}
+                            width={80}
+                            height={80}
+                            className="rounded-full mb-4"
+                            data-ai-hint={testimonial.dataAiHint}
+                        />
+                        <p className="text-lg italic text-foreground mb-4">"{testimonial.quote}"</p>
+                        <h3 className="font-semibold text-lg font-headline">{testimonial.author}</h3>
+                        <p className="text-muted-foreground">{testimonial.role}</p>
+                        </CardContent>
+                    </Card>
+                    </div>
+                </CarouselItem>
+                ))
+            )}
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
