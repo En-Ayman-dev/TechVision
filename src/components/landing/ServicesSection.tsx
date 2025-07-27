@@ -17,7 +17,7 @@ export default async function ServicesSection() {
   const services = await getServicesAction();
 
   return (
-    <section id="services" className="bg-secondary/50">
+    <section id="services" className="bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">{t('title')}</h2>

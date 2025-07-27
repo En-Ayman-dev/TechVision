@@ -11,7 +11,7 @@ export default async function TeamSection() {
   const teamMembers = await getTeamAction();
 
   return (
-    <section id="team" className="bg-background">
+    <section id="team" className="bg-secondary/50">
       <div className="container mx-auto px-4">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">{t('title')}</h2>

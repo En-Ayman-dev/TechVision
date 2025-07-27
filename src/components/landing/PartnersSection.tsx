@@ -1,6 +1,6 @@
 import type { Partner } from '@/lib/types';
 import { Globe, CircuitBoard, Rocket, Bot, Building } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { getPartnersAction } from '@/app/actions';
 
 const iconMap: { [key: string]: React.ElementType } = {
@@ -12,7 +12,7 @@ const iconMap: { [key: string]: React.ElementType } = {
 };
 
 export default async function PartnersSection() {
-  const t = await useTranslations('PartnersSection');
+  const t = await getTranslations('PartnersSection');
   const partners = await getPartnersAction();
   
   return (
