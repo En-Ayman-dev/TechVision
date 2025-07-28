@@ -4,8 +4,8 @@ import { ThemeProvider } from '@/hooks/use-theme';
 import { Toaster } from "@/components/ui/toaster";
 import LoadingScreen from '@/components/landing/LoadingScreen';
 import WelcomeNotification from '@/components/landing/WelcomeNotification';
-import {NextIntlClientProvider} from 'next-intl';
-import {getMessages, getTranslations} from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { Inter, Space_Grotesk } from 'next/font/google'
 import Script from 'next/script';
 
@@ -22,7 +22,7 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 type Props = {
-  params: {locale: string};
+  params: { locale: string };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: 'TechVision',
       images: [
         {
-          url: `${baseUrl}/og-image.png`, 
+          url: `${baseUrl}/og-image.png`,
           width: 1200,
           height: 630,
           alt: 'TechVision Logo',
@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale: locale,
       type: 'website',
     },
-     twitter: {
+    twitter: {
       card: 'summary_large_image',
       title: t('title'),
       description: t('description'),
@@ -85,7 +85,7 @@ export default async function LocaleLayout({
   params
 }: Readonly<{
   children: React.ReactNode;
-  params: {locale: string};
+  params: { locale: string };
 }>) {
   const { locale } = params;
   const messages = await getMessages();
@@ -111,7 +111,7 @@ export default async function LocaleLayout({
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         /> */}
-            <Script
+        <Script
           id="structured-data-script" // معرف فريد للسكربت
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
