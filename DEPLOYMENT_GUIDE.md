@@ -1,7 +1,7 @@
 
-# TechVision Project: From Setup to Deployment (A Beginner's Guide)
+# TechVision Project: From Setup to Deployment on Firebase (A Beginner's Guide)
 
-This guide provides a detailed, step-by-step walkthrough for setting up, running, and deploying your TechVision web application. This is written for beginners, so every step is explained.
+This guide provides a detailed, step-by-step walkthrough for setting up, running, and deploying your TechVision web application to Firebase Hosting. This is written for beginners, so every step is explained.
 
 ## Part 1: Setting Up Your Development Environment
 
@@ -13,13 +13,13 @@ Before you can run the project, you need to have some essential tools installed 
     *   **How to install**: Go to the official [Node.js website](https://nodejs.org/) and download the **LTS** (Long-Term Support) version. The installer will guide you through the process.
     *   **Verify installation**: Open your terminal or command prompt and type `node -v`. You should see a version number (e.g., `v20.11.0`).
 
-*   **Git**: This is a version control system used for managing code.
+*   **Git**: This is a version control system used for managing code. While not strictly necessary for local development, it's essential for collaboration and deployment.
     *   **How to install**: Go to the [Git website](https://git-scm.com/downloads) and download the version for your operating system.
     *   **Verify installation**: In your terminal, type `git --version`. You should see a version number.
 
 ### 1.2. Getting the Project Code
 
-You have the project files, but if you were starting on a new machine, you would typically "clone" the project repository using Git.
+You already have the project files. If you were starting on a new machine, you would typically "clone" the project repository using Git.
 
 ```bash
 # In your terminal, navigate to where you want to store the project, then run:
@@ -48,14 +48,14 @@ Environment variables are used to store secret keys and configuration details th
 
 2.  **Get Firebase Configuration**:
     *   Go to the [Firebase Console](https://console.firebase.google.com/).
-    *   Select your project (or create a new one if you haven't already).
-    *   In the project overview, click the `</>` (Web) icon to add a web app or select your existing web app.
-    *   Go to **Project Settings** (click the gear icon ⚙️ next to "Project Overview").
+    *   Create a new project.
+    *   In the project overview, click the `</>` (Web) icon to add a web app. Give it a nickname.
+    *   After creating the web app, go to **Project Settings** (click the gear icon ⚙️ next to "Project Overview").
     *   Scroll down to the "Your apps" card.
     *   You will find a code snippet with a `firebaseConfig` object. Copy the values from this object.
 
 3.  **Get Google AI (Gemini) API Key**:
-    *   Go to [Google AI Studio](httpss://aistudio.google.com/app/apikey).
+    *   Go to [Google AI Studio](https://aistudio.google.com/app/apikey).
     *   Click "**Create API key in new project**".
     *   Copy the generated API key.
 
@@ -84,7 +84,7 @@ Your project has two parts that need to run simultaneously: the Next.js website 
     npm run dev
     ```
 
-    This will start the website. You should see a message like `✓ Ready in 1.2s │ Local: http://localhost:9002`. You can now open `http://localhost:9002` in your web browser to see your site.
+    This will start the website. You should see a message like `✓ Ready in X.Xs │ Local: http://localhost:9002`. You can now open `http://localhost:9002` in your web browser.
 
 *   **Terminal 2: Run the Genkit AI Flows**
 
@@ -94,42 +94,53 @@ Your project has two parts that need to run simultaneously: the Next.js website 
 
     This starts the AI service that powers features like content generation. You can visit `http://localhost:4000` to see the Genkit developer UI and test your AI flows.
 
-You can now use the website and the admin panel locally. Changes you make to the code will automatically reload in the browser.
+## Part 3: Deploying to the Web with Firebase Hosting
 
-## Part 3: Deploying to the Web (for Free!)
+We will use **Firebase App Hosting**, which is designed for modern web apps like Next.js. It automatically sets up everything you need, including a secure `https://` connection.
 
-We will use **Vercel** for deployment. It's made by the creators of Next.js and has a very generous free tier that is perfect for this project.
+### 3.1. Install Firebase Tools
 
-### 3.1. Sign Up for Vercel
+1.  In your terminal, run this command to install the Firebase command-line tools globally on your computer. You only need to do this once.
 
-1.  Go to [vercel.com](https://vercel.com/) and sign up for a free "Hobby" account. The easiest way is to sign up using your GitHub, GitLab, or Bitbucket account.
+    ```bash
+    npm install -g firebase-tools
+    ```
 
-### 3.2. Prepare Your Project for Deployment
+### 3.2. Login to Firebase
 
-1.  **Push to GitHub**: If your project is not already on GitHub, you need to create a new repository and push your code to it. Vercel deploys directly from a Git repository.
+1.  Run this command to log in to your Google account.
 
-### 3.3. Deploy on Vercel
+    ```bash
+    firebase login
+    ```
 
-1.  **New Project**: Once you are logged into your Vercel dashboard, click "**Add New...**" -> "**Project**".
+    This will open a new browser window for you to sign in.
 
-2.  **Import Git Repository**: Vercel will show a list of your Git repositories. Find your TechVision project and click the "**Import**" button next to it.
+### 3.3. Link Your Local Project to Your Firebase Project
 
-3.  **Configure Project**:
-    *   **Framework Preset**: Vercel will automatically detect that you are using Next.js. You don't need to change this.
-    *   **Build and Output Settings**: You can leave these as default.
-    *   **Environment Variables**: This is the most important step. Click to expand this section. You need to add all the same variables from your `.env` file here.
-        *   Click "**Add**" for each key-value pair.
-        *   **KEY**: `NEXT_PUBLIC_FIREBASE_API_KEY`, **VALUE**: `AIzaSy...`
-        *   **KEY**: `NEXT_PUBLIC_FIREBASE_PROJECT_ID`, **VALUE**: `your-project-id`
-        *   ...and so on for all Firebase and Gemini keys.
-        *   **Crucially, you must add all of them here.** The deployed application will not be able to read your local `.env` file.
+1.  **Find your Project ID**: Go to the [Firebase Console](https://console.firebase.google.com/). Your Project ID is shown on the project card (e.g., `your-project-id`).
+2.  **Update `.firebaserc`**: Open the `.firebaserc` file in your project. Replace `"your-project-id"` with your actual Firebase Project ID.
 
-4.  **Deploy**: Click the "**Deploy**" button.
+    ```json
+    {
+      "projects": {
+        "default": "my-cool-tech-vision-app"
+      }
+    }
+    ```
 
-Vercel will now start building and deploying your website. This process might take a few minutes. You'll see a console log of the progress.
+### 3.4. Deploy to Firebase!
 
-### 3.4. All Done!
+1.  **The Final Step**: Run the following command in your terminal from the project's root directory:
 
-Once the deployment is complete, Vercel will give you a public URL (e.g., `your-project-name.vercel.app`). Congratulations! Your website is now live on the internet for everyone to see.
+    ```bash
+    firebase deploy --only hosting
+    ```
 
-Vercel will automatically redeploy your website every time you push a new change to your main Git branch.
+2.  **Wait for Deployment**: Firebase will now build your Next.js application and deploy it. This process might take a few minutes. You'll see progress logs in your terminal.
+
+3.  **All Done!**
+    *   Once the deployment is complete, Firebase will give you a public **Hosting URL** (e.g., `https://your-project-id.web.app`).
+    *   Congratulations! Your website is now live on the internet, fully secured with HTTPS.
+
+Every time you want to deploy a new version of your site, just run `firebase deploy --only hosting` again.
