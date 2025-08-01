@@ -14,6 +14,7 @@ export default function PortfolioSection() {
 
   const [allProjects, setAllProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     async function loadProjects() {
@@ -28,22 +29,14 @@ export default function PortfolioSection() {
   const categories = useMemo(() => {
     if (isLoading) return [];
     
-    const projectCategories = ['all', ...new Set(allProjects.map(p => p.category.toLowerCase()))];
+    const projectCategories = ['all', ...Array.from(new Set(allProjects.map(p => p.category.toLowerCase())))];
     
     return projectCategories.map(key => ({ 
       key, 
-      value: t(`categories.${key}`) 
+      value: t(`categories.${key as 'all' | 'web' | 'cloud' | 'design' | 'data' | 'security'}`) 
     }));
 
   }, [isLoading, allProjects, t]);
-
-  const [filter, setFilter] = useState('all');
-  
-  useEffect(() => {
-    if (categories.length > 0) {
-      setFilter('all');
-    }
-  }, [categories]);
 
   const filteredProjects = useMemo(() => {
     if (filter === 'all') return allProjects;

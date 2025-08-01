@@ -1,8 +1,8 @@
 import dynamic from 'next/dynamic';
 import Header from '@/components/landing/Header';
 import Footer from '@/components/landing/Footer';
-import { Skeleton } from '@/components/ui/skeleton';
 import { getTranslations } from 'next-intl/server';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const HeroSection = dynamic(() => import('@/components/landing/HeroSection'));
 const PartnersSection = dynamic(() => import('@/components/landing/PartnersSection'));
