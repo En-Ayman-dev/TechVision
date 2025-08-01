@@ -1,6 +1,7 @@
+
 import type { Metadata } from 'next';
-import { NextIntlClientProvider, useMessages } from 'next-intl';
-import { getLocale, getTranslations } from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import Script from 'next/script';
 import { Toaster } from "@/components/ui/toaster";
@@ -87,7 +88,7 @@ export default async function LocaleLayout({
   params: { locale: string }
 }) {
   const locale = await getLocale();
-  const messages = useMessages();
+  const messages = await getMessages();
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
