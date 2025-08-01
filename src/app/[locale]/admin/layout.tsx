@@ -1,4 +1,3 @@
-
 "use client";
 
 import "../../globals.css";
@@ -7,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import AdminShell from "@/components/admin/AdminShell";
 import Login from "@/components/admin/Login";
+import { NextIntlClientProvider, useMessages } from 'next-intl';
 
 function AdminAuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -32,25 +32,29 @@ function AdminAuthenticatedLayout({ children }: { children: React.ReactNode }) {
 
 export default function AdminLayout({
   children,
+  params: {locale}
 }: {
   children: React.ReactNode;
+  params: {locale: string};
 }) {
+    const messages = useMessages();
   return (
     <div className="admin-dashboard-layout">
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <AuthProvider>
-          <AdminAuthenticatedLayout>
-            {children}
-          </AdminAuthenticatedLayout>
-          <Toaster />
-        </AuthProvider>
-      </ThemeProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+            >
+                <AuthProvider>
+                <AdminAuthenticatedLayout>
+                    {children}
+                </AdminAuthenticatedLayout>
+                <Toaster />
+                </AuthProvider>
+            </ThemeProvider>
+      </NextIntlClientProvider>
     </div>
   );
-
 }

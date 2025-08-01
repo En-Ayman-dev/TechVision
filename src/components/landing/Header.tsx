@@ -1,5 +1,4 @@
-// src/components/landing/Header.tsx
-"use client"; // هذا المكون هو Client Component
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -8,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './ThemeToggle';
 import { cn } from '@/lib/utils';
 import type { NavItem } from '@/lib/types';
-import { useTranslation } from 'react-i18next'; // استخدام useTranslation
+import { useTranslations, useLocale } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 
 import {
@@ -18,16 +17,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-
-
 export default function Header() {
-  const { t, i18n } = useTranslation('Header');
+  const t = useTranslations('Header');
+  const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
-  const currentLocale = i18n.language;
 
   const navItems: NavItem[] = [
-    { label: t('about'), href: '#about' }, // الآن t('about') ستعمل إذا كان 'Header' هو الـ namespace
+    { label: t('about'), href: '#about' },
     { label: t('services'), href: '#services' },
     { label: t('portfolio'), href: '#portfolio' },
     { label: t('contact'), href: '#contact' },
@@ -45,8 +42,8 @@ export default function Header() {
   }, []);
 
   const changeLanguage = (newLocale: string) => {
-    const pathWithoutLocale = pathname.startsWith(`/${currentLocale}`)
-      ? pathname.substring(`/${currentLocale}`.length)
+    const pathWithoutLocale = pathname.startsWith(`/${locale}`)
+      ? pathname.substring(`/${locale}`.length)
       : pathname;
     router.push(`/${newLocale}${pathWithoutLocale || '/'}`);
   };
