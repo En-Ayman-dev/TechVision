@@ -1,11 +1,19 @@
+// src/components/landing/HeroSection.tsx
+"use client"; // هذا المكون هو Client Component
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-import {useTranslations} from 'next-intl';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next'; // استخدام useTranslation
 
-export default function HeroSection() {
-  const t = useTranslations('HeroSection');
+// إزالة تعريف الـ props التي تستقبل t
+// interface HeroSectionProps { t: (key: string) => string; }
+
+// المكون لم يعد يستقبل t كـ prop
+export default function HeroSection() { // إزالة { t }: HeroSectionProps
+  // استخدام useTranslation مباشرة هنا
+  const { t } = useTranslation('HeroSection'); // جلب الترجمة لـ namespace 'HeroSection'
 
   return (
     <section id="hero" className="relative overflow-hidden bg-background">
@@ -18,6 +26,7 @@ export default function HeroSection() {
         <div className="py-20 md:py-32">
           <div className="mx-auto max-w-4xl">
             <h1 className="text-4xl font-bold tracking-tight font-headline sm:text-5xl md:text-6xl lg:text-7xl">
+              {/* استخدام t مباشرة مع المفتاح من الـ namespace المحدد */}
               {t('title')}
             </h1>
             <p className="mt-6 text-lg leading-8 text-muted-foreground sm:text-xl">

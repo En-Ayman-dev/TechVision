@@ -1,9 +1,17 @@
+// src/components/landing/Footer.tsx
+"use client"; // هذا المكون هو Client Component
+
 import Link from 'next/link';
 import { Code, Twitter, Linkedin, Github } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslation } from 'react-i18next'; // استخدام useTranslation
 
-export default function Footer() {
-  const t = useTranslations('Footer');
+// إزالة تعريف الـ props التي تستقبل t
+// interface FooterProps { t: (key: string) => string; }
+
+// المكون لم يعد يستقبل t كـ prop
+export default function Footer() { // إزالة { t }: FooterProps
+  // استخدام useTranslation مباشرة هنا
+  const { t } = useTranslation('Footer'); // جلب الترجمة لـ namespace 'Footer'
   
   return (
     <footer className="bg-background border-t">
@@ -11,6 +19,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center gap-2">
             <Code className="h-6 w-6 text-primary" />
+            {/* استخدام t مباشرة مع المفتاح من الـ namespace المحدد */}
             <span className="font-bold text-lg font-headline">{t('companyName')}</span>
           </div>
           <div className="flex gap-4 mt-4 md:mt-0">
@@ -20,6 +29,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 text-center text-sm text-muted-foreground border-t pt-8">
+          {/* استخدام t مباشرة مع المفتاح من الـ namespace المحدد */}
           <p>&copy; {new Date().getFullYear()} {t('companyName')}. {t('rightsReserved')}</p>
         </div>
       </div>

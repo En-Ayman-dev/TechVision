@@ -1,35 +1,26 @@
-// import {notFound} from 'next/navigation';
-// import {getRequestConfig} from 'next-intl/server';
- 
-// const locales = ['en', 'ar'];
- 
-// export default getRequestConfig(async ({locale}) => {
-//   if (!locales.includes(locale as any)) {
-//     notFound();
-//   }
- 
-//   return {
-//     messages: (await import(`../messages/${locale}.json`)).default,
-//     locale,
-//   };
-// });
-import {notFound} from 'next/navigation';
-import {getRequestConfig} from 'next-intl/server';
+// i18n.js (في جذر مشروعك أو src/)
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import Backend from 'i18next-http-backend';
 
-const locales = ['en', 'ar'];
+i18n
+  .use(Backend)
+  .use(initReactI18next)
+  .init({
+    fallbackLng: 'en',
+    lng: 'en', // سيتم تحديث هذا ديناميكيًا بواسطة Next.js
+    interpolation: {
+      escapeValue: false, // React بالفعل يقوم بذلك
+    },
+    backend: {
+      loadPath: '/locales/{{lng}}/{{ns}}.json',
+    },
+    // قائمة بجميع الـ namespaces التي تستخدمها في مشروعك
+    ns: ['common', 'Header', 'HeroSection', 'Footer', 'PartnersSection', 'AboutSection', 'ServicesSection', 'WhyChooseUsSection', 'PortfolioSection', 'TeamSection', 'TestimonialsSection', 'FaqSection', 'CtaSection', 'ContactSection', 'LoadingScreen', 'WelcomeNotification', 'Metadata'],
+    defaultNS: 'common',
+    react: {
+      useSuspense: false, // أو true إذا كنت تستخدم Suspense
+    },
+  });
 
-export default getRequestConfig(async ({ requestLocale }) => { // <--- تم التعديل هنا
-  // هذا عادة ما يتوافق مع الجزء `[locale]` في المسار
-  let locale = await requestLocale; // <--- تم التعديل هنا
-
-  // التأكد من أن اللغة الواردة صالحة
-  if (!locales.includes(locale as any)) { // <--- استخدام مصفوفة اللغات الخاصة بك
-    notFound(); // أو قم بتعيين لغة افتراضية إذا كان لديك واحدة، مثل 'en'
-    // مثال لتعيين لغة افتراضية: locale = 'en';
-  }
-
-  return {
-    locale, // <--- تمرير اللغة النهائية
-    messages: (await import(`../messages/${locale}.json`)).default,
-  };
-});
+export default i18n;

@@ -1,6 +1,7 @@
+// src/components/landing/PartnersSection.tsx
 import type { Partner } from '@/lib/types';
 import { Globe, CircuitBoard, Rocket, Bot, Building } from 'lucide-react';
-import { getTranslations } from 'next-intl/server';
+// قم بإزالة: import { getTranslations } from 'next-intl/server';
 import { getPartnersAction } from '@/app/actions';
 
 const iconMap: { [key: string]: React.ElementType } = {
@@ -11,8 +12,15 @@ const iconMap: { [key: string]: React.ElementType } = {
   Building,
 };
 
-export default async function PartnersSection() {
-  const t = await getTranslations('PartnersSection');
+// تعريف نوع الـ props التي سيستقبلها المكون
+interface PartnersSectionProps {
+  t: (key: string) => string; // دالة الترجمة t
+}
+
+// المكون الآن يستقبل t كـ prop
+export default async function PartnersSection({ t }: PartnersSectionProps) {
+  // لم نعد بحاجة لاستدعاء getTranslations هنا
+  // const t = await getTranslations('PartnersSection'); // هذا كان من next-intl/server
   const partners = await getPartnersAction();
   
   return (
@@ -20,7 +28,8 @@ export default async function PartnersSection() {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-7xl">
           <h2 className="text-center text-lg font-semibold leading-8 text-muted-foreground">
-            {t('title')}
+            {/* استخدام t مباشرة مع المفتاح الكامل من ملف الترجمة */}
+            {t('PartnersSection.title')}
           </h2>
           <div className="mx-auto mt-10 grid max-w-lg grid-cols-2 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-3 lg:mx-0 lg:max-w-none lg:grid-cols-5">
             {partners.map((partner) => {

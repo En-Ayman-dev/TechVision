@@ -1,5 +1,5 @@
-
-"use client";
+// src/components/landing/PortfolioSection.tsx
+"use client"; // هذا المكون هو Client Component
 
 import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
@@ -7,15 +7,21 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import type { Project } from '@/lib/types';
 import { getProjectsAction } from '@/app/actions';
-import { useTranslations } from 'next-intl';
+import { useTranslation } from 'react-i18next'; // استخدام useTranslation
 import { Skeleton } from '../ui/skeleton';
+
+// إزالة تعريف الـ props التي تستقبل t
+// interface PortfolioSectionProps { t: (key: string) => string; }
 
 // This component remains a client component because it has interactive filtering logic.
 // However, the initial data fetching could be passed as a prop from a server parent
 // in a more complex app to optimize initial load. For this case, fetching on client is acceptable.
 
-export default function PortfolioSection() {
-  const t = useTranslations('PortfolioSection');
+// المكون لم يعد يستقبل t كـ prop
+export default function PortfolioSection() { // إزالة { t }: PortfolioSectionProps
+  // استخدام useTranslation مباشرة هنا
+  const { t } = useTranslation('PortfolioSection'); // جلب الترجمة لـ namespace 'PortfolioSection'
+
   const [allProjects, setAllProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -31,20 +37,21 @@ export default function PortfolioSection() {
   
   const categories = useMemo(() => {
     if (isLoading) return [];
-    const categoryTranslations = t.raw('categories');
+    
     const projectCategories = [...new Set(allProjects.map(p => p.category.toLowerCase()))];
     
-    const translatedCategories = {
-        all: categoryTranslations.all,
-        ...projectCategories.reduce((acc, key) => {
-            acc[key] = categoryTranslations[key] || key.charAt(0).toUpperCase() + key.slice(1);
-            return acc;
-        }, {} as Record<string, string>)
+    const translatedCategories: Record<string, string> = {
+        all: t('categories.all'), // استخدام المفتاح من الـ namespace المحدد
     };
+
+    projectCategories.forEach(key => {
+        // محاولة جلب الترجمة لكل فئة، أو استخدام القيمة الأصلية مع تنسيق
+        translatedCategories[key] = t(`categories.${key}`) || key.charAt(0).toUpperCase() + key.slice(1);
+    });
 
     return Object.entries(translatedCategories).map(([key, value]) => ({ key, value }));
 
-  }, [isLoading, allProjects, t]);
+  }, [isLoading, allProjects, t]); // إضافة t إلى dependencies array
 
   const [filter, setFilter] = useState('all');
   
@@ -81,7 +88,7 @@ export default function PortfolioSection() {
         </div>
         <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {isLoading ? (
-             Array.from({ length: 6 }).map((_, i) => (
+              Array.from({ length: 6 }).map((_, i) => (
                 <Card key={i} className="overflow-hidden group">
                     <CardContent className="p-0">
                         <Skeleton className="w-full h-[250px]" />
@@ -91,7 +98,7 @@ export default function PortfolioSection() {
                         </div>
                     </CardContent>
                 </Card>
-             ))
+              ))
           ) : (
             filteredProjects.map((project) => (
               <Card key={project.id} className="overflow-hidden group">

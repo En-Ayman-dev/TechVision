@@ -1,5 +1,5 @@
-
-"use client";
+// src/components/landing/Header.tsx
+"use client"; // هذا المكون هو Client Component
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './ThemeToggle';
 import { cn } from '@/lib/utils';
 import type { NavItem } from '@/lib/types';
-import { useTranslations, useLocale } from 'next-intl';
-import { usePathname } from 'next/navigation';
+import { useTranslation } from 'react-i18next'; // استخدام useTranslation
+import { usePathname, useRouter } from 'next/navigation';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,13 +18,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+
+
 export default function Header() {
-  const t = useTranslations('Header');
+  const { t, i18n } = useTranslation('Header');
   const pathname = usePathname();
-  const currentLocale = useLocale();
+  const router = useRouter();
+  const currentLocale = i18n.language;
 
   const navItems: NavItem[] = [
-    { label: t('about'), href: '#about' },
+    { label: t('about'), href: '#about' }, // الآن t('about') ستعمل إذا كان 'Header' هو الـ namespace
     { label: t('services'), href: '#services' },
     { label: t('portfolio'), href: '#portfolio' },
     { label: t('contact'), href: '#contact' },
@@ -40,11 +44,12 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const pathWithoutLocale = pathname.startsWith(`/${currentLocale}`)
-    ? pathname.substring(`/${currentLocale}`.length)
-    : pathname;
-  const enPath = `/en${pathWithoutLocale || '/'}`;
-  const arPath = `/ar${pathWithoutLocale || '/'}`;
+  const changeLanguage = (newLocale: string) => {
+    const pathWithoutLocale = pathname.startsWith(`/${currentLocale}`)
+      ? pathname.substring(`/${currentLocale}`.length)
+      : pathname;
+    router.push(`/${newLocale}${pathWithoutLocale || '/'}`);
+  };
 
   return (
     <header className={cn(
@@ -55,7 +60,7 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2 font-bold text-lg font-headline">
             <Code className="h-6 w-6 text-primary" />
-            TechVision
+            <span>TechVision</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             {navItems.map((item) => (
@@ -65,20 +70,15 @@ export default function Header() {
             ))}
           </nav>
           <div className="flex items-center gap-4">
-             <DropdownMenu>
+            <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" aria-label="Change language">
                   <Globe className="h-[1.2rem] w-[1.2rem]" />
-                  <span className="sr-only">Change language</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link href={enPath} hrefLang="en">English</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                   <Link href={arPath} hrefLang="ar">العربية</Link>
-                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => changeLanguage('en')}>English</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => changeLanguage('ar')}>العربية</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <ThemeToggle />

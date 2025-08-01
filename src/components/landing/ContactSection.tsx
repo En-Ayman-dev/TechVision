@@ -1,5 +1,5 @@
-
-"use client";
+// src/components/landing/ContactSection.tsx
+"use client"; // هذا المكون هو Client Component
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -13,11 +13,17 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { sendContactMessageAction, suggestFaqAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Wand2, Lightbulb } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslation } from 'react-i18next'; // استخدام useTranslation
 
-export default function ContactSection() {
-  const t = useTranslations('ContactSection');
+// إزالة تعريف الـ props التي تستقبل t
+// interface ContactSectionProps { t: (key: string) => string; }
+
+// المكون لم يعد يستقبل t كـ prop
+export default function ContactSection() { // إزالة { t }: ContactSectionProps
+  // استخدام useTranslation مباشرة هنا
+  const { t } = useTranslation('ContactSection'); // جلب الترجمة لـ namespace 'ContactSection'
   
+  // تعريف Schema داخل المكون بعد استلام t
   const contactSchema = z.object({
     name: z.string().min(2, { message: t('validation.name') }),
     email: z.string().email({ message: t('validation.email') }),
