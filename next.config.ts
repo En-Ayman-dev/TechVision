@@ -1,7 +1,6 @@
+
 import createWithIntl from 'next-intl/plugin';
 import type { NextConfig } from 'next';
-
-const withIntl = createWithIntl('./src/i18n.ts');
 
 const nextConfig: NextConfig = {
   typescript: {
@@ -21,5 +20,7 @@ const nextConfig: NextConfig = {
     ],
   },
 };
+
+const withIntl = createWithIntl('./src/i18n.ts');
 
 export default withIntl(nextConfig);

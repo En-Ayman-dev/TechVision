@@ -1,7 +1,8 @@
 
 import type { Metadata } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
+
+import { NextIntlClientProvider } from 'next-intl';
 import { Inter, Space_Grotesk } from 'next/font/google';
 import Script from 'next/script';
 import { Toaster } from "@/components/ui/toaster";
@@ -26,10 +27,13 @@ type Props = {
   params: { locale: string };
 };
 
-export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+// export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+//   const t = await getTranslations({ locale, namespace: 'Metadata' });
+//   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
   const t = await getTranslations({ locale, namespace: 'Metadata' });
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
-
   return {
     title: t('title'),
     description: t('description'),
