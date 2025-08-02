@@ -1,35 +1,57 @@
-
 [
-    {
-      "id": 1,
-      "name": "Jane Doe",
-      "role": "CEO & Founder",
-      "image": "https://placehold.co/400x400.png",
-      "social": { "twitter": "#", "linkedin": "#" },
-      "dataAiHint": "professional woman"
+  {
+    "id": 1,
+    "name": "مازن العديني",
+    "role": "CEO & Founder",
+    "image": "https://placehold.co/400x400.png",
+    "social": {
+      "twitter": "#",
+      "linkedin": "#"
     },
-    {
-      "id": 2,
-      "name": "John Smith",
-      "role": "CTO",
-      "image": "https://placehold.co/400x400.png",
-      "social": { "twitter": "#", "linkedin": "#" },
-      "dataAiHint": "professional man"
+    "dataAiHint": "professional man"
+  },
+  {
+    "id": 2,
+    "name": "محمد معوضة",
+    "role": "CTO",
+    "image": "https://placehold.co/400x400.png",
+    "social": {
+      "twitter": "#",
+      "linkedin": "#"
     },
-    {
-      "id": 3,
-      "name": "Emily White",
-      "role": "Lead Designer",
-      "image": "https://placehold.co/400x400.png",
-      "social": { "twitter": "#", "linkedin": "#" },
-      "dataAiHint": "designer woman"
+    "dataAiHint": "professional man"
+  },
+  {
+    "id": 3,
+    "name": "أحمد السماوي",
+    "role": "Lead Designer",
+    "image": "https://placehold.co/400x400.png",
+    "social": {
+      "twitter": "#",
+      "linkedin": "#"
     },
-    {
-      "id": 4,
-      "name": "Michael Brown",
-      "role": "Lead Developer",
-      "image": "https://placehold.co/400x400.png",
-      "social": { "twitter": "#", "linkedin": "#" },
-      "dataAiHint": "developer man"
-    }
+    "dataAiHint": "designer man"
+  },
+  {
+    "id": 4,
+    "name": "أيمن احمد الذاهبي",
+    "role": "Lead Developer",
+    "image": "https://placehold.co/400x400.png",
+    "social": {
+      "twitter": "#",
+      "linkedin": "#"
+    },
+    "dataAiHint": "developer man"
+  },
+  {
+    "name": "هلال الملصي ",
+    "role": "Data analyst",
+    "image": "https://placehold.co/400x400.png",
+    "social": {
+      "twitter": "",
+      "linkedin": ""
+    },
+    "dataAiHint": "",
+    "id": 1754100600227
+  }
 ]
