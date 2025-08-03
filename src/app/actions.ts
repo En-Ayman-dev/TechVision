@@ -1,13 +1,16 @@
 
 "use server";
-
 import { z } from "zod";
 import { suggestFaq } from "@/ai/flows/faq-suggestions";
-import { promises as fs } from 'fs';
-import path from 'path';
+import { db } from "@/lib/firebase-admin";
 import type { Message, Project, TeamMember, Service, Testimonial, SiteSettings, Partner, ThemeSettings } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 import { generateDescription, generateTestimonialQuote } from "@/ai/flows/text-generation";
+import { promises as fs } from 'fs';
+import path from 'path';
+
+// Helper to check if db is initialized
+const isDbInitialized = () => db && typeof db.collection === 'function';
 
 // Schemas
 const contactSchema = z.object({
@@ -17,7 +20,7 @@ const contactSchema = z.object({
 });
 
 const projectSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   title: z.string().min(2, "Title must be at least 2 characters."),
   category: z.string().min(2, "Category must be at least 2 characters."),
   description: z.string().min(10, "Description must be at least 10 characters."),
@@ -26,7 +29,7 @@ const projectSchema = z.object({
 });
 
 const teamMemberSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   name: z.string().min(2, "Name must be at least 2 characters."),
   role: z.string().min(2, "Role must be at least 2 characters."),
   image: z.string().url("Image must be a valid URL."),
@@ -38,7 +41,7 @@ const teamMemberSchema = z.object({
 });
 
 const serviceSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   icon: z.string().min(2, "Icon name is required."),
   title: z.string().min(2, "Title must be at least 2 characters."),
   description: z.string().min(10, "Description must be at least 10 characters."),
@@ -46,7 +49,7 @@ const serviceSchema = z.object({
 });
 
 const testimonialSchema = z.object({
-    id: z.number().optional(),
+    id: z.string().optional(),
     quote: z.string().min(10, "Quote must be at least 10 characters."),
     author: z.string().min(2, "Author must be at least 2 characters."),
     role: z.string().min(2, "Role must be at least 2 characters."),
@@ -64,7 +67,7 @@ const siteSettingsSchema = z.object({
 });
 
 const partnerSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   name: z.string().min(2, "Name must be at least 2 characters."),
   logo: z.string().min(2, "Logo name is required."),
   dataAiHint: z.string().optional(),
@@ -86,87 +89,35 @@ const themeSettingsSchema = z.object({
 });
 
 
-// File Paths
-const messagesFilePath = path.join(process.cwd(), 'data', 'messages.json');
-const projectsFilePath = path.join(process.cwd(), 'data', 'projects.json');
-const teamFilePath = path.join(process.cwd(), 'data', 'team.json');
-const servicesFilePath = path.join(process.cwd(), 'data', 'services.json');
-const testimonialsFilePath = path.join(process.cwd(), 'data', 'testimonials.json');
-const settingsFilePath = path.join(process.cwd(), 'data', 'settings.json');
-const partnersFilePath = path.join(process.cwd(), 'data', 'partners.json');
+// Firestore Collections (conditional)
+const messagesCollection = isDbInitialized() ? db.collection('messages') : null;
+const projectsCollection = isDbInitialized() ? db.collection('projects') : null;
+const teamCollection = isDbInitialized() ? db.collection('team') : null;
+const servicesCollection = isDbInitialized() ? db.collection('services') : null;
+const testimonialsCollection = isDbInitialized() ? db.collection('testimonials') : null;
+const settingsCollection = isDbInitialized() ? db.collection('settings') : null;
+const partnersCollection = isDbInitialized() ? db.collection('partners') : null;
 const globalsCssPath = path.join(process.cwd(), 'src', 'app', 'globals.css');
-
-
-// File System Utilities
-async function ensureFileExists(filePath: string, defaultContent: string) {
-  try {
-    await fs.access(path.dirname(filePath));
-  } catch {
-    await fs.mkdir(path.dirname(filePath), { recursive: true });
-  }
-  try {
-    await fs.access(filePath);
-  } catch {
-    await fs.writeFile(filePath, defaultContent, 'utf8');
-  }
-}
-
-async function readJsonFile<T>(filePath: string, isArray = true): Promise<T> {
-    await ensureFileExists(filePath, isArray ? '[]' : '{}');
-    try {
-        const fileContent = await fs.readFile(filePath, 'utf8');
-        return JSON.parse(fileContent) as T;
-    } catch (error) {
-        console.error(`Error reading ${filePath}:`, error);
-        return (isArray ? [] : {}) as T;
-    }
-}
-
-async function writeJsonFile<T>(filePath: string, data: T): Promise<void> {
-    try {
-        await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
-    } catch (error) {
-        console.error(`Error writing to ${filePath}:`, error);
-        throw new Error(`Could not write to file ${filePath}`);
-    }
-}
-
-// Generic CRUD Actions
-async function createItem<T>(filePath: string, item: T, items: T[]): Promise<void> {
-    const newItem = { ...item, id: new Date().getTime() };
-    items.push(newItem);
-    await writeJsonFile(filePath, items);
-}
-
-async function updateItem<T extends { id?: number }>(filePath: string, updatedItem: T, items: T[]): Promise<void> {
-    const index = items.findIndex(item => item.id === updatedItem.id);
-    if (index === -1) throw new Error("Item not found");
-    items[index] = updatedItem;
-    await writeJsonFile(filePath, items);
-}
-
-async function deleteItem(filePath: string, id: number, items: { id: number }[]): Promise<void> {
-    const newItems = items.filter(item => item.id !== id);
-    if (newItems.length === items.length) throw new Error("Item not found");
-    await writeJsonFile(filePath, newItems);
-}
 
 
 // Message Actions
 export async function getMessagesAction(): Promise<Message[]> {
-  const messages = await readJsonFile<Message[]>(messagesFilePath);
-  return messages.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+  if (!messagesCollection) return [];
+  const snapshot = await messagesCollection.orderBy('submittedAt', 'desc').get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Message));
 }
 
 export async function sendContactMessageAction(data: z.infer<typeof contactSchema>) {
+  if (!messagesCollection) return { success: false, message: "Database not configured." };
   const validatedFields = contactSchema.safeParse(data);
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
-    const messages = await readJsonFile<Message[]>(messagesFilePath);
-    const newMessage: Message = { ...validatedFields.data, id: new Date().getTime(), submittedAt: new Date().toISOString() };
-    messages.push(newMessage);
-    await writeJsonFile(messagesFilePath, messages);
+    const newMessage = { 
+        ...validatedFields.data, 
+        submittedAt: new Date().toISOString() 
+    };
+    await messagesCollection.add(newMessage);
     revalidatePath("/[locale]/admin/messages", "page");
     revalidatePath("/[locale]/admin", "page");
     return { success: true, message: "Message sent!" };
@@ -175,10 +126,10 @@ export async function sendContactMessageAction(data: z.infer<typeof contactSchem
   }
 }
 
-export async function deleteMessageAction(id: number) {
+export async function deleteMessageAction(id: string) {
+  if (!messagesCollection) return { success: false, message: "Database not configured." };
   try {
-    const messages = await readJsonFile<Message[]>(messagesFilePath);
-    await deleteItem(messagesFilePath, id, messages);
+    await messagesCollection.doc(id).delete();
     revalidatePath("/[locale]/admin/messages", "page");
     revalidatePath("/[locale]/admin", "page");
     return { success: true, message: "Message deleted." };
@@ -203,16 +154,19 @@ export async function suggestFaqAction(userInput: string) {
 
 // Project Actions
 export async function getProjectsAction(): Promise<Project[]> {
-  return await readJsonFile<Project[]>(projectsFilePath);
+  if (!projectsCollection) return [];
+  const snapshot = await projectsCollection.get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Project));
 }
 
 export async function addProjectAction(data: z.infer<typeof projectSchema>) {
+  if (!projectsCollection) return { success: false, message: "Database not configured." };
   const validatedFields = projectSchema.safeParse(data);
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
-    const projects = await readJsonFile<Project[]>(projectsFilePath);
-    await createItem<Project>(projectsFilePath, validatedFields.data, projects);
+    const { id, ...projectData } = validatedFields.data;
+    await projectsCollection.add(projectData);
     revalidatePath("/[locale]/admin/projects", "page");
     revalidatePath("/", "layout");
     revalidatePath("/[locale]/admin", "page");
@@ -223,12 +177,14 @@ export async function addProjectAction(data: z.infer<typeof projectSchema>) {
 }
 
 export async function updateProjectAction(data: z.infer<typeof projectSchema>) {
+  if (!projectsCollection) return { success: false, message: "Database not configured." };
   const validatedFields = projectSchema.safeParse(data);
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
-    const projects = await readJsonFile<Project[]>(projectsFilePath);
-    await updateItem<Project>(projectsFilePath, validatedFields.data, projects);
+    const { id, ...projectData } = validatedFields.data;
+    if (!id) throw new Error("Project ID is missing.");
+    await projectsCollection.doc(id).set(projectData, { merge: true });
     revalidatePath("/[locale]/admin/projects", "page");
     revalidatePath("/", "layout");
     return { success: true, message: "Project updated successfully." };
@@ -237,10 +193,10 @@ export async function updateProjectAction(data: z.infer<typeof projectSchema>) {
   }
 }
 
-export async function deleteProjectAction(id: number) {
+export async function deleteProjectAction(id: string) {
+  if (!projectsCollection) return { success: false, message: "Database not configured." };
   try {
-    const projects = await readJsonFile<Project[]>(projectsFilePath);
-    await deleteItem(projectsFilePath, id, projects);
+    await projectsCollection.doc(id).delete();
     revalidatePath("/[locale]/admin/projects", "page");
     revalidatePath("/", "layout");
     revalidatePath("/[locale]/admin", "page");
@@ -253,16 +209,19 @@ export async function deleteProjectAction(id: number) {
 
 // Team Member Actions
 export async function getTeamAction(): Promise<TeamMember[]> {
-  return await readJsonFile<TeamMember[]>(teamFilePath);
+  if (!teamCollection) return [];
+  const snapshot = await teamCollection.get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TeamMember));
 }
 
 export async function addTeamMemberAction(data: z.infer<typeof teamMemberSchema>) {
+    if (!teamCollection) return { success: false, message: "Database not configured." };
     const validatedFields = teamMemberSchema.safeParse(data);
     if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
     try {
-        const teamMembers = await readJsonFile<TeamMember[]>(teamFilePath);
-        await createItem<TeamMember>(teamFilePath, validatedFields.data, teamMembers);
+        const { id, ...memberData } = validatedFields.data;
+        await teamCollection.add(memberData);
         revalidatePath("/[locale]/admin/team", "page");
         revalidatePath("/", "layout");
         revalidatePath("/[locale]/admin", "page");
@@ -273,12 +232,14 @@ export async function addTeamMemberAction(data: z.infer<typeof teamMemberSchema>
 }
 
 export async function updateTeamMemberAction(data: z.infer<typeof teamMemberSchema>) {
+    if (!teamCollection) return { success: false, message: "Database not configured." };
     const validatedFields = teamMemberSchema.safeParse(data);
     if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
     
     try {
-        const teamMembers = await readJsonFile<TeamMember[]>(teamFilePath);
-        await updateItem<TeamMember>(teamFilePath, validatedFields.data, teamMembers);
+        const { id, ...memberData } = validatedFields.data;
+        if (!id) throw new Error("Team member ID is missing.");
+        await teamCollection.doc(id).set(memberData, { merge: true });
         revalidatePath("/[locale]/admin/team", "page");
         revalidatePath("/", "layout");
         return { success: true, message: "Team member updated successfully." };
@@ -287,10 +248,10 @@ export async function updateTeamMemberAction(data: z.infer<typeof teamMemberSche
     }
 }
 
-export async function deleteTeamMemberAction(id: number) {
+export async function deleteTeamMemberAction(id: string) {
+    if (!teamCollection) return { success: false, message: "Database not configured." };
     try {
-        const teamMembers = await readJsonFile<TeamMember[]>(teamFilePath);
-        await deleteItem(teamFilePath, id, teamMembers);
+        await teamCollection.doc(id).delete();
         revalidatePath("/[locale]/admin/team", "page");
         revalidatePath("/", "layout");
         revalidatePath("/[locale]/admin", "page");
@@ -303,16 +264,19 @@ export async function deleteTeamMemberAction(id: number) {
 
 // Service Actions
 export async function getServicesAction(): Promise<Service[]> {
-  return await readJsonFile<Service[]>(servicesFilePath);
+  if (!servicesCollection) return [];
+  const snapshot = await servicesCollection.get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Service));
 }
 
 export async function addServiceAction(data: z.infer<typeof serviceSchema>) {
+  if (!servicesCollection) return { success: false, message: "Database not configured." };
   const validatedFields = serviceSchema.safeParse(data);
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
-    const services = await readJsonFile<Service[]>(servicesFilePath);
-    await createItem<Service>(servicesFilePath, validatedFields.data, services);
+    const { id, ...serviceData } = validatedFields.data;
+    await servicesCollection.add(serviceData);
     revalidatePath("/[locale]/admin/services", "page");
     revalidatePath("/", "layout");
     return { success: true, message: "Service added successfully." };
@@ -322,12 +286,14 @@ export async function addServiceAction(data: z.infer<typeof serviceSchema>) {
 }
 
 export async function updateServiceAction(data: z.infer<typeof serviceSchema>) {
+  if (!servicesCollection) return { success: false, message: "Database not configured." };
   const validatedFields = serviceSchema.safeParse(data);
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
-    const services = await readJsonFile<Service[]>(servicesFilePath);
-    await updateItem<Service>(servicesFilePath, validatedFields.data, services);
+    const { id, ...serviceData } = validatedFields.data;
+    if (!id) throw new Error("Service ID is missing.");
+    await servicesCollection.doc(id).set(serviceData, { merge: true });
     revalidatePath("/[locale]/admin/services", "page");
     revalidatePath("/", "layout");
     return { success: true, message: "Service updated successfully." };
@@ -336,10 +302,10 @@ export async function updateServiceAction(data: z.infer<typeof serviceSchema>) {
   }
 }
 
-export async function deleteServiceAction(id: number) {
+export async function deleteServiceAction(id: string) {
+  if (!servicesCollection) return { success: false, message: "Database not configured." };
   try {
-    const services = await readJsonFile<Service[]>(servicesFilePath);
-    await deleteItem(servicesFilePath, id, services);
+    await servicesCollection.doc(id).delete();
     revalidatePath("/[locale]/admin/services", "page");
     revalidatePath("/", "layout");
     return { success: true, message: "Service deleted." };
@@ -350,16 +316,19 @@ export async function deleteServiceAction(id: number) {
 
 // Testimonial Actions
 export async function getTestimonialsAction(): Promise<Testimonial[]> {
-  return await readJsonFile<Testimonial[]>(testimonialsFilePath);
+  if (!testimonialsCollection) return [];
+  const snapshot = await testimonialsCollection.get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Testimonial));
 }
 
 export async function addTestimonialAction(data: z.infer<typeof testimonialSchema>) {
+    if (!testimonialsCollection) return { success: false, message: "Database not configured." };
     const validatedFields = testimonialSchema.safeParse(data);
     if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
     try {
-        const testimonials = await readJsonFile<Testimonial[]>(testimonialsFilePath);
-        await createItem<Testimonial>(testimonialsFilePath, validatedFields.data, testimonials);
+        const { id, ...testimonialData } = validatedFields.data;
+        await testimonialsCollection.add(testimonialData);
         revalidatePath("/[locale]/admin/testimonials", "page");
         revalidatePath("/", "layout");
         return { success: true, message: "Testimonial added successfully." };
@@ -369,12 +338,14 @@ export async function addTestimonialAction(data: z.infer<typeof testimonialSchem
 }
 
 export async function updateTestimonialAction(data: z.infer<typeof testimonialSchema>) {
+    if (!testimonialsCollection) return { success: false, message: "Database not configured." };
     const validatedFields = testimonialSchema.safeParse(data);
     if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
     try {
-        const testimonials = await readJsonFile<Testimonial[]>(testimonialsFilePath);
-        await updateItem<Testimonial>(testimonialsFilePath, validatedFields.data, testimonials);
+        const { id, ...testimonialData } = validatedFields.data;
+        if (!id) throw new Error("Testimonial ID is missing.");
+        await testimonialsCollection.doc(id).set(testimonialData, { merge: true });
         revalidatePath("/[locale]/admin/testimonials", "page");
         revalidatePath("/", "layout");
         return { success: true, message: "Testimonial updated successfully." };
@@ -383,10 +354,10 @@ export async function updateTestimonialAction(data: z.infer<typeof testimonialSc
     }
 }
 
-export async function deleteTestimonialAction(id: number) {
+export async function deleteTestimonialAction(id: string) {
+    if (!testimonialsCollection) return { success: false, message: "Database not configured." };
     try {
-        const testimonials = await readJsonFile<Testimonial[]>(testimonialsFilePath);
-        await deleteItem(testimonialsFilePath, id, testimonials);
+        await testimonialsCollection.doc(id).delete();
         revalidatePath("/[locale]/admin/testimonials", "page");
         revalidatePath("/", "layout");
         return { success: true, message: "Testimonial deleted." };
@@ -398,15 +369,28 @@ export async function deleteTestimonialAction(id: number) {
 
 // Site Settings Actions
 export async function getSiteSettingsAction(): Promise<SiteSettings> {
-  return await readJsonFile<SiteSettings>(settingsFilePath, false);
+  if (!settingsCollection) {
+    return { stats: { satisfaction: 0, projects: 0, experience: 0, team: 0 } };
+  }
+  const doc = await settingsCollection.doc('main').get();
+  if (!doc.exists) {
+      // Create default settings if they don't exist
+      const defaultSettings: SiteSettings = {
+          stats: { satisfaction: 98, projects: 150, experience: 12, team: 42 }
+      };
+      await settingsCollection.doc('main').set(defaultSettings);
+      return defaultSettings;
+  }
+  return doc.data() as SiteSettings;
 }
 
 export async function updateSiteSettingsAction(data: z.infer<typeof siteSettingsSchema>) {
+    if (!settingsCollection) return { success: false, message: "Database not configured." };
     const validatedFields = siteSettingsSchema.safeParse(data);
     if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
     try {
-        await writeJsonFile<SiteSettings>(settingsFilePath, validatedFields.data);
+        await settingsCollection.doc('main').set(validatedFields.data, { merge: true });
         revalidatePath("/[locale]/admin/settings", "page");
         revalidatePath("/", "layout");
         return { success: true, message: "Settings updated successfully." };
@@ -417,16 +401,19 @@ export async function updateSiteSettingsAction(data: z.infer<typeof siteSettings
 
 // Partner Actions
 export async function getPartnersAction(): Promise<Partner[]> {
-  return await readJsonFile<Partner[]>(partnersFilePath);
+    if (!partnersCollection) return [];
+    const snapshot = await partnersCollection.get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Partner));
 }
 
 export async function addPartnerAction(data: z.infer<typeof partnerSchema>) {
+  if (!partnersCollection) return { success: false, message: "Database not configured." };
   const validatedFields = partnerSchema.safeParse(data);
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
-    const partners = await readJsonFile<Partner[]>(partnersFilePath);
-    await createItem<Partner>(partnersFilePath, validatedFields.data, partners);
+    const { id, ...partnerData } = validatedFields.data;
+    await partnersCollection.add(partnerData);
     revalidatePath("/[locale]/admin/partners", "page");
     revalidatePath("/", "layout");
     return { success: true, message: "Partner added successfully." };
@@ -436,12 +423,14 @@ export async function addPartnerAction(data: z.infer<typeof partnerSchema>) {
 }
 
 export async function updatePartnerAction(data: z.infer<typeof partnerSchema>) {
+  if (!partnersCollection) return { success: false, message: "Database not configured." };
   const validatedFields = partnerSchema.safeParse(data);
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
-    const partners = await readJsonFile<Partner[]>(partnersFilePath);
-    await updateItem<Partner>(partnersFilePath, validatedFields.data, partners);
+    const { id, ...partnerData } = validatedFields.data;
+    if (!id) throw new Error("Partner ID is missing.");
+    await partnersCollection.doc(id).set(partnerData, { merge: true });
     revalidatePath("/[locale]/admin/partners", "page");
     revalidatePath("/", "layout");
     return { success: true, message: "Partner updated successfully." };
@@ -450,10 +439,10 @@ export async function updatePartnerAction(data: z.infer<typeof partnerSchema>) {
   }
 }
 
-export async function deletePartnerAction(id: number) {
+export async function deletePartnerAction(id: string) {
+  if (!partnersCollection) return { success: false, message: "Database not configured." };
   try {
-    const partners = await readJsonFile<Partner[]>(partnersFilePath);
-    await deleteItem(partnersFilePath, id, partners);
+    await partnersCollection.doc(id).delete();
     revalidatePath("/[locale]/admin/partners", "page");
     revalidatePath("/", "layout");
     return { success: true, message: "Partner deleted." };
@@ -561,4 +550,3 @@ export async function generateTestimonialQuoteAction(authorName: string) {
     return { success: false, quote: null, message: "AI generation failed." };
   }
 }
-
