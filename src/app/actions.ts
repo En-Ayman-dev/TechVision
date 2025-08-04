@@ -232,28 +232,20 @@ export async function addTeamMemberAction(data: z.infer<typeof teamMemberSchema>
 }
 
 export async function updateTeamMemberAction(data: z.infer<typeof teamMemberSchema>) {
-  if (!teamCollection) return { success: false, message: "Database not configured." };
-
-  const validatedFields = teamMemberSchema.safeParse(data);
-  if (!validatedFields.success)
-    return {
-      success: false,
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: "Validation failed.",
-    };
-
-  try {
-    const { id, ...memberData } = validatedFields.data;
-    if (!id) throw new Error("Team member ID is missing.");
-
-    await teamCollection.doc(String(id)).set(memberData, { merge: true }); // 👈 تحويل id إلى string
-
-    revalidatePath("/[locale]/admin/team", "page");
-    revalidatePath("/", "layout");
-    return { success: true, message: "Team member updated successfully." };
-  } catch (error) {
-    return { success: false, message: "Failed to update team member." };
-  }
+    if (!teamCollection) return { success: false, message: "Database not configured." };
+    const validatedFields = teamMemberSchema.safeParse(data);
+    if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+    
+    try {
+        const { id, ...memberData } = validatedFields.data;
+        if (!id) throw new Error("Team member ID is missing.");
+        await teamCollection.doc(id).set(memberData, { merge: true });
+        revalidatePath("/[locale]/admin/team", "page");
+        revalidatePath("/", "layout");
+        return { success: true, message: "Team member updated successfully." };
+    } catch (error) {
+        return { success: false, message: "Failed to update team member." };
+    }
 }
 
 export async function deleteTeamMemberAction(id: string) {
