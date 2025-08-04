@@ -1,5 +1,6 @@
 
 "use client";
+import { useRef } from "react";
 
 import {
   Dialog,
@@ -94,7 +95,7 @@ export function TeamMemberForm({ isOpen, onOpenChange, member, onSubmit }: TeamM
         <DialogHeader>
           <DialogTitle>{member ? "Edit Team Member" : "Add New Member"}</DialogTitle>
           <DialogDescription>
-             {member ? "Update the details of the team member." : "Fill in the details to add a new team member."}
+            {member ? "Update the details of the team member." : "Fill in the details to add a new team member."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4 py-4">
@@ -106,13 +107,77 @@ export function TeamMemberForm({ isOpen, onOpenChange, member, onSubmit }: TeamM
           <div className="grid gap-2">
             <Label htmlFor="role">Role</Label>
             <Input id="role" {...form.register("role")} />
-             {form.formState.errors.role && <p className="text-destructive text-sm">{form.formState.errors.role.message}</p>}
+            {form.formState.errors.role && <p className="text-destructive text-sm">{form.formState.errors.role.message}</p>}
           </div>
-          <div className="grid gap-2">
+          {/* <div className="grid gap-2">
             <Label htmlFor="image">Image URL</Label>
             <Input id="image" {...form.register("image")} />
             {form.formState.errors.image && <p className="text-destructive text-sm">{form.formState.errors.image.message}</p>}
+          </div> */}
+          {/* ✅ حقل عرض رابط الصورة بعد الرفع */}
+          <div className="grid gap-2">
+            <Label htmlFor="image">Image URL</Label>
+            <Input
+              id="image"
+              {...form.register("image")}
+              readOnly
+              className="bg-gray-100 cursor-not-allowed"
+            />
           </div>
+
+          {/* ✅ زر رفع صورة إلى Cloudinary */}
+          <Button
+            variant="outline"
+            type="button"
+            disabled={isPending}
+            onClick={async () => {
+              const fileInput = document.createElement("input");
+              fileInput.type = "file";
+              fileInput.accept = "image/*";
+              fileInput.click();
+              fileInput.onchange = async () => {
+                const file = fileInput.files?.[0];
+                if (!file) return;
+
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("upload_preset", "assetsTeam"); // ✅ اكتب هنا اسم الـ Upload Preset من Cloudinary
+
+                try {
+                  const res = await fetch("https://api.cloudinary.com/v1_1/dqvyzrdbc/image/upload", {
+                    method: "POST",
+                    body: formData,
+                  });
+
+                  const data = await res.json();
+
+                  if (data.secure_url) {
+                    form.setValue("image", data.secure_url); // ✅ نحفظ رابط الصورة في الحقل
+                    toast({
+                      title: "Image uploaded",
+                      description: "Image uploaded successfully.",
+                    });
+                  } else {
+                    toast({
+                      title: "Upload failed",
+                      description: "No URL returned from Cloudinary.",
+                      variant: "destructive",
+                    });
+                  }
+                } catch (error) {
+                  toast({
+                    title: "Upload error",
+                    description: "An error occurred while uploading the image.",
+                    variant: "destructive",
+                  });
+                }
+              };
+            }}
+          >
+            {isPending ? "Uploading..." : "Upload Image"}
+          </Button>
+
+
           <div className="grid gap-2">
             <Label htmlFor="twitter">Twitter URL</Label>
             <Input id="twitter" {...form.register("social.twitter")} placeholder="#" />
@@ -123,9 +188,9 @@ export function TeamMemberForm({ isOpen, onOpenChange, member, onSubmit }: TeamM
             <Input id="linkedin" {...form.register("social.linkedin")} placeholder="#" />
             {form.formState.errors.social?.linkedin && <p className="text-destructive text-sm">{form.formState.errors.social.linkedin.message}</p>}
           </div>
-           <div className="grid gap-2">
+          <div className="grid gap-2">
             <Label htmlFor="dataAiHint">AI Image Hint</Label>
-            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder="e.g., 'professional man'"/>
+            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder="e.g., 'professional man'" />
           </div>
           <DialogFooter>
             <Button type="submit" disabled={isPending}>
