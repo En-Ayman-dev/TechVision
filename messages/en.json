@@ -14,9 +14,22 @@
     "seeOurWork": "See Our Work"
   },
   "Footer": {
-    "companyName": "TechVision",
-    "rightsReserved": "All rights reserved."
+    "companyName": "Tech Vision",
+    "rightsReserved": "All rights reserved.",
+    "aboutParagraph": "We are a passionate team of developers, designers, and strategists dedicated to crafting exceptional digital experiences.",
+    "importantLinks": "Important Links",
+    "home": "Home",
+    "about": "About Us",
+    "services": "Services",
+    "contact": "Contact Us",
+    "visionTitle": "Our Vision",
+    "visionText": "To be a leading force in digital innovation, shaping the future of technology for businesses worldwide.",
+    "valuesTitle": "Our Values",
+    "valuesText": "Integrity, collaboration, and an unwavering pursuit of excellence.",
+    "contactTitle": "Get in Touch",
+    "resourcesTitle": "Trusted Global Resources"
   },
+
   "PartnersSection": {
     "title": "Trusted by the world’s most innovative teams"
   },
