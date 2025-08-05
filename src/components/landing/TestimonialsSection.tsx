@@ -20,7 +20,7 @@ export default async function TestimonialsSection() {
 
   return (
     <section id="testimonials" className="bg-background">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 py-10">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">{t('title')}</h2>
           <p className="mt-4 max-w-2xl mx-auto text-lg leading-8 text-muted-foreground">
@@ -36,25 +36,25 @@ export default async function TestimonialsSection() {
         >
           <CarouselContent>
             {testimonials.map((testimonial, index) => (
-            <CarouselItem key={index}>
+              <CarouselItem key={index}>
                 <div className="p-1">
-                <Card>
+                  <Card>
                     <CardContent className="flex flex-col items-center text-center p-8">
-                    <Image
+                      <Image
                         src={testimonial.image}
                         alt={testimonial.author}
                         width={80}
                         height={80}
                         className="rounded-full mb-4"
                         data-ai-hint={testimonial.dataAiHint}
-                    />
-                    <p className="text-lg italic text-foreground mb-4">"{testimonial.quote}"</p>
-                    <h3 className="font-semibold text-lg font-headline">{testimonial.author}</h3>
-                    <p className="text-muted-foreground">{testimonial.role}</p>
+                      />
+                      <p className="text-lg italic text-foreground mb-4">"{testimonial.quote}"</p>
+                      <h3 className="font-semibold text-lg font-headline">{testimonial.author}</h3>
+                      <p className="text-muted-foreground">{testimonial.role}</p>
                     </CardContent>
-                </Card>
+                  </Card>
                 </div>
-            </CarouselItem>
+              </CarouselItem>
             ))}
           </CarouselContent>
           <CarouselPrevious />

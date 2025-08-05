@@ -9,7 +9,7 @@ export default async function WhyChooseUsSection() {
 
   return (
     <section id="why-us" className="bg-background">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 py-10">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">{t('title')}</h2>

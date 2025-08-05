@@ -9,6 +9,10 @@ import { Toaster } from "@/components/ui/toaster";
 import LoadingScreen from '@/components/landing/LoadingScreen';
 import WelcomeNotification from '@/components/landing/WelcomeNotification';
 import { ThemeProvider } from '@/hooks/use-theme';
+import { NotificationProvider } from '@/components/ui/notification';
+import { AccessibilityProvider, AccessibilityToolbar, SkipToContent } from '@/components/ui/accessibility';
+import { PerformanceMonitor } from '@/components/ui/performance-monitor';
+import { PWAInstallPrompt } from '@/components/ui/pwa-install';
 import '../globals.css';
 
 const inter = Inter({
@@ -113,6 +117,12 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={dir} className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="TechVision" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <Script
           id="structured-data-script"
           type="application/ld+json"
@@ -120,6 +130,7 @@ export default async function LocaleLayout({
         />
       </head>
       <body className="font-body antialiased">
+        <SkipToContent />
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider
             attribute="class"
@@ -127,10 +138,19 @@ export default async function LocaleLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <LoadingScreen />
-            {children}
-            <Toaster />
-            <WelcomeNotification />
+            <AccessibilityProvider>
+              <NotificationProvider>
+                <LoadingScreen />
+                <main id="main-content">
+                  {children}
+                </main>
+                <Toaster />
+                <WelcomeNotification />
+                <AccessibilityToolbar />
+                <PerformanceMonitor />
+                <PWAInstallPrompt />
+              </NotificationProvider>
+            </AccessibilityProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

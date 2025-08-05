@@ -7,7 +7,7 @@ export default async function CtaSection() {
 
   return (
     <section id="cta" className="bg-gradient-to-r from-primary to-accent text-primary-foreground">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 py-10">
         <div className="mx-auto max-w-4xl text-center py-16">
           <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">
             {t('title')}

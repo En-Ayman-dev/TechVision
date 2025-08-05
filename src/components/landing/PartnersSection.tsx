@@ -14,10 +14,10 @@ const iconMap: { [key: string]: React.ElementType } = {
 export default async function PartnersSection() {
   const t = await getTranslations('PartnersSection');
   const partners = await getPartnersAction();
-  
+
   return (
     <section id="partners" className="bg-secondary/50">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 py-10">
         <div className="mx-auto max-w-7xl">
           <h2 className="text-center text-lg font-semibold leading-8 text-muted-foreground">
             {t('title')}

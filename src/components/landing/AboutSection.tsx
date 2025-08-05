@@ -6,7 +6,7 @@ export default async function AboutSection() {
 
   return (
     <section id="about" className="bg-background">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 py-14">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">
