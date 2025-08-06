@@ -104,7 +104,7 @@ const globalsCssPath = path.join(process.cwd(), 'src', 'app', 'globals.css');
 export async function getMessagesAction(): Promise<Message[]> {
   if (!messagesCollection) return [];
   const snapshot = await messagesCollection.orderBy('submittedAt', 'desc').get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Message));
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Message));
 }
 
 export async function sendContactMessageAction(data: z.infer<typeof contactSchema>) {
@@ -144,7 +144,7 @@ export async function suggestFaqAction(userInput: string) {
   if (!userInput || userInput.length < 10) return { success: false, suggestions: [] };
   try {
     const result = await suggestFaq({ userInput });
-    return { success: true, suggestions: result.suggestions };
+    return { success: true, suggestions: result.suggestedFaqs };
   } catch (error) {
     console.error("Error suggesting FAQ:", error);
     return { success: false, suggestions: [] };
@@ -156,7 +156,7 @@ export async function suggestFaqAction(userInput: string) {
 export async function getProjectsAction(): Promise<Project[]> {
   if (!projectsCollection) return [];
   const snapshot = await projectsCollection.get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Project));
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Project));
 }
 
 export async function addProjectAction(data: z.infer<typeof projectSchema>) {
@@ -211,7 +211,7 @@ export async function deleteProjectAction(id: string) {
 export async function getTeamAction(): Promise<TeamMember[]> {
   if (!teamCollection) return [];
   const snapshot = await teamCollection.get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TeamMember));
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as TeamMember));
 }
 
 export async function addTeamMemberAction(data: z.infer<typeof teamMemberSchema>) {
@@ -266,7 +266,7 @@ export async function deleteTeamMemberAction(id: string) {
 export async function getServicesAction(): Promise<Service[]> {
   if (!servicesCollection) return [];
   const snapshot = await servicesCollection.get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Service));
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Service));
 }
 
 export async function addServiceAction(data: z.infer<typeof serviceSchema>) {
@@ -318,7 +318,7 @@ export async function deleteServiceAction(id: string) {
 export async function getTestimonialsAction(): Promise<Testimonial[]> {
   if (!testimonialsCollection) return [];
   const snapshot = await testimonialsCollection.get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Testimonial));
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Testimonial));
 }
 
 export async function addTestimonialAction(data: z.infer<typeof testimonialSchema>) {
@@ -403,7 +403,7 @@ export async function updateSiteSettingsAction(data: z.infer<typeof siteSettings
 export async function getPartnersAction(): Promise<Partner[]> {
     if (!partnersCollection) return [];
     const snapshot = await partnersCollection.get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Partner));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Partner));
 }
 
 export async function addPartnerAction(data: z.infer<typeof partnerSchema>) {
