@@ -152,5 +152,74 @@
     "title": "TechVision | Innovative Technology & Digital Solutions",
     "description": "TechVision is a leading technology partner specializing in web development, cloud solutions, UI/UX design, and cybersecurity. Let us elevate your business.",
     "keywords": "TechVision, Web Development, Cloud Solutions, UI/UX Design, Cybersecurity, Next.js, React, Digital Transformation"
+  },
+  "BlogSystem": {
+    "header": {
+      "title": "Blog",
+      "subtitle": "Insights, tutorials, and updates from our team"
+    },
+    "buttons": {
+      "newPost": "New Post"
+    },
+    "search": {
+      "placeholder": "Search blog posts...",
+      "tagsCategory": "Tags",
+      "allCategories": "All Categories"
+    },
+    "noPostsFound": "No blog posts found.",
+    "confirm": {
+      "deletePost": "Are you sure you want to delete this post?"
+    },
+    "notifications": {
+      "liked": {
+        "title": "Post liked!",
+        "description": "Thank you for your feedback."
+      },
+      "linkCopied": {
+        "title": "Link copied!",
+        "description": "Blog post link copied to clipboard."
+      },
+      "deleted": {
+        "title": "Post deleted",
+        "description": "The blog post has been successfully deleted."
+      }
+    },
+    "card": {
+      "featured": "Featured"
+    },
+    "posts": {
+      "1": {
+        "title": "The Future of Web Development: Trends to Watch in 2024",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
+        "excerpt": "Explore the latest trends shaping the future of web development, from AI integration to new frameworks."
+      },
+      "2": {
+        "title": "Building Scalable Applications with Next.js and Firebase",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
+        "excerpt": "Learn how to build scalable, modern applications using Next.js and Firebase for the backend."
+      },
+      "3": {
+        "title": "UI/UX Design Principles for Modern Web Applications",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
+        "excerpt": "Discover essential UI/UX design principles that make web applications user-friendly and engaging."
+      }
+    },
+    "categories": {
+      "Technology": "Technology",
+      "Development": "Development",
+      "Design": "Design"
+    },
+    "tags": {
+      "Web Development": "Web Development",
+      "AI": "AI",
+      "Trends": "Trends",
+      "Next_js": "Next.js",
+      "Firebase": "Firebase",
+      "Scalability": "Scalability",
+      "UI/UX": "UI/UX",
+      "Design": "Design",
+      "User Experience": "User Experience"
+    }
   }
 }
+
