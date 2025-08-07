@@ -15,7 +15,8 @@ import {
   Handshake,
   Palette,
   LayoutTemplate,
-  Briefcase
+  Briefcase,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -28,6 +29,7 @@ const navItems = [
   { href: "/ar/admin/projects", icon: LayoutTemplate, label: "Projects" },
   { href: "/ar/admin/team", icon: Users, label: "Team" },
   { href: "/ar/admin/services", icon: Briefcase, label: "Services" },
+  { href: "/ar/admin/blog", icon: FileText, label: "Blog" },
   { href: "/ar/admin/testimonials", icon: Star, label: "Testimonials" },
   { href: "/ar/admin/partners", icon: Handshake, label: "Partners" },
   { href: "/ar/admin/settings", icon: Settings, label: "Site Settings" },

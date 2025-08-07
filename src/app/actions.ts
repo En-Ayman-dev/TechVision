@@ -3,11 +3,17 @@
 import { z } from "zod";
 import { suggestFaq } from "@/ai/flows/faq-suggestions";
 import { db } from "@/lib/firebase-admin";
-import type { Message, Project, TeamMember, Service, Testimonial, SiteSettings, Partner, ThemeSettings } from "@/lib/types";
+// import type { BlogPost } from "@/components/blog/blog-system";
+
+// import type { Message, Project, TeamMember, Service, Testimonial, SiteSettings, Partner, ThemeSettings } from "@/lib/types";
+import type { Message, Project, TeamMember, Service, Testimonial, SiteSettings, Partner, ThemeSettings, BlogPost } from "@/lib/types";
+
 import { revalidatePath } from "next/cache";
 import { generateDescription, generateTestimonialQuote } from "@/ai/flows/text-generation";
 import { promises as fs } from 'fs';
 import path from 'path';
+
+
 
 // Helper to check if db is initialized
 const isDbInitialized = () => db && typeof db.collection === 'function';
@@ -97,6 +103,7 @@ const servicesCollection = isDbInitialized() ? db.collection('services') : null;
 const testimonialsCollection = isDbInitialized() ? db.collection('testimonials') : null;
 const settingsCollection = isDbInitialized() ? db.collection('settings') : null;
 const partnersCollection = isDbInitialized() ? db.collection('partners') : null;
+const blogPostsCollection = isDbInitialized() ? db.collection('blogPosts') : null;
 const globalsCssPath = path.join(process.cwd(), 'src', 'app', 'globals.css');
 
 
@@ -548,5 +555,99 @@ export async function generateTestimonialQuoteAction(authorName: string) {
   } catch (error) {
     console.error("Error generating testimonial quote:", error);
     return { success: false, quote: null, message: "AI generation failed." };
+  }
+}
+
+
+
+// Blog Post Actions (with Firestore)
+const blogPostSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(2, "Title must be at least 2 characters."),
+  content: z.string().min(10, "Content must be at least 10 characters."),
+  excerpt: z.string().optional(),
+  author: z.string().min(2, "Author must be at least 2 characters."),
+  publishedAt: z.string().optional(),
+  updatedAt: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  category: z.string().min(2, "Category must be at least 2 characters."),
+  views: z.number().optional(),
+  likes: z.number().optional(),
+  featured: z.boolean().optional(),
+  published: z.boolean().optional(),
+});
+
+export async function getBlogPostsAction(): Promise<BlogPost[]> {
+  try {
+    const snapshot = await db.collection('blogPosts').get();
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    } as unknown as BlogPost));
+  } catch (error) {
+    console.error("Failed to fetch blog posts:", error);
+    return [];
+  }
+}
+
+export async function addBlogPostAction(data: z.infer<typeof blogPostSchema>) {
+  const validatedFields = blogPostSchema.safeParse(data);
+  if (!validatedFields.success) {
+    return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+  }
+
+  try {
+    const { id, ...postData } = validatedFields.data;
+const postRef = await db.collection('blogPosts').add({
+        ...postData,
+      publishedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+    if (!postRef.id) {
+      return { success: false, message: "Failed to create blog post reference." };
+    }
+    console.log("PostRef ID:", postRef.id);
+    console.log("PostData:", postData);
+    revalidatePath("/[locale]/admin/blog", "page");
+    revalidatePath("/[locale]/blog", "page");
+    return { success: true, message: "Blog post added successfully." };
+  } catch (error) {
+    console.error("Error adding blog post:", error);
+
+    return { success: false, message: "Failed to add blog post." };
+  }
+}
+
+export async function updateBlogPostAction(data: z.infer<typeof blogPostSchema>) {
+  const validatedFields = blogPostSchema.safeParse(data);
+  if (!validatedFields.success) {
+    return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+  }
+
+  try {
+    const { id, ...postData } = validatedFields.data;
+    if (!id) throw new Error("Post ID is missing.");
+    // await db.collection('blogPosts').doc(id).set(postData, { merge: true });
+        const postRef = db.collection('blogPosts').doc(id);
+    await postRef.set(postData, { merge: true });
+    if (!postRef.id) {
+      return { success: false, message: "Failed to update blog post." };
+    }
+    revalidatePath("/[locale]/admin/blog", "page");
+    revalidatePath("/[locale]/blog", "page");
+    return { success: true, message: "Blog post updated successfully." };
+  } catch (error) {
+     console.error("Error updating blog post:", error);
+    return { success: false, message: "Failed to update blog post." };
+  }
+}
+export async function deleteBlogPostAction(id: string) {
+  try {
+    await db.collection('blogPosts').doc(id).delete();
+    revalidatePath("/[locale]/admin/blog", "page");
+    revalidatePath("/[locale]/blog", "page");
+    return { success: true, message: "Blog post deleted." };
+  } catch (error) {
+    return { success: false, message: "Failed to delete blog post." };
   }
 }

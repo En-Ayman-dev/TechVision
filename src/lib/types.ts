@@ -99,3 +99,18 @@ export interface ThemeSettings {
         accent: string;
     }
 }
+export  interface BlogPost {
+    id: string;
+    title: string;
+    content: string;
+    excerpt: string;
+    author: string;
+    publishedAt: string;
+    updatedAt: string;
+    tags: string[];
+    category: string;
+    views: number;
+    likes: number;
+    featured: boolean;
+    published: boolean;
+}
