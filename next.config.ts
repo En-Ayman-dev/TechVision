@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'imgur.com',
+        hostname: 'github.com',
       },
       {
         protocol: 'https',

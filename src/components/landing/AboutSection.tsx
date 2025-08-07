@@ -28,7 +28,7 @@ export default async function AboutSection() {
           </div>
           <div className="w-full h-auto">
             <Image
-              src="https://imgur.com/iD7uwag.jpg"
+              src="/image/About.png" // تأكد من أن المسار صحيح
               alt={t('imageAlt')}
               width={600}
               height={400}
