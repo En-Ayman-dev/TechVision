@@ -65,9 +65,9 @@ export function SearchComponent({
     setSelectedFilters([])
   }
 
-  React.useEffect(() => {
-    handleSearch()
-  }, [selectedFilters, handleSearch])
+  // React.useEffect(() => {
+  //   handleSearch()
+  // }, [selectedFilters, handleSearch])
 
   const groupedFilters = availableFilters.reduce((acc, filter) => {
     const category = filter.category || "Other"

@@ -19,6 +19,14 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'imgur.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.imgur.com', // مهم جدًا! Imgur يعرض الصور عبر i.imgur.com
+      },
     ],
   },
 };
