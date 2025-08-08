@@ -69,7 +69,8 @@
       "item": "item",
       "deleteMessage": "Delete {item}",
       "deleteMessageDesc": "Are you sure you want to delete this {item}? This action cannot be undone.",
-      "generateQuote": "Quote generated for you by AI."
+      "generateQuote": "Quote generated for you by AI.",
+      "itemUpdatedDesc": "{item} updated successfully."
       },
     "dashboardPage": {
       "title": "Dashboard",
@@ -128,7 +129,8 @@
       "social": "Social links",
       "imageHint": "AI image hint",
       "imageHintPlaceholder": "Example: 'Professional businessman'",
-      "titleRequired": "Title is required",     "item": "team member",
+      "titleRequired": "Title is required",
+      "item": "team member",
       "imageUrlValidation": "Image must be a valid URL (e.g., https://placehold.co/400x400.png).",
       "twitterUrl": "Twitter URL",
       "twitterUrlValidation": "Must be a valid URL or empty.",
