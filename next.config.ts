@@ -65,14 +65,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-
-  async rewrites() {
+  async redirects() {
     return [
       {
-        source: '/image/:path*', 
-        destination: '/image/:path*', 
+        source: '/ar/image/:path*',
+        destination: '/image/:path*',
         permanent: true,
-
       },
     ];
   },
