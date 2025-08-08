@@ -121,6 +121,8 @@ export default function Footer() {
                 href={res.href}
                 target="_blank"
                 className="group flex items-start gap-3 hover:bg-gray-100 p-2 rounded"
+                locale={false}
+                
               >
                 <Image
                   src={res.logo}
@@ -128,7 +130,7 @@ export default function Footer() {
                   width={32}
                   height={32}
                   className="object-contain rounded"
-                  // locale={false}  
+                  unoptimized 
                 />
                 <div>
                   <div className="font-semibold group-hover:text-black">{res.title}</div>

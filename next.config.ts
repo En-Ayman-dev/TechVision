@@ -69,8 +69,10 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: '/image/:path*',  // كل طلبات الصور
-        destination: '/image/:path*',  // توجهها مباشرة إلى نفس المسار بدون لغة
+        source: '/image/:path*', 
+        destination: '/image/:path*', 
+        permanent: true,
+
       },
     ];
   },
