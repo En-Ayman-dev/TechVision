@@ -133,7 +133,8 @@
       "twitterUrl": "Twitter URL",
       "twitterUrlValidation": "Must be a valid URL or empty.",
       "linkedinUrl": "LinkedIn URL",
-      "linkedinUrlValidation": "Must be a valid URL or empty."
+      "linkedinUrlValidation": "Must be a valid URL or empty.",
+      "role": "Role"
     },
     "servicesPage": {
       "manageServices": "Manage Services",
