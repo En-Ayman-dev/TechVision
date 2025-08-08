@@ -37,7 +37,7 @@ type Props = {
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const t = await getTranslations({ locale, namespace: 'Metadata' });
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://tech-vision-ayman.vercel.app';
   return {
     title: t('title'),
     description: t('description'),

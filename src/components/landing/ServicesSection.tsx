@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardHeader, CardDescription } from "@/components/ui/card";
 import { Code, Cloud, PenTool, Database, Shield, LineChart } from 'lucide-react';
 import { getTranslations } from "next-intl/server";
 import { getServicesAction } from "@/app/actions";
@@ -34,7 +34,9 @@ export default async function ServicesSection() {
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4">
                     <IconComponent className="h-6 w-6" />
                   </div>
-                  <CardTitle className="font-headline">{service.title}</CardTitle>
+                  <h3 className="text-2xl font-semibold leading-none tracking-tight font-headline">
+                    {service.title}
+                  </h3>
                   <CardDescription>{service.description}</CardDescription>
                 </CardHeader>
               </Card>

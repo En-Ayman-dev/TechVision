@@ -1,6 +1,5 @@
 import {
   Accordion,
-  AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
@@ -31,9 +30,10 @@ export default function FaqSection() {
             {faqItems.map((item, index) => (
               <AccordionItem key={index} value={`item-${index}`}>
                 <AccordionTrigger className="text-lg text-left">{item.question}</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
+                {/* <AccordionContent className="text-muted-foreground">
                   {item.answer}
-                </AccordionContent>
+                </AccordionContent> */}
+                <h3 className="text-lg text-left font-semibold">{item.question}</h3>
               </AccordionItem>
             ))}
           </Accordion>

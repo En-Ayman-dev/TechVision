@@ -121,7 +121,7 @@ export default function Footer() {
                 href={res.href}
                 target="_blank"
                 className="group flex items-start gap-3 hover:bg-gray-100 p-2 rounded"
-                locale={false}
+                // locale={false}
                 
               >
                 <Image

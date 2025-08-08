@@ -10,8 +10,6 @@ import PartnersSection from '@/components/landing/PartnersSection';
 import AboutSection from '@/components/landing/AboutSection';
 import ServicesSection from '@/components/landing/ServicesSection';
 import WhyChooseUsSection from '@/components/landing/WhyChooseUsSection';
-import TeamSection from '@/components/landing/TeamSection';
-import TestimonialsSection from '@/components/landing/TestimonialsSection';
 import FaqSection from '@/components/landing/FaqSection';
 import CtaSection from '@/components/landing/CtaSection';
 import ContactSection from '@/components/landing/ContactSection';
@@ -20,6 +18,15 @@ import BlogPage from './blog/page';
 // Dynamically import the Portfolio section as it is a client component with state
 const PortfolioSection = dynamic(() => import('@/components/landing/PortfolioSection'), {
   loading: () => <div className="container"><Skeleton className="h-[600px] w-full" /></div>,
+  ssr: true,
+});
+
+const TeamSection = dynamic(() => import('@/components/landing/TeamSection'), {
+  loading: () => <div className="container"><Skeleton className="h-[400px] w-full" /></div>,
+  ssr: true,
+});
+const TestimonialsSection = dynamic(() => import('@/components/landing/TestimonialsSection'), {
+  loading: () => <div className="container"><Skeleton className="h-[400px] w-full" /></div>,
   ssr: true,
 });
 
