@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -20,6 +19,7 @@ import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 const hslColorRegex = /^(\d{1,3})\s+(\d{1,3})%\s+(\d{1,3})%$/;
 const hexToHsl = (hex: string) => {
@@ -90,6 +90,9 @@ export default function ThemePage() {
   const [isPending, startTransition] = useTransition();
   const [isFetching, startFetchingTransition] = useTransition();
   const { toast } = useToast();
+  const t = useTranslations("Admin.themePage");
+  const tGeneral = useTranslations("Admin.general");
+
 
   const form = useForm<z.infer<typeof themeSettingsSchema>>({
     resolver: zodResolver(themeSettingsSchema),
@@ -111,12 +114,12 @@ export default function ThemePage() {
       const result = await updateThemeSettingsAction(values);
       if (result.success) {
         toast({
-          title: "Theme Updated",
-          description: "Your site's theme has been successfully updated.",
+          title: tGeneral("itemUpdated", { item: t("item") }),
+          description: tGeneral("itemUpdatedDesc", { item: t("item") }),
         });
       } else {
         toast({
-          title: "Error",
+          title: tGeneral("error"),
           description: result.message,
           variant: "destructive",
         });
@@ -126,7 +129,7 @@ export default function ThemePage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Theme Settings</h1>
+      <h1 className="text-3xl font-bold mb-6">{t("title")}</h1>
       {isFetching ? (
         <Card>
             <CardHeader>
@@ -156,21 +159,21 @@ export default function ThemePage() {
         <form onSubmit={form.handleSubmit(handleSubmit)}>
             <Card>
             <CardHeader>
-                <CardTitle>Color Scheme</CardTitle>
+                <CardTitle>{t("themeTitle")}</CardTitle>
                 <CardDescription>
-                Customize the color palette for your website's light and dark themes.
+                {t("themeDesc")}
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
                 <div>
-                    <h3 className="text-lg font-medium mb-4">Light Theme</h3>
+                    <h3 className="text-lg font-medium mb-4">{t("lightTheme")}</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <Controller
                             name="light.background"
                             control={form.control}
                             render={({ field }) => (
                                 <div className="grid gap-2">
-                                <Label>Background</Label>
+                                <Label>{t("background")}</Label>
                                 <ColorPicker value={field.value} onChange={field.onChange} />
                                 {form.formState.errors.light?.background && <p className="text-destructive text-sm">{form.formState.errors.light.background.message}</p>}
                                 </div>
@@ -181,7 +184,7 @@ export default function ThemePage() {
                             control={form.control}
                             render={({ field }) => (
                                 <div className="grid gap-2">
-                                <Label>Primary</Label>
+                                <Label>{t("primary")}</Label>
                                 <ColorPicker value={field.value} onChange={field.onChange} />
                                 {form.formState.errors.light?.primary && <p className="text-destructive text-sm">{form.formState.errors.light.primary.message}</p>}
                                 </div>
@@ -192,7 +195,7 @@ export default function ThemePage() {
                             control={form.control}
                             render={({ field }) => (
                                 <div className="grid gap-2">
-                                <Label>Accent</Label>
+                                <Label>{t("accent")}</Label>
                                 <ColorPicker value={field.value} onChange={field.onChange} />
                                 {form.formState.errors.light?.accent && <p className="text-destructive text-sm">{form.formState.errors.light.accent.message}</p>}
                                 </div>
@@ -202,14 +205,14 @@ export default function ThemePage() {
                 </div>
 
                  <div>
-                    <h3 className="text-lg font-medium mb-4">Dark Theme</h3>
+                    <h3 className="text-lg font-medium mb-4">{t("darkTheme")}</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <Controller
                             name="dark.background"
                             control={form.control}
                             render={({ field }) => (
                                 <div className="grid gap-2">
-                                <Label>Background</Label>
+                                <Label>{t("background")}</Label>
                                 <ColorPicker value={field.value} onChange={field.onChange} />
                                 {form.formState.errors.dark?.background && <p className="text-destructive text-sm">{form.formState.errors.dark.background.message}</p>}
                                 </div>
@@ -220,7 +223,7 @@ export default function ThemePage() {
                             control={form.control}
                             render={({ field }) => (
                                 <div className="grid gap-2">
-                                <Label>Primary</Label>
+                                <Label>{t("primary")}</Label>
                                 <ColorPicker value={field.value} onChange={field.onChange} />
                                 {form.formState.errors.dark?.primary && <p className="text-destructive text-sm">{form.formState.errors.dark.primary.message}</p>}
                                 </div>
@@ -231,7 +234,7 @@ export default function ThemePage() {
                             control={form.control}
                             render={({ field }) => (
                                 <div className="grid gap-2">
-                                <Label>Accent</Label>
+                                <Label>{t("accent")}</Label>
                                 <ColorPicker value={field.value} onChange={field.onChange} />
                                 {form.formState.errors.dark?.accent && <p className="text-destructive text-sm">{form.formState.errors.dark.accent.message}</p>}
                                 </div>
@@ -242,7 +245,7 @@ export default function ThemePage() {
 
                 <Button type="submit" disabled={isPending}>
                     {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Save Changes
+                    {tGeneral("saveChanges")}
                 </Button>
             </CardContent>
             </Card>

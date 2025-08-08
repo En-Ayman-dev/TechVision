@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -44,6 +43,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 export default function TestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -51,6 +51,9 @@ export default function TestimonialsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null);
   const { toast } = useToast();
+  const t = useTranslations("Admin.testimonialsPage");
+  const tGeneral = useTranslations("Admin.general");
+
 
   const fetchTestimonials = () => {
     startTransition(async () => {
@@ -73,18 +76,18 @@ export default function TestimonialsPage() {
     setIsFormOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     startTransition(async () => {
       const result = await deleteTestimonialAction(id);
       if (result.success) {
         fetchTestimonials();
         toast({
-          title: "Testimonial Deleted",
-          description: "The testimonial has been successfully deleted.",
+          title: tGeneral("itemDeleted", { item: t("item") }),
+          description: tGeneral("itemDeletedDesc", { item: t("item") }),
         });
       } else {
         toast({
-          title: "Error",
+          title: tGeneral("error"),
           description: result.message,
           variant: "destructive",
         });
@@ -100,10 +103,10 @@ export default function TestimonialsPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Manage Testimonials</h1>
+        <h1 className="text-3xl font-bold">{t("title")}</h1>
         <Button onClick={handleAddClick}>
           <PlusCircle className="mr-2 h-5 w-5" />
-          Add Testimonial
+          {t("addTestimonial")}
         </Button>
       </div>
 
@@ -116,19 +119,19 @@ export default function TestimonialsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Testimonials List</CardTitle>
+          <CardTitle>{t("testimonialsList")}</CardTitle>
           <CardDescription>
-            Here are all the testimonials from your clients.
+            {t("testimonialsListDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="hidden w-[100px] sm:table-cell">Image</TableHead>
-                <TableHead>Author</TableHead>
-                <TableHead>Quote</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="hidden w-[100px] sm:table-cell">{tGeneral("image")}</TableHead>
+                <TableHead>{t("author")}</TableHead>
+                <TableHead>{t("quote")}</TableHead>
+                <TableHead className="text-right">{tGeneral("actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -160,33 +163,33 @@ export default function TestimonialsPage() {
                         <DropdownMenuTrigger asChild>
                           <Button aria-haspopup="true" size="icon" variant="ghost">
                             <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">Toggle menu</span>
+                            <span className="sr-only">{tGeneral("openMenu")}</span>
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuLabel>{tGeneral("actions")}</DropdownMenuLabel>
                           <DropdownMenuItem onClick={() => handleEditClick(testimonial)}>
                             <FilePen className="mr-2 h-4 w-4" />
-                            Edit
+                            {tGeneral("edit")}
                           </DropdownMenuItem>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                 <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
+                                {tGeneral("delete")}
                               </DropdownMenuItem>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogTitle>{tGeneral("areYouSure")}</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  This action cannot be undone. This will permanently delete the testimonial.
+                                  {tGeneral("deleteConfirmation", { item: t("item") })}
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDelete(testimonial.id)}>
-                                  Continue
+                                <AlertDialogCancel>{tGeneral("cancel")}</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDelete(testimonial.id?.toString())}>
+                                  {tGeneral("continue")}
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
@@ -199,7 +202,7 @@ export default function TestimonialsPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={4} className="h-24 text-center">
-                    No testimonials found.
+                    {tGeneral("noItemsFound", { item: t("item") })}
                   </TableCell>
                 </TableRow>
               )}

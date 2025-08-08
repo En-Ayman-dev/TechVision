@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -21,6 +20,7 @@ import { useEffect, useTransition } from "react";
 import { addTestimonialAction, updateTestimonialAction, generateTestimonialQuoteAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Wand2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface TestimonialFormProps {
   isOpen: boolean;
@@ -29,19 +29,22 @@ interface TestimonialFormProps {
   onSubmit: () => void;
 }
 
-const testimonialSchema = z.object({
-  id: z.number().optional(),
-  quote: z.string().min(10, "Quote must be at least 10 characters."),
-  author: z.string().min(2, "Author must be at least 2 characters."),
-  role: z.string().min(2, "Role must be at least 2 characters."),
-  image: z.string().url("Image must be a valid URL (e.g., https://placehold.co/100x100.png)."),
-  dataAiHint: z.string().optional(),
-});
-
 export function TestimonialForm({ isOpen, onOpenChange, testimonial, onSubmit }: TestimonialFormProps) {
+  const t = useTranslations("Admin.testimonialsPage");
+  const tGeneral = useTranslations("Admin.general");
   const [isPending, startTransition] = useTransition();
   const [isGenerating, startGeneratingTransition] = useTransition();
   const { toast } = useToast();
+  
+  const testimonialSchema = z.object({
+    id: z.string().optional(),
+    quote: z.string().min(10, t("quoteMin")),
+    author: z.string().min(2, t("authorMin")),
+    role: z.string().min(2, t("roleMin")),
+    image: z.string().url(t("imageUrlValidation")),
+    dataAiHint: z.string().optional(),
+  });
+  
   const form = useForm<z.infer<typeof testimonialSchema>>({
     resolver: zodResolver(testimonialSchema),
     defaultValues: {
@@ -66,13 +69,13 @@ export function TestimonialForm({ isOpen, onOpenChange, testimonial, onSubmit }:
       });
     }
   }, [testimonial, form, isOpen]);
-  
+
   const handleGenerateQuote = () => {
     const author = form.getValues("author");
     if (!author || author.length < 2) {
       toast({
-        title: "Author Name Required",
-        description: "Please enter an author's name to generate a quote.",
+        title: t("authorRequired"),
+        description: t("authorRequiredDesc"),
         variant: "destructive",
       });
       return;
@@ -82,13 +85,13 @@ export function TestimonialForm({ isOpen, onOpenChange, testimonial, onSubmit }:
       if (result.success && result.quote) {
         form.setValue("quote", result.quote, { shouldValidate: true });
         toast({
-          title: "Quote Generated",
-          description: "An AI-powered quote has been generated for you.",
+          title: tGeneral("generateQuoteSuccess"),
+          description: tGeneral("generateQuote"),
         });
       } else {
         toast({
-          title: "Generation Failed",
-          description: result.message || "Could not generate a quote at this time.",
+          title: tGeneral("generationFailed"),
+          description: result.message || tGeneral("generationFailedDesc"),
           variant: "destructive",
         });
       }
@@ -98,16 +101,20 @@ export function TestimonialForm({ isOpen, onOpenChange, testimonial, onSubmit }:
   const handleSubmit = (values: z.infer<typeof testimonialSchema>) => {
     startTransition(async () => {
       const action = testimonial ? updateTestimonialAction : addTestimonialAction;
-      const result = await action(values);
+      const result = await action({
+        ...values,
+        id: values.id?.toString(),
+      });
+
       if (result.success) {
         toast({
-          title: testimonial ? "Testimonial Updated" : "Testimonial Added",
+          title: testimonial ? tGeneral("itemUpdated", { item: t("item") }) : tGeneral("itemAdded", { item: t("item") }),
           description: result.message,
         });
         onSubmit();
       } else {
         toast({
-          title: "Error",
+          title: tGeneral("error"),
           description: result.message,
           variant: "destructive",
         });
@@ -119,46 +126,46 @@ export function TestimonialForm({ isOpen, onOpenChange, testimonial, onSubmit }:
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{testimonial ? "Edit Testimonial" : "Add New Testimonial"}</DialogTitle>
+          <DialogTitle>{testimonial ? tGeneral("editTitle", { item: t("item") }) : tGeneral("addTitle", { item: t("item") })}</DialogTitle>
           <DialogDescription>
-            {testimonial ? "Update the details of the testimonial." : "Fill in the details to add a new testimonial."}
+            {testimonial ? tGeneral("editDesc", { item: t("item") }) : tGeneral("addDesc", { item: t("item") })}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="author">Author</Label>
+            <Label htmlFor="author">{t("author")}</Label>
             <Input id="author" {...form.register("author")} />
             {form.formState.errors.author && <p className="text-destructive text-sm">{form.formState.errors.author.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="role">Role</Label>
+            <Label htmlFor="role">{t("role")}</Label>
             <Input id="role" {...form.register("role")} />
             {form.formState.errors.role && <p className="text-destructive text-sm">{form.formState.errors.role.message}</p>}
           </div>
           <div className="grid gap-2">
             <div className="flex justify-between items-center">
-              <Label htmlFor="quote">Quote</Label>
-               <Button type="button" size="sm" variant="outline" onClick={handleGenerateQuote} disabled={isGenerating}>
-                  {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
-                  Generate
-                </Button>
+              <Label htmlFor="quote">{t("quote")}</Label>
+              <Button type="button" size="sm" variant="outline" onClick={handleGenerateQuote} disabled={isGenerating}>
+                {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+                {tGeneral("generate")}
+              </Button>
             </div>
             <Textarea id="quote" {...form.register("quote")} />
             {form.formState.errors.quote && <p className="text-destructive text-sm">{form.formState.errors.quote.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="image">Image URL</Label>
+            <Label htmlFor="image">{t("imageUrl")}</Label>
             <Input id="image" {...form.register("image")} />
-             {form.formState.errors.image && <p className="text-destructive text-sm">{form.formState.errors.image.message}</p>}
+            {form.formState.errors.image && <p className="text-destructive text-sm">{form.formState.errors.image.message}</p>}
           </div>
-           <div className="grid gap-2">
-            <Label htmlFor="dataAiHint">AI Image Hint</Label>
-            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder="e.g., 'happy client'"/>
+          <div className="grid gap-2">
+            <Label htmlFor="dataAiHint">{t("imageHint")}</Label>
+            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder={t("imageHintPlaceholder")} />
           </div>
           <DialogFooter>
             <Button type="submit" disabled={isPending}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {testimonial ? "Save Changes" : "Add Testimonial"}
+              {testimonial ? tGeneral("saveChanges") : tGeneral("add")}
             </Button>
           </DialogFooter>
         </form>

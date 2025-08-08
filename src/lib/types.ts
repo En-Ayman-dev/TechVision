@@ -7,7 +7,7 @@ export interface NavItem {
 }
 
 export interface Service {
-  id: number;
+  id: string;
   icon: string;
   title: string;
   description: string;
@@ -20,7 +20,7 @@ export interface Stat {
 }
 
 export interface PortfolioItem {
-  id: number;
+  id: string;
   category: string;
   title: string;
   image: string;
@@ -29,7 +29,7 @@ export interface PortfolioItem {
 }
 
 export interface TeamMember {
-  id: number;
+  id: string;
   name: string;
   role: string;
   image: string;
@@ -41,7 +41,7 @@ export interface TeamMember {
 }
 
 export interface Testimonial {
-  id: number;
+  id: string;
   quote: string;
   author: string;
   role: string;
@@ -55,14 +55,14 @@ export interface FaqItem {
 }
 
 export interface Partner {
-  id: number;
+  id?: string;
   name: string;
   logo: string;
   dataAiHint?: string;
 }
 
 export interface Message {
-  id: number;
+  id: string;
   name: string;
   email: string;
   message: string;
@@ -70,7 +70,7 @@ export interface Message {
 }
 
 export interface Project {
-  id: number;
+  id: string;
   title: string;
   description: string;
   category: string;

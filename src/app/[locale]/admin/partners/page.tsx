@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -43,6 +42,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 const iconMap: { [key: string]: React.ElementType } = {
   Globe,
@@ -58,6 +58,9 @@ export default function PartnersPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
   const { toast } = useToast();
+  const t = useTranslations("Admin.partnersPage");
+  const tGeneral = useTranslations("Admin.general");
+
 
   const fetchPartners = () => {
     startTransition(async () => {
@@ -80,18 +83,18 @@ export default function PartnersPage() {
     setIsFormOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     startTransition(async () => {
       const result = await deletePartnerAction(id);
       if (result.success) {
         fetchPartners();
         toast({
-          title: "Partner Deleted",
-          description: "The partner has been successfully deleted.",
+          title: tGeneral("itemDeleted", { item: t("item") }),
+          description: tGeneral("itemDeletedDesc", { item: t("item") }),
         });
       } else {
         toast({
-          title: "Error",
+          title: tGeneral("error"),
           description: result.message,
           variant: "destructive",
         });
@@ -107,10 +110,10 @@ export default function PartnersPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Manage Partners</h1>
+        <h1 className="text-3xl font-bold">{t("title")}</h1>
         <Button onClick={handleAddClick}>
           <PlusCircle className="mr-2 h-5 w-5" />
-          Add Partner
+          {t("addPartner")}
         </Button>
       </div>
 
@@ -123,18 +126,18 @@ export default function PartnersPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Partners List</CardTitle>
+          <CardTitle>{t("partnersList")}</CardTitle>
           <CardDescription>
-            Here are all the partners featured on your site.
+            {t("partnersListDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[50px]">Logo</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="w-[50px]">{t("logo")}</TableHead>
+                <TableHead>{tGeneral("name")}</TableHead>
+                <TableHead className="text-right">{tGeneral("actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -160,33 +163,33 @@ export default function PartnersPage() {
                           <DropdownMenuTrigger asChild>
                             <Button aria-haspopup="true" size="icon" variant="ghost">
                               <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
+                              <span className="sr-only">{tGeneral("openMenu")}</span>
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuLabel>{tGeneral("actions")}</DropdownMenuLabel>
                             <DropdownMenuItem onClick={() => handleEditClick(partner)}>
                               <FilePen className="mr-2 h-4 w-4" />
-                              Edit
+                              {tGeneral("edit")}
                             </DropdownMenuItem>
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
                                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                   <Trash2 className="mr-2 h-4 w-4" />
-                                  Delete
+                                  {tGeneral("delete")}
                                 </DropdownMenuItem>
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                  <AlertDialogTitle>{tGeneral("areYouSure")}</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the partner.
+                                    {tGeneral("deleteConfirmation", { item: t("item") })}
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={() => handleDelete(partner.id)}>
-                                    Continue
+                                  <AlertDialogCancel>{tGeneral("cancel")}</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => handleDelete(partner.id!)}>
+                                    {tGeneral("continue")}
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
@@ -200,7 +203,7 @@ export default function PartnersPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={4} className="h-24 text-center">
-                    No partners found.
+                    {tGeneral("noItemsFound", { item: t("item") })}
                   </TableCell>
                 </TableRow>
               )}

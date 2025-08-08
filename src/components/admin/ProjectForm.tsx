@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -21,6 +20,8 @@ import { useEffect, useTransition } from "react";
 import { addProjectAction, updateProjectAction, generateProjectDescriptionAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Wand2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 
 interface ProjectFormProps {
   isOpen: boolean;
@@ -29,19 +30,23 @@ interface ProjectFormProps {
   onSubmit: () => void;
 }
 
-const projectSchema = z.object({
-  id: z.number().optional(),
-  title: z.string().min(2, "Title must be at least 2 characters."),
-  category: z.string().min(2, "Category must be at least 2 characters."),
-  description: z.string().min(10, "Description must be at least 10 characters."),
-  image: z.string().url("Image must be a valid URL (e.g., https://placehold.co/600x400.png)."),
-  dataAiHint: z.string().optional(),
-});
-
 export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: ProjectFormProps) {
   const [isPending, startTransition] = useTransition();
   const [isGenerating, startGeneratingTransition] = useTransition();
   const { toast } = useToast();
+  const t = useTranslations("Admin.projectsPage");
+  const tGeneral = useTranslations("Admin.general");
+
+
+  const projectSchema = z.object({
+    id: z.string().optional(),
+    title: z.string().min(2, t("titleMin")),
+    category: z.string().min(2, t("categoryMin")),
+    description: z.string().min(10, t("descMin")),
+    image: z.string().url(t("imageUrlValidation")),
+    dataAiHint: z.string().optional(),
+  });
+  
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
@@ -71,8 +76,8 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
     const title = form.getValues("title");
     if (!title || title.length < 2) {
       toast({
-        title: "Title Required",
-        description: "Please enter a title to generate a description.",
+        title: t("titleRequired"),
+        description: t("titleRequiredDesc"),
         variant: "destructive",
       });
       return;
@@ -82,13 +87,13 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
       if (result.success && result.description) {
         form.setValue("description", result.description, { shouldValidate: true });
         toast({
-          title: "Description Generated",
-          description: "An AI-powered description has been generated for you.",
+          title: tGeneral("descriptionGenerated"),
+          description: tGeneral("descriptionGeneratedDesc"),
         });
       } else {
         toast({
-          title: "Generation Failed",
-          description: result.message || "Could not generate a description at this time.",
+          title: tGeneral("generationFailed"),
+          description: result.message || tGeneral("generationFailedDesc"),
           variant: "destructive",
         });
       }
@@ -98,16 +103,20 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
   const handleSubmit = (values: z.infer<typeof projectSchema>) => {
     startTransition(async () => {
       const action = project ? updateProjectAction : addProjectAction;
-      const result = await action(values);
+      const result = await action({
+        ...values,
+        id: values.id?.toString(),
+      });
+
       if (result.success) {
         toast({
-          title: project ? "Project Updated" : "Project Added",
+          title: project ? tGeneral("itemUpdated", { item: t("item") }) : tGeneral("itemAdded", { item: t("item") }),
           description: result.message,
         });
         onSubmit();
       } else {
         toast({
-          title: "Error",
+          title: tGeneral("error"),
           description: result.message,
           variant: "destructive",
         });
@@ -119,46 +128,46 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{project ? "Edit Project" : "Add New Project"}</DialogTitle>
+          <DialogTitle>{project ? tGeneral("editTitle", { item: t("item") }) : tGeneral("addTitle", { item: t("item") })}</DialogTitle>
           <DialogDescription>
-            {project ? "Update the details of your project." : "Fill in the details to add a new project."}
+            {project ? tGeneral("editDesc", { item: t("item") }) : tGeneral("addDesc", { item: t("item") })}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">{tGeneral("title")}</Label>
             <Input id="title" {...form.register("title")} />
             {form.formState.errors.title && <p className="text-destructive text-sm">{form.formState.errors.title.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category">{tGeneral("category")}</Label>
             <Input id="category" {...form.register("category")} />
             {form.formState.errors.category && <p className="text-destructive text-sm">{form.formState.errors.category.message}</p>}
           </div>
           <div className="grid gap-2">
-             <div className="flex justify-between items-center">
-              <Label htmlFor="description">Description</Label>
+            <div className="flex justify-between items-center">
+              <Label htmlFor="description">{tGeneral("description")}</Label>
               <Button type="button" size="sm" variant="outline" onClick={handleGenerateDescription} disabled={isGenerating}>
-                  {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
-                  Generate
-                </Button>
+                {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+                {tGeneral("generate")}
+              </Button>
             </div>
             <Textarea id="description" {...form.register("description")} />
             {form.formState.errors.description && <p className="text-destructive text-sm">{form.formState.errors.description.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="image">Image URL</Label>
+            <Label htmlFor="image">{t("imageUrl")}</Label>
             <Input id="image" {...form.register("image")} />
-             {form.formState.errors.image && <p className="text-destructive text-sm">{form.formState.errors.image.message}</p>}
+            {form.formState.errors.image && <p className="text-destructive text-sm">{form.formState.errors.image.message}</p>}
           </div>
-           <div className="grid gap-2">
-            <Label htmlFor="dataAiHint">AI Image Hint</Label>
-            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder="e.g., 'dashboard chart'"/>
+          <div className="grid gap-2">
+            <Label htmlFor="dataAiHint">{t("imageHint")}</Label>
+            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder={t("imageHintPlaceholder")} />
           </div>
           <DialogFooter>
             <Button type="submit" disabled={isPending}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {project ? "Save Changes" : "Add Project"}
+              {project ? tGeneral("saveChanges") : tGeneral("add")}
             </Button>
           </DialogFooter>
         </form>

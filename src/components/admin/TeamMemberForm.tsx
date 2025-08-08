@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -20,6 +19,7 @@ import { useEffect, useTransition } from "react";
 import { addTeamMemberAction, updateTeamMemberAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface TeamMemberFormProps {
   isOpen: boolean;
@@ -28,21 +28,24 @@ interface TeamMemberFormProps {
   onSubmit: () => void;
 }
 
-const teamMemberSchema = z.object({
-  id: z.number().optional(),
-  name: z.string().min(2, "Name must be at least 2 characters."),
-  role: z.string().min(2, "Role must be at least 2 characters."),
-  image: z.string().url("Image must be a valid URL (e.g., https://placehold.co/400x400.png)."),
-  social: z.object({
-    twitter: z.string().url("Must be a valid URL or empty.").or(z.literal("")),
-    linkedin: z.string().url("Must be a valid URL or empty.").or(z.literal("")),
-  }),
-  dataAiHint: z.string().optional(),
-});
-
 export function TeamMemberForm({ isOpen, onOpenChange, member, onSubmit }: TeamMemberFormProps) {
+  const t = useTranslations("Admin.teamPage");
+  const tGeneral = useTranslations("Admin.general");
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  
+  const teamMemberSchema = z.object({
+    id: z.string().optional(),
+    name: z.string().min(2, t("nameMin")),
+    role: z.string().min(2, t("roleMin")),
+    image: z.string().url(t("imageUrlValidation")),
+    social: z.object({
+      twitter: z.string().url(t("twitterUrlValidation")).or(z.literal("")),
+      linkedin: z.string().url(t("linkedinUrlValidation")).or(z.literal("")),
+    }),
+    dataAiHint: z.string().optional(),
+  });
+  
   const form = useForm<z.infer<typeof teamMemberSchema>>({
     resolver: zodResolver(teamMemberSchema),
     defaultValues: {
@@ -56,7 +59,10 @@ export function TeamMemberForm({ isOpen, onOpenChange, member, onSubmit }: TeamM
 
   useEffect(() => {
     if (member) {
-      form.reset(member);
+      form.reset({
+        ...member,
+        id: member.id?.toString(),
+      });
     } else {
       form.reset({
         name: "",
@@ -74,13 +80,13 @@ export function TeamMemberForm({ isOpen, onOpenChange, member, onSubmit }: TeamM
       const result = await action(values);
       if (result.success) {
         toast({
-          title: member ? "Member Updated" : "Member Added",
+          title: member ? tGeneral("itemUpdated", { item: t("item") }) : tGeneral("itemAdded", { item: t("item") }),
           description: result.message,
         });
         onSubmit();
       } else {
         toast({
-          title: "Error",
+          title: tGeneral("error"),
           description: result.message,
           variant: "destructive",
         });
@@ -92,45 +98,45 @@ export function TeamMemberForm({ isOpen, onOpenChange, member, onSubmit }: TeamM
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{member ? "Edit Team Member" : "Add New Member"}</DialogTitle>
+          <DialogTitle>{member ? tGeneral("editTitle", { item: t("item") }) : tGeneral("addTitle", { item: t("item") })}</DialogTitle>
           <DialogDescription>
-             {member ? "Update the details of the team member." : "Fill in the details to add a new team member."}
+            {member ? tGeneral("editDesc", { item: t("item") }) : tGeneral("addDesc", { item: t("item") })}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">{tGeneral("name")}</Label>
             <Input id="name" {...form.register("name")} />
             {form.formState.errors.name && <p className="text-destructive text-sm">{form.formState.errors.name.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="role">Role</Label>
+            <Label htmlFor="role">{t("role")}</Label>
             <Input id="role" {...form.register("role")} />
-             {form.formState.errors.role && <p className="text-destructive text-sm">{form.formState.errors.role.message}</p>}
+            {form.formState.errors.role && <p className="text-destructive text-sm">{form.formState.errors.role.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="image">Image URL</Label>
+            <Label htmlFor="image">{t("imageUrl")}</Label>
             <Input id="image" {...form.register("image")} />
             {form.formState.errors.image && <p className="text-destructive text-sm">{form.formState.errors.image.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="twitter">Twitter URL</Label>
+            <Label htmlFor="twitter">{t("twitterUrl")}</Label>
             <Input id="twitter" {...form.register("social.twitter")} placeholder="#" />
             {form.formState.errors.social?.twitter && <p className="text-destructive text-sm">{form.formState.errors.social.twitter.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="linkedin">LinkedIn URL</Label>
+            <Label htmlFor="linkedin">{t("linkedinUrl")}</Label>
             <Input id="linkedin" {...form.register("social.linkedin")} placeholder="#" />
             {form.formState.errors.social?.linkedin && <p className="text-destructive text-sm">{form.formState.errors.social.linkedin.message}</p>}
           </div>
-           <div className="grid gap-2">
-            <Label htmlFor="dataAiHint">AI Image Hint</Label>
-            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder="e.g., 'professional man'"/>
+          <div className="grid gap-2">
+            <Label htmlFor="dataAiHint">{t("imageHint")}</Label>
+            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder={t("imageHintPlaceholder")} />
           </div>
           <DialogFooter>
             <Button type="submit" disabled={isPending}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {member ? "Save Changes" : "Add Member"}
+              {member ? tGeneral("saveChanges") : tGeneral("add")}
             </Button>
           </DialogFooter>
         </form>

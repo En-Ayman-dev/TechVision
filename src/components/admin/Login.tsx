@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -16,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslations } from "next-intl"; // Added useTranslations import
 
 export default function Login() {
   const { login } = useAuth();
@@ -23,6 +23,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const t = useTranslations("Admin.login"); // Initialize translation function
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -30,8 +31,8 @@ export default function Login() {
       await login(email, password);
     } catch (error: any) {
         toast({
-            title: "Login Failed",
-            description: error.message || "An unexpected error occurred.",
+            title: t("failed"),
+            description: error.message || t("failedDesc"),
             variant: "destructive"
         })
     }
@@ -42,14 +43,14 @@ export default function Login() {
     <div className="flex items-center justify-center min-h-screen bg-muted/40">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">{t("title")}</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account.
+            {t("description")}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("email")}</Label>
             <Input
               id="email"
               type="email"
@@ -60,7 +61,7 @@ export default function Login() {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("password")}</Label>
             <Input 
                 id="password" 
                 type="password" 
@@ -73,7 +74,7 @@ export default function Login() {
         <CardFooter>
           <Button className="w-full" onClick={handleLogin} disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Sign in
+            {t("signIn")}
           </Button>
         </CardFooter>
       </Card>

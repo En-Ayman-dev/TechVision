@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -9,7 +8,6 @@ import {
   Users,
   LogOut,
   Code,
-  Sparkles,
   Star,
   Settings,
   Handshake,
@@ -20,8 +18,9 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl"; // تم إضافة useTranslations
 import { ThemeToggle } from "../landing/ThemeToggle";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/ar/admin", icon: LayoutDashboard, label: "Dashboard" },
@@ -36,13 +35,26 @@ const navItems = [
   { href: "/ar/admin/theme", icon: Palette, label: "Theme" },
 ];
 
-export default function AdminSidebar() {
+interface AdminSidebarProps {
+  onMobile: boolean;
+}
+
+export default function AdminSidebar({ onMobile }: AdminSidebarProps) {
   const pathname = usePathname();
   const { logout } = useAuth();
   const locale = useLocale();
+  const t = useTranslations('Admin'); // استخدام hook الترجمة
+  const isRTL = locale === 'ar';
 
   return (
-    <aside className="w-64 flex-shrink-0 bg-background border-r hidden md:flex flex-col">
+    <aside
+      className={cn(
+        "w-64 flex-shrink-0 bg-background border-r flex flex-col",
+        {
+          "hidden md:flex": !onMobile,
+        }
+      )}
+    >
       <div className="flex items-center justify-center h-20 border-b gap-2">
         <Code className="h-6 w-6 text-primary" />
         <span className="font-bold text-lg font-headline">TechVision</span>
@@ -58,9 +70,9 @@ export default function AdminSidebar() {
               className="w-full justify-start"
               asChild
             >
-              <Link href={item.href}>
-                <item.icon className="mr-2 h-4 w-4" />
-                {item.label}
+              <Link href={`/${locale}${item.href.replace(`/${locale}`, '')}`}>
+                <item.icon className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+                {t(item.label)} {/* استخدام مفتاح الترجمة */}
               </Link>
             </Button>
           );
@@ -69,8 +81,8 @@ export default function AdminSidebar() {
       <div className="p-4 border-t">
         <ThemeToggle />
         <Button variant="outline" className="w-full mt-4" onClick={logout}>
-          <LogOut className="mr-2 h-4 w-4" />
-          Logout
+          <LogOut className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2")} />
+          {t('logout')} {/* استخدام مفتاح الترجمة */}
         </Button>
       </div>
     </aside>

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -20,6 +19,7 @@ import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 const siteSettingsSchema = z.object({
   stats: z.object({
@@ -35,6 +35,9 @@ export default function SettingsPage() {
   const [isPending, startTransition] = useTransition();
   const [isFetching, startFetchingTransition] = useTransition();
   const { toast } = useToast();
+  const t = useTranslations("Admin.settingsPage");
+  const tGeneral = useTranslations("Admin.general");
+
 
   const form = useForm<z.infer<typeof siteSettingsSchema>>({
     resolver: zodResolver(siteSettingsSchema),
@@ -53,12 +56,12 @@ export default function SettingsPage() {
       const result = await updateSiteSettingsAction(values);
       if (result.success) {
         toast({
-          title: "Settings Updated",
-          description: "Site settings have been successfully updated.",
+          title: tGeneral("itemUpdated", { item: t("item") }),
+          description: tGeneral("itemUpdatedDesc", { item: t("item") }),
         });
       } else {
         toast({
-          title: "Error",
+          title: tGeneral("error"),
           description: result.message,
           variant: "destructive",
         });
@@ -68,7 +71,7 @@ export default function SettingsPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Site Settings</h1>
+      <h1 className="text-3xl font-bold mb-6">{t("title")}</h1>
       {isFetching ? (
         <Card>
             <CardHeader>
@@ -87,38 +90,38 @@ export default function SettingsPage() {
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>Why Choose Us Statistics</CardTitle>
+            <CardTitle>{t("statsTitle")}</CardTitle>
             <CardDescription>
-              Update the numbers that appear in the "Why Choose Us" section.
+              {t("statsDesc")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="grid gap-2">
-                  <Label htmlFor="satisfaction">Client Satisfaction (%)</Label>
+                  <Label htmlFor="satisfaction">{t("satisfaction")}</Label>
                   <Input id="satisfaction" type="number" {...form.register("stats.satisfaction")} />
                   {form.formState.errors.stats?.satisfaction && <p className="text-destructive text-sm">{form.formState.errors.stats.satisfaction.message}</p>}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="projects">Projects Completed</Label>
+                  <Label htmlFor="projects">{t("projects")}</Label>
                   <Input id="projects" type="number" {...form.register("stats.projects")} />
                   {form.formState.errors.stats?.projects && <p className="text-destructive text-sm">{form.formState.errors.stats.projects.message}</p>}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="experience">Years of Experience</Label>
+                  <Label htmlFor="experience">{t("experience")}</Label>
                   <Input id="experience" type="number" {...form.register("stats.experience")} />
                   {form.formState.errors.stats?.experience && <p className="text-destructive text-sm">{form.formState.errors.stats.experience.message}</p>}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="team">Expert Team Members</Label>
+                  <Label htmlFor="team">{t("team")}</Label>
                   <Input id="team" type="number" {...form.register("stats.team")} />
                   {form.formState.errors.stats?.team && <p className="text-destructive text-sm">{form.formState.errors.stats.team.message}</p>}
                 </div>
               </div>
               <Button type="submit" disabled={isPending}>
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Save Changes
+                {tGeneral("saveChanges")}
               </Button>
             </form>
           </CardContent>

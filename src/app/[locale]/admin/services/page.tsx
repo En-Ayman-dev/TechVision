@@ -43,6 +43,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl"; 
+
 
 const iconMap: { [key: string]: React.ElementType } = {
   Code,
@@ -54,6 +56,8 @@ const iconMap: { [key: string]: React.ElementType } = {
 };
 
 export default function ServicesPage() {
+    const t = useTranslations('Admin.servicesPage');
+    const tg = useTranslations('Admin.general'); 
   const [services, setServices] = useState<Service[]>([]);
   const [isPending, startTransition] = useTransition();
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -81,18 +85,18 @@ export default function ServicesPage() {
     setIsFormOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     startTransition(async () => {
       const result = await deleteServiceAction(id);
       if (result.success) {
         fetchServices();
         toast({
-          title: "Service Deleted",
-          description: "The service has been successfully deleted.",
+          title: t('serviceDeleted'),
+          description: t('serviceDeletedDesc'),
         });
       } else {
         toast({
-          title: "Error",
+          title: t('error'),
           description: result.message,
           variant: "destructive",
         });
@@ -108,10 +112,10 @@ export default function ServicesPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Manage Services</h1>
+        <h1 className="text-3xl font-bold">{t('manageServices')}</h1>
         <Button onClick={handleAddClick}>
           <PlusCircle className="mr-2 h-5 w-5" />
-          Add Service
+          {t('addService')}
         </Button>
       </div>
 
@@ -124,19 +128,19 @@ export default function ServicesPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Services List</CardTitle>
+          <CardTitle>{t('servicesList')}</CardTitle>
           <CardDescription>
-            Here are all the services you offer.
+           {t('servicesListDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[50px]">Icon</TableHead>
-                <TableHead>Title</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="w-[50px]">{tg('icon')}</TableHead>
+                <TableHead>{tg('title')}</TableHead>
+                <TableHead>{tg('description')}</TableHead>
+                <TableHead className="text-right">{tg('actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -164,33 +168,33 @@ export default function ServicesPage() {
                           <DropdownMenuTrigger asChild>
                             <Button aria-haspopup="true" size="icon" variant="ghost">
                               <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
+                              <span className="sr-only">{tg('actions')}</span>
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuLabel>{tg('actions')}</DropdownMenuLabel>
                             <DropdownMenuItem onClick={() => handleEditClick(service)}>
                               <FilePen className="mr-2 h-4 w-4" />
-                              Edit
+                              {tg('edit')}
                             </DropdownMenuItem>
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
                                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                   <Trash2 className="mr-2 h-4 w-4" />
-                                  Delete
+                                  {tg('delete')}
                                 </DropdownMenuItem>
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                  <AlertDialogTitle>{tg('areYouSure')}</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the service.
+                                    {tg('deleteConfirmation')}
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={() => handleDelete(service.id)}>
-                                    Continue
+                                  <AlertDialogCancel>{tg('cancel')}</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => handleDelete(service.id?.toString())}>
+                                    {tg('continue')}
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
@@ -204,7 +208,7 @@ export default function ServicesPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={4} className="h-24 text-center">
-                    No services found.
+                    {t('noServicesFound')}
                   </TableCell>
                 </TableRow>
               )}

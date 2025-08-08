@@ -399,7 +399,7 @@ export function BlogSystem({ isAdmin = false, posts }: BlogSystemProps) {
   // تحديث القيم الديناميكية بناءً على البيانات من prop
   const categories = useMemo(() => ["all", ...Array.from(new Set(posts.map(post => post.category)))], [posts]);
   const allTags = useMemo(() => Array.from(new Set(posts.flatMap(post => post.tags))), [posts]);
- 
+
   const searchFilters = allTags.map(tag => ({
     id: tagToKey(tag),
     label: tag,
@@ -565,108 +565,110 @@ function BlogPostCard({ post, isAdmin, onLike, onShare, onDelete, dir }: BlogPos
   // دالة مساعدة لترجمة الوسوم والفئات
   // const translateTag = (tag: string) => t(`tags.${tagToKey(tag)}`);
   // const translateCategory = (category: string) => t(`categories.${category}`);
-const translateTag = (tag: string) => {
-  const key = tagToKey(tag);
-  try {
-    return t(`tags.${key}`);
-  } catch (err) {
-    console.warn(`Missing translation for tag: ${key}`);
-    return tag;
-  }
-};
+  const translateTag = (tag: string) => {
+    const key = tagToKey(tag);
+    try {
+      return t(`tags.${key}`);
+    } catch (err) {
+      console.warn(`Missing translation for tag: ${key}`);
+      return tag;
+    }
+  };
 
-const translateCategory = (category: string) => {
-  const key = tagToKey(category);
-  try {
-    return t(`categories.${key}`);
-  } catch (err) {
-    console.warn(`Missing translation for category: ${key}`);
-    return category;
-  }
-};
+  const translateCategory = (category: string) => {
+    const key = tagToKey(category);
+    try {
+      return t(`categories.${key}`);
+    } catch (err) {
+      console.warn(`Missing translation for category: ${key}`);
+      return category;
+    }
+  };
 
 
 
   return (
-    <Card className="hover:shadow-lg transition-shadow">
-      <CardHeader>
-        <div className="flex justify-between items-start">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              {post.featured && (
-                <Badge variant="secondary">{t('card.featured')}</Badge>
-              )}
-              <Badge variant="outline">{translateCategory(post.category)}</Badge>
+    <section id="BlogSystem" className="bg-secondary/50">
+      <Card className="hover:shadow-lg transition-shadow">
+        <CardHeader>
+          <div className="flex justify-between items-start">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                {post.featured && (
+                  <Badge variant="secondary">{t('card.featured')}</Badge>
+                )}
+                <Badge variant="outline">{translateCategory(post.category)}</Badge>
+              </div>
+              <CardTitle className="text-xl hover:text-primary cursor-pointer">
+                {post.title}
+              </CardTitle>
             </div>
-            <CardTitle className="text-xl hover:text-primary cursor-pointer">
-              {post.title}
-            </CardTitle>
+            {isAdmin && (
+              <div className="flex gap-2">
+                <Button variant="ghost" size="sm">
+                  <Edit className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onDelete(post.id)}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
           </div>
-          {isAdmin && (
-            <div className="flex gap-2">
-              <Button variant="ghost" size="sm">
-                <Edit className="w-4 h-4" />
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground mb-4">{post.excerpt}</p>
+
+          <div className={`flex flex-wrap gap-2 mb-4 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+            {post.tags.map(tag => (
+              <Badge key={tag} variant="secondary" className="text-xs">
+                <Tag className={`w-3 h-3 ${iconMargin}`} />
+                {translateTag(tag)}
+              </Badge>
+            ))}
+          </div>
+
+          <div className={`flex items-center justify-between text-sm text-muted-foreground ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+            <div className={`flex items-center gap-4 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+              <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+                <User className="w-4 h-4" />
+                {post.author}
+              </div>
+              <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+                <Calendar className="w-4 h-4" />
+                {format(new Date(post.publishedAt), "MMM dd, yyyy")}
+              </div>
+              <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+                <Eye className="w-4 h-4" />
+                {post.views}
+              </div>
+            </div>
+
+            <div className={`flex items-center gap-2 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onLike(post.id)}
+                className="text-muted-foreground hover:text-red-500"
+              >
+                <Heart className={`w-4 h-4 ${iconMargin}`} />
+                {post.likes}
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => onDelete(post.id)}
+                onClick={() => onShare(post)}
+                className="text-muted-foreground"
               >
-                <Trash2 className="w-4 h-4" />
+                <Share2 className="w-4 h-4" />
               </Button>
             </div>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground mb-4">{post.excerpt}</p>
-
-        <div className={`flex flex-wrap gap-2 mb-4 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
-          {post.tags.map(tag => (
-            <Badge key={tag} variant="secondary" className="text-xs">
-              <Tag className={`w-3 h-3 ${iconMargin}`} />
-              {translateTag(tag)}
-            </Badge>
-          ))}
-        </div>
-
-        <div className={`flex items-center justify-between text-sm text-muted-foreground ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
-          <div className={`flex items-center gap-4 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
-            <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
-              <User className="w-4 h-4" />
-              {post.author}
-            </div>
-            <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
-              <Calendar className="w-4 h-4" />
-              {format(new Date(post.publishedAt), "MMM dd, yyyy")}
-            </div>
-            <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
-              <Eye className="w-4 h-4" />
-              {post.views}
-            </div>
           </div>
-
-          <div className={`flex items-center gap-2 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onLike(post.id)}
-              className="text-muted-foreground hover:text-red-500"
-            >
-              <Heart className={`w-4 h-4 ${iconMargin}`} />
-              {post.likes}
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onShare(post)}
-              className="text-muted-foreground"
-            >
-              <Share2 className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </section>
   )
 }

@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -21,6 +20,8 @@ import { addPartnerAction, updatePartnerAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useTranslations } from "next-intl";
+
 
 interface PartnerFormProps {
   isOpen: boolean;
@@ -29,18 +30,20 @@ interface PartnerFormProps {
   onSubmit: () => void;
 }
 
-const partnerSchema = z.object({
-  id: z.number().optional(),
-  name: z.string().min(2, "Name must be at least 2 characters."),
-  logo: z.string().min(1, "Logo is required."),
-  dataAiHint: z.string().optional(),
-});
-
-const iconOptions = ["Globe", "CircuitBoard", "Rocket", "Bot", "Building"];
-
 export function PartnerForm({ isOpen, onOpenChange, partner, onSubmit }: PartnerFormProps) {
+  const t = useTranslations("Admin.partnersPage");
+  const tGeneral = useTranslations("Admin.general");
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const iconOptions = ["Globe", "CircuitBoard", "Rocket", "Bot", "Building"];
+  
+  const partnerSchema = z.object({
+    id: z.string().optional(),
+    name: z.string().min(2, t("nameMin")),
+    logo: z.string().min(1, t("logoRequired")),
+    dataAiHint: z.string().optional(),
+  });
+  
   const form = useForm<z.infer<typeof partnerSchema>>({
     resolver: zodResolver(partnerSchema),
     defaultValues: {
@@ -52,7 +55,10 @@ export function PartnerForm({ isOpen, onOpenChange, partner, onSubmit }: Partner
 
   useEffect(() => {
     if (partner) {
-      form.reset(partner);
+      form.reset({
+        ...partner,
+        id: partner.id?.toString(),
+      });
     } else {
       form.reset({
         name: "",
@@ -65,16 +71,20 @@ export function PartnerForm({ isOpen, onOpenChange, partner, onSubmit }: Partner
   const handleSubmit = (values: z.infer<typeof partnerSchema>) => {
     startTransition(async () => {
       const action = partner ? updatePartnerAction : addPartnerAction;
-      const result = await action(values);
+      const result = await action({
+        ...values,
+        id: values.id?.toString(),
+      });
+
       if (result.success) {
         toast({
-          title: partner ? "Partner Updated" : "Partner Added",
+          title: tGeneral("itemUpdated", { item: t("item") }),
           description: result.message,
         });
         onSubmit();
       } else {
         toast({
-          title: "Error",
+          title: tGeneral("error"),
           description: result.message,
           variant: "destructive",
         });
@@ -86,39 +96,39 @@ export function PartnerForm({ isOpen, onOpenChange, partner, onSubmit }: Partner
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{partner ? "Edit Partner" : "Add New Partner"}</DialogTitle>
+          <DialogTitle>{partner ? tGeneral("editTitle", { item: t("item") }) : tGeneral("addTitle", { item: t("item") })}</DialogTitle>
           <DialogDescription>
-            {partner ? "Update the details of this partner." : "Fill in the details to add a new partner."}
+            {partner ? tGeneral("editDesc", { item: t("item") }) : tGeneral("addDesc", { item: t("item") })}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">{tGeneral("name")}</Label>
             <Input id="name" {...form.register("name")} />
             {form.formState.errors.name && <p className="text-destructive text-sm">{form.formState.errors.name.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="logo">Logo</Label>
+            <Label htmlFor="logo">{t("logo")}</Label>
             <Select onValueChange={(value) => form.setValue('logo', value)} defaultValue={form.getValues('logo')}>
-                <SelectTrigger>
-                    <SelectValue placeholder="Select a logo" />
-                </SelectTrigger>
-                <SelectContent>
-                    {iconOptions.map(icon => (
-                        <SelectItem key={icon} value={icon}>{icon}</SelectItem>
-                    ))}
-                </SelectContent>
+              <SelectTrigger>
+                <SelectValue placeholder={t("selectLogo")} />
+              </SelectTrigger>
+              <SelectContent>
+                {iconOptions.map(icon => (
+                  <SelectItem key={icon} value={icon}>{icon}</SelectItem>
+                ))}
+              </SelectContent>
             </Select>
             {form.formState.errors.logo && <p className="text-destructive text-sm">{form.formState.errors.logo.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="dataAiHint">AI Image Hint</Label>
-            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder="e.g., 'corporate building'"/>
+            <Label htmlFor="dataAiHint">{t("imageHint")}</Label>
+            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder={t("imageHintPlaceholder")} />
           </div>
           <DialogFooter>
             <Button type="submit" disabled={isPending}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {partner ? "Save Changes" : "Add Partner"}
+              {partner ? tGeneral("saveChanges") : tGeneral("add")}
             </Button>
           </DialogFooter>
         </form>

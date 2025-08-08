@@ -22,6 +22,7 @@ import { addServiceAction, updateServiceAction, generateServiceDescriptionAction
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Wand2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useTranslations } from "next-intl"; // تم إضافة useTranslations
 
 interface ServiceFormProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ interface ServiceFormProps {
 }
 
 const serviceSchema = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   icon: z.string().min(1, "Icon is required."),
   title: z.string().min(2, "Title must be at least 2 characters."),
   description: z.string().min(10, "Description must be at least 10 characters."),
@@ -41,6 +42,9 @@ const serviceSchema = z.object({
 const iconOptions = ["Code", "Cloud", "PenTool", "Database", "Shield", "LineChart"];
 
 export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: ServiceFormProps) {
+  
+  const t = useTranslations('Admin.servicesPage'); 
+  const tg = useTranslations('Admin.general'); 
   const [isPending, startTransition] = useTransition();
   const [isGenerating, startGeneratingTransition] = useTransition();
   const { toast } = useToast();
@@ -71,8 +75,8 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
     const title = form.getValues("title");
     if (!title || title.length < 2) {
       toast({
-        title: "Title Required",
-        description: "Please enter a title to generate a description.",
+        title: tg('titleRequired'),
+        description: tg('titleRequiredDesc'),
         variant: "destructive",
       });
       return;
@@ -82,13 +86,13 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
       if (result.success && result.description) {
         form.setValue("description", result.description, { shouldValidate: true });
         toast({
-          title: "Description Generated",
-          description: "An AI-powered description has been generated for you.",
+           title: tg('descriptionGenerated'),
+          description: tg('descriptionGeneratedDesc'),
         });
       } else {
         toast({
-          title: "Generation Failed",
-          description: result.message || "Could not generate a description at this time.",
+          title: tg('generationFailed'),
+          description: result.message || tg('generationFailedDesc'),
           variant: "destructive",
         });
       }
@@ -98,16 +102,20 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
   const handleSubmit = (values: z.infer<typeof serviceSchema>) => {
     startTransition(async () => {
       const action = service ? updateServiceAction : addServiceAction;
-      const result = await action(values);
+      const result = await action({
+        ...values,
+        id: values.id?.toString(),
+      });
+
       if (result.success) {
         toast({
-          title: service ? "Service Updated" : "Service Added",
+          title: service ? t('serviceUpdated') : t('serviceAdded'),
           description: result.message,
         });
         onSubmit();
       } else {
         toast({
-          title: "Error",
+          title:  tg('error'),
           description: result.message,
           variant: "destructive",
         });
@@ -119,45 +127,45 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{service ? "Edit Service" : "Add New Service"}</DialogTitle>
+          <DialogTitle>{service ? t('editService') : t('addService')}</DialogTitle>
           <DialogDescription>
-            {service ? "Update the details of your service." : "Fill in the details to add a new service."}
+            {service ? t('editServiceDescription') : t('addServiceDescription')}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">{tg('title')}</Label>
             <Input id="title" {...form.register("title")} />
             {form.formState.errors.title && <p className="text-destructive text-sm">{form.formState.errors.title.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="icon">Icon</Label>
+            <Label htmlFor="icon">{tg('icon')}</Label>
             <Select onValueChange={(value) => form.setValue('icon', value)} defaultValue={form.getValues('icon')}>
-                <SelectTrigger>
-                    <SelectValue placeholder="Select an icon" />
-                </SelectTrigger>
-                <SelectContent>
-                    {iconOptions.map(icon => (
-                        <SelectItem key={icon} value={icon}>{icon}</SelectItem>
-                    ))}
-                </SelectContent>
+              <SelectTrigger>
+                <SelectValue placeholder="Select an icon" />
+              </SelectTrigger>
+              <SelectContent>
+                {iconOptions.map(icon => (
+                  <SelectItem key={icon} value={icon}>{icon}</SelectItem>
+                ))}
+              </SelectContent>
             </Select>
             {form.formState.errors.icon && <p className="text-destructive text-sm">{form.formState.errors.icon.message}</p>}
           </div>
           <div className="grid gap-2">
             <div className="flex justify-between items-center">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{tg('description')}</Label>
               <Button type="button" size="sm" variant="outline" onClick={handleGenerateDescription} disabled={isGenerating}>
-                  {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
-                  Generate
-                </Button>
+                {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
+                  {tg('generate')}
+              </Button>
             </div>
             <Textarea id="description" {...form.register("description")} />
             {form.formState.errors.description && <p className="text-destructive text-sm">{form.formState.errors.description.message}</p>}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="dataAiHint">AI Image Hint</Label>
-            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder="e.g., 'cloud security'"/>
+            <Label htmlFor="dataAiHint">{tg('hint')}</Label>
+            <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder="e.g., 'cloud security'" />
           </div>
           <DialogFooter>
             <Button type="submit" disabled={isPending}>

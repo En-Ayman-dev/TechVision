@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -44,6 +43,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
@@ -51,6 +51,9 @@ export default function TeamPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const { toast } = useToast();
+  const t = useTranslations("Admin.teamPage");
+  const tGeneral = useTranslations("Admin.general");
+
 
   const fetchTeamMembers = () => {
     startTransition(async () => {
@@ -73,18 +76,18 @@ export default function TeamPage() {
     setIsFormOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
      startTransition(async () => {
       const result = await deleteTeamMemberAction(id);
       if (result.success) {
         fetchTeamMembers();
         toast({
-          title: "Team Member Deleted",
-          description: "The team member has been successfully deleted.",
+          title: tGeneral("itemDeleted", { item: t("item") }),
+          description: tGeneral("itemDeletedDesc", { item: t("item") }),
         });
       } else {
         toast({
-          title: "Error",
+          title: tGeneral("error"),
           description: result.message,
           variant: "destructive",
         });
@@ -100,10 +103,10 @@ export default function TeamPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Manage Team</h1>
+        <h1 className="text-3xl font-bold">{t("title")}</h1>
         <Button onClick={handleAddClick}>
           <PlusCircle className="mr-2 h-5 w-5" />
-          Add Member
+          {t("addMember")}
         </Button>
       </div>
       
@@ -116,9 +119,9 @@ export default function TeamPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Team Members</CardTitle>
+          <CardTitle>{t("teamList")}</CardTitle>
           <CardDescription>
-            Here are all the members of your team.
+            {t("teamListDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -126,11 +129,11 @@ export default function TeamPage() {
             <TableHeader>
               <TableRow>
                 <TableHead className="hidden w-[100px] sm:table-cell">
-                  <span className="sr-only">Image</span>
+                  <span className="sr-only">{tGeneral("image")}</span>
                 </TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>{tGeneral("name")}</TableHead>
+                <TableHead>{t("role")}</TableHead>
+                <TableHead className="text-right">{tGeneral("actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -168,33 +171,33 @@ export default function TeamPage() {
                             variant="ghost"
                           >
                             <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">Toggle menu</span>
+                            <span className="sr-only">{tGeneral("openMenu")}</span>
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuLabel>{tGeneral("actions")}</DropdownMenuLabel>
                           <DropdownMenuItem onClick={() => handleEditClick(member)}>
                             <FilePen className="mr-2 h-4 w-4" />
-                            Edit
+                            {tGeneral("edit")}
                           </DropdownMenuItem>
                            <AlertDialog>
                              <AlertDialogTrigger asChild>
                                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                   <Trash2 className="mr-2 h-4 w-4" />
-                                  Delete
+                                  {tGeneral("delete")}
                                 </DropdownMenuItem>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogTitle>{tGeneral("areYouSure")}</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  This action cannot be undone. This will permanently delete the team member.
+                                  {tGeneral("deleteConfirmation", { item: t("item") })}
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDelete(member.id)}>
-                                  Continue
+                                <AlertDialogCancel>{tGeneral("cancel")}</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDelete(member.id?.toString())}>
+                                  {tGeneral("continue")}
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
@@ -207,7 +210,7 @@ export default function TeamPage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={4} className="h-24 text-center">
-                    No team members found.
+                    {tGeneral("noItemsFound", { item: t("item") })}
                   </TableCell>
                 </TableRow>
               )}
