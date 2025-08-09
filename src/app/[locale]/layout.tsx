@@ -14,6 +14,8 @@ import { AccessibilityProvider, AccessibilityToolbar, SkipToContent } from '@/co
 import { PerformanceMonitor } from '@/components/ui/performance-monitor';
 import { PWAInstallPrompt } from '@/components/ui/pwa-install';
 import '../globals.css';
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -56,8 +58,8 @@ export async function generateMetadata(): Promise<Metadata> {
         'max-snippet': -1,
       },
     },
-        metadataBase: new URL(baseUrl),
-        
+    metadataBase: new URL(baseUrl),
+
 
     alternates: {
       canonical: `/${locale}`,
@@ -156,6 +158,8 @@ export default async function LocaleLayout({
             </AccessibilityProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

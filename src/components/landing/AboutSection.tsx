@@ -28,7 +28,7 @@ export default async function AboutSection() {
           </div>
           <div className="w-full h-auto">
             <Image
-              src="/image/logo.svg" 
+              src="/image/About.png" 
               alt={t('imageAlt')}
               width={600}
               height={400}
