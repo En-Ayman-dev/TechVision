@@ -119,7 +119,7 @@ export default function SettingsPage() {
                   {form.formState.errors.stats?.team && <p className="text-destructive text-sm">{form.formState.errors.stats.team.message}</p>}
                 </div>
               </div>
-              <Button type="submit" disabled={isPending}>
+              <Button type="submit" disabled={isPending} className="w-full"  aria-label={tGeneral("saveChanges")}>
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {tGeneral("saveChanges")}
               </Button>

@@ -56,8 +56,11 @@ export async function generateMetadata(): Promise<Metadata> {
         'max-snippet': -1,
       },
     },
+        metadataBase: new URL(baseUrl),
+        
+
     alternates: {
-      canonical: `${baseUrl}/${locale}`,
+      canonical: `/${locale}`,
       languages: {
         'en-US': `${baseUrl}/en`,
         'ar-AE': `${baseUrl}/ar`,

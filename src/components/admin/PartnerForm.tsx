@@ -126,7 +126,7 @@ export function PartnerForm({ isOpen, onOpenChange, partner, onSubmit }: Partner
             <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder={t("imageHintPlaceholder")} />
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} className="w-full" aria-label={partner ? tGeneral("saveChanges") : tGeneral("add")}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {partner ? tGeneral("saveChanges") : tGeneral("add")}
             </Button>

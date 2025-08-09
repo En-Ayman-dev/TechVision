@@ -113,7 +113,7 @@ export default function ServicesPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t('manageServices')}</h1>
-        <Button onClick={handleAddClick}>
+        <Button onClick={handleAddClick} aria-label={t('addService')} className="flex items-center">
           <PlusCircle className="mr-2 h-5 w-5" />
           {t('addService')}
         </Button>
@@ -166,7 +166,7 @@ export default function ServicesPage() {
                       <TableCell className="text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button aria-haspopup="true" size="icon" variant="ghost">
+                            <Button aria-haspopup="true" size="icon" variant="ghost" aria-label={tg('openMenu')}>
                               <MoreHorizontal className="h-4 w-4" />
                               <span className="sr-only">{tg('actions')}</span>
                             </Button>

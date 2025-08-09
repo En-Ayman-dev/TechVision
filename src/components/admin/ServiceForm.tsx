@@ -155,7 +155,7 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
           <div className="grid gap-2">
             <div className="flex justify-between items-center">
               <Label htmlFor="description">{tg('description')}</Label>
-              <Button type="button" size="sm" variant="outline" onClick={handleGenerateDescription} disabled={isGenerating}>
+              <Button type="button" size="sm" variant="outline" onClick={handleGenerateDescription} disabled={isGenerating} aria-label={tg('generate')}>
                 {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                   {tg('generate')}
               </Button>
@@ -168,9 +168,9 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
             <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder="e.g., 'cloud security'" />
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} className="w-full" aria-label={service ? tg('saveChanges') : tg('add')}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {service ? "Save Changes" : "Add Service"}
+              {service ? tg('saveChanges') : tg('add')}
             </Button>
           </DialogFooter>
         </form>

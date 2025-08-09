@@ -9,9 +9,14 @@ import { db } from "@/lib/firebase-admin";
 import type { Message, Project, TeamMember, Service, Testimonial, SiteSettings, Partner, ThemeSettings, BlogPost } from "@/lib/types";
 
 import { revalidatePath } from "next/cache";
-import { generateDescription, generateTestimonialQuote } from "@/ai/flows/text-generation";
 import { promises as fs } from 'fs';
 import path from 'path';
+
+import {
+  generateDescription,
+  generateTestimonialQuote,
+} from "@/ai/flows/text-generation";
+import { firestore } from "firebase-admin";
 
 
 
@@ -146,11 +151,10 @@ export async function deleteMessageAction(id: string) {
 }
 
 
-// FAQ Suggestion Action
-export async function suggestFaqAction(userInput: string) {
-  if (!userInput || userInput.length < 10) return { success: false, suggestions: [] };
+export async function suggestFaqAction(input: { userInput: string; languageHint: string }) {
+  if (!input.userInput || input.userInput.length < 10) return { success: false, suggestions: [] };
   try {
-    const result = await suggestFaq({ userInput });
+    const result = await suggestFaq(input);
     return { success: true, suggestions: result.suggestedFaqs };
   } catch (error) {
     console.error("Error suggesting FAQ:", error);
@@ -524,41 +528,6 @@ export async function updateThemeSettingsAction(data: z.infer<typeof themeSettin
     }
 }
 
-// AI Generation Actions
-export async function generateServiceDescriptionAction(title: string) {
-  if (!title) return { success: false, description: null, message: "Title is required." };
-  try {
-    const result = await generateDescription({ type: 'service', topic: title });
-    return { success: true, description: result.description };
-  } catch (error) {
-    console.error("Error generating service description:", error);
-    return { success: false, description: null, message: "AI generation failed." };
-  }
-}
-
-export async function generateProjectDescriptionAction(title: string) {
-  if (!title) return { success: false, description: null, message: "Title is required." };
-  try {
-    const result = await generateDescription({ type: 'project', topic: title });
-    return { success: true, description: result.description };
-  } catch (error) {
-    console.error("Error generating project description:", error);
-    return { success: false, description: null, message: "AI generation failed." };
-  }
-}
-
-export async function generateTestimonialQuoteAction(authorName: string) {
-  if (!authorName) return { success: false, quote: null, message: "Author name is required." };
-  try {
-    const result = await generateTestimonialQuote({ authorName });
-    return { success: true, quote: result.quote };
-  } catch (error) {
-    console.error("Error generating testimonial quote:", error);
-    return { success: false, quote: null, message: "AI generation failed." };
-  }
-}
-
-
 
 // Blog Post Actions (with Firestore)
 const blogPostSchema = z.object({
@@ -650,4 +619,63 @@ export async function deleteBlogPostAction(id: string) {
   } catch (error) {
     return { success: false, message: "Failed to delete blog post." };
   }
+}
+
+
+
+// =============================================================================
+// AI Generation Actions
+// =============================================================================
+
+export async function generateProjectDescriptionAction(title: string) {
+  if (!title) return { success: false, description: null, message: "Title is required." };
+  try {
+    const result = await generateDescription({ type: 'project', topic: title });
+    return { success: true, description: result.description };
+  } catch (error) {
+    console.error("Error generating project description:", error);
+    return { success: false, description: null, message: "AI generation failed." };
+  }
+}
+
+export async function generateServiceDescriptionAction(title: string) {
+  if (!title) return { success: false, description: null, message: "Title is required." };
+  try {
+    const result = await generateDescription({ type: 'service', topic: title });
+    return { success: true, description: result.description };
+  } catch (error) {
+    console.error("Error generating service description:", error);
+    return { success: false, description: null, message: "AI generation failed." };
+  }
+}
+
+export async function generateTestimonialQuoteAction(authorName: string) {
+  if (!authorName) return { success: false, quote: null, message: "Author name is required." };
+  try {
+    const result = await generateTestimonialQuote({ authorName });
+    return { success: true, quote: result.quote };
+  } catch (error) {
+    console.error("Error generating testimonial quote:", error);
+    return { success: false, quote: null, message: "AI generation failed." };
+  }
+}
+
+// =============================================================================
+// Contact Form Actions (Missing)
+// =============================================================================
+
+export async function addMessageAction(name: string, email: string, message: string) {
+    if (!messagesCollection) return { success: false, message: "Database not configured." };
+    try {
+        await messagesCollection.add({
+            name,
+            email,
+            message,
+            submittedAt: new Date().toISOString(),
+        });
+        revalidatePath("/ar");
+        return { success: true, message: "Message sent successfully." };
+    } catch (error: any) {
+        return { success: false, message: error.message };
+    }
 }

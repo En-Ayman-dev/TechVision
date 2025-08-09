@@ -146,8 +146,8 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
           </div>
           <div className="grid gap-2">
             <div className="flex justify-between items-center">
-              <Label htmlFor="description">{tGeneral("description")}</Label>
-              <Button type="button" size="sm" variant="outline" onClick={handleGenerateDescription} disabled={isGenerating}>
+              <Label htmlFor="description" id={tGeneral("description")}>{tGeneral("description")}</Label>
+              <Button type="button" size="sm" variant="outline" onClick={handleGenerateDescription} disabled={isGenerating} aria-label={tGeneral("generate")}>
                 {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                 {tGeneral("generate")}
               </Button>
@@ -165,7 +165,7 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
             <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder={t("imageHintPlaceholder")} />
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} className="w-full" aria-label={project ? tGeneral("saveChanges") : tGeneral("add")}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {project ? tGeneral("saveChanges") : tGeneral("add")}
             </Button>

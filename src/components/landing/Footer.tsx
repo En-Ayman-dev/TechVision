@@ -92,18 +92,25 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <a href="mailto:ayman.alzhabi.dev@gmail.com" className="hover:text-primary">
+                <a
+                  href="mailto:ayman.alzhabi.dev@gmail.com"
+                  className="hover:text-primary"
+                >
                   ayman.alzhabi.dev@gmail.com
                 </a>
-
               </li>
+
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                <a href="tel:+967774998429" className="hover:text-primary">
-                  +967-774-998-429
+                <a
+                  href="tel:+967774998429"
+                  className="hover:text-primary"
+                >
+                  +967 774 998 429
                 </a>
               </li>
             </ul>
+
             <div className="flex gap-4 mt-4">
               <Link href="https://twitter.com" className="hover:text-primary" aria-label="Twitter"><Twitter className="h-5 w-5" /></Link>
               <Link href="https://linkedin.com" className="hover:text-primary" aria-label="LinkedIn"><Linkedin className="h-5 w-5" /></Link>
@@ -121,8 +128,8 @@ export default function Footer() {
                 href={res.href}
                 target="_blank"
                 className="group flex items-start gap-3 hover:bg-gray-100 p-2 rounded"
-                // locale={false}
-                
+              // locale={false}
+
               >
                 <Image
                   src={res.logo}
@@ -130,7 +137,7 @@ export default function Footer() {
                   width={32}
                   height={32}
                   className="object-contain rounded"
-                  unoptimized 
+                  unoptimized
                 />
                 <div>
                   <div className="font-semibold group-hover:text-black">{res.title}</div>

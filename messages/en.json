@@ -154,6 +154,7 @@
       "noServicesFound": "No services found."
     },
     "testimonialsPage": {
+      "generate":"Generate",
       "title": "Manage Testimonials",
       "testimonialsList": "Testimonials List",
       "testimonialsListDesc": "Here are all client testimonials.",
@@ -206,6 +207,7 @@
     },
     "shell": {
       "title": "Admin Navigation",
+      "openMenu": "Open menu",
       "description": "Main navigation for the admin dashboard."
     },
     "BlogForm": {
@@ -344,37 +346,53 @@
     "subtitle": "Let's build something amazing together. Contact us today for a free consultation and quote.",
     "button": "Get in Touch"
   },
+
   "ContactSection": {
+    "saturday": "Saturday: 10:00 AM - 4:00 PM",
     "title": "Contact Us",
     "subtitle": "We'd love to hear from you. Fill out the form, and we'll get back to you as soon as possible.",
-    "form": {
-      "name": "Name",
-      "namePlaceholder": "Your Name",
-      "email": "Email",
-      "emailPlaceholder": "your.email@example.com",
-      "message": "Message",
-      "messagePlaceholder": "How can we help you?",
-      "aiButton": "Get AI Suggestions",
-      "submitButton": "Send Message"
-    },
-    "validation": {
-        "name": "Name must be at least 2 characters.",
-        "email": "Please enter a valid email address.",
-        "message": "Message must be at least 10 characters."
+    "getInTouch": "Get in Touch",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "businessHours": "Business Hours",
+    "whyChooseUs": "Why Choose Us?",
+    "reason1": "Fast response within 24 hours",
+    "reason2": "Free consultation and project estimation",
+    "reason3": "Experienced team of developers",
+    "reason4": "Ongoing support and maintenance",
+    "name": "Name *",
+    "namePlaceholder": "Your Name",
+    "emailLabel": "Email *",
+    "emailPlaceholder": "ayman.alzhabi.dev@gmail.com",
+    "messageLabel": "Message *",
+    "messagePlaceholder": "Tell us about your project or how we can help you...",
+    "getAISuggestions": "Get AI Suggestions",
+    "sendMessage": "Send Message",
+    "requiredFields": "* Required fields. We respect your privacy and will never share your information.",
+    "addressLine1": "Rada'a Street - In front of Al-Ahlam Hall",
+    "addressLine2": "Sana'a Street - In front of Kuchi Store - Next to Al-Haminy Pharmacy",
+    "mondayFriday": "Monday to Wednesday: 4:00 PM - 2:00 AM",
+    "sunday": "Sunday: Closed",
+    
+  "validation": {
+      "nameMin": "Name must be at least 2 characters",
+      "emailInvalid": "Please enter a valid email address",
+      "messageMin": "Message must be at least 10 characters"
     },
     "toast": {
-        "successTitle": "Message Sent!",
-        "errorTitle": "Error",
-        "errorMessage": "Something went wrong.",
-        "suggestTitle": "Enter a message",
-        "suggestMessage": "Please type at least 10 characters in your message to get suggestions.",
-        "suggestErrorTitle": "Could not get suggestions",
-        "suggestErrorMessage": "The AI assistant is currently unavailable. Please try again later."
-    },
-    "suggestions": {
-        "title": "Suggested FAQs",
-        "description": "Based on your message, these FAQs might help:"
+      "aiSuggestionTitle": "AI Suggestions",
+      "aiSuggestionDescription": "AI suggestions have been applied to your message.",
+      "successTitle": "Message sent successfully!",
+      "successDescription": "We'll get back to you as soon as possible.",
+      "errorTitle": "Failed to send message",
+      "errorDescription": "Please try again later or contact us directly.",
+      "aiErrorTitle": "AI suggestions unavailable",
+      "aiErrorDescription": "The AI assistant is currently unavailable. Please try again later.",
+      "aiWarningTitle": "Message too short",
+      "aiWarningDescription": "Please write at least 10 characters to get AI suggestions."
     }
+
   },
   "LoadingScreen": {
     "message": "Initializing innovative solutions..."
@@ -399,7 +417,11 @@
       "allCategories": "All Categories"
     },
     "buttons": {
-      "newPost": "New Post"
+      "newPost": "New Post",
+      "edit": "Edit",
+      "delete": "Delete",
+      "like": "Like",
+      "share": "Share"
     },
     "notifications": {
       "liked": {

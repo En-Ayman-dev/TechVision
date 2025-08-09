@@ -145,7 +145,7 @@ export function TestimonialForm({ isOpen, onOpenChange, testimonial, onSubmit }:
           <div className="grid gap-2">
             <div className="flex justify-between items-center">
               <Label htmlFor="quote">{t("quote")}</Label>
-              <Button type="button" size="sm" variant="outline" onClick={handleGenerateQuote} disabled={isGenerating}>
+              <Button type="button" size="sm" variant="outline" onClick={handleGenerateQuote} disabled={isGenerating} aria-label={t("generate")}>
                 {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                 {tGeneral("generate")}
               </Button>
@@ -163,7 +163,7 @@ export function TestimonialForm({ isOpen, onOpenChange, testimonial, onSubmit }:
             <Input id="dataAiHint" {...form.register("dataAiHint")} placeholder={t("imageHintPlaceholder")} />
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} className="w-full" aria-label={testimonial ? tGeneral("saveChanges") : tGeneral("add")}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {testimonial ? tGeneral("saveChanges") : tGeneral("add")}
             </Button>

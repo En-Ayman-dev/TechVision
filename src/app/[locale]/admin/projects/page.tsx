@@ -105,7 +105,7 @@ export default function ProjectsPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t("title")}</h1>
-        <Button onClick={handleAddClick}>
+        <Button onClick={handleAddClick} aria-label={t("addProject")} className="flex items-center">
           <PlusCircle className="mr-2 h-5 w-5" />
           {t("addProject")}
         </Button>
@@ -172,6 +172,7 @@ export default function ProjectsPage() {
                             aria-haspopup="true"
                             size="icon"
                             variant="ghost"
+                            aria-label={tGeneral("openMenu")}
                           >
                             <MoreHorizontal className="h-4 w-4" />
                             <span className="sr-only">{tGeneral("openMenu")}</span>

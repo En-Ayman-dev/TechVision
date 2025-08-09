@@ -149,7 +149,7 @@ export function BlogPostForm({ isOpen, onOpenChange, post, onSubmit }: BlogPostF
             <Label htmlFor="featured">{t("featuredPost")}</Label>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} className="w-full" aria-label={post ? tGeneral("saveChanges") : tGeneral("add")}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {post ? tGeneral("saveChanges") : tGeneral("add")}
             </Button>

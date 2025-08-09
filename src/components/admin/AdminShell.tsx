@@ -22,7 +22,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 <div className="md:hidden mb-4">
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>
-                            <Button variant="outline" size="icon">
+                            <Button variant="outline" size="icon" aria-label={t("openMenu")}>
                                 <Menu className="h-6 w-6" />
                             </Button>
                         </SheetTrigger>

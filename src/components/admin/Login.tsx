@@ -72,7 +72,7 @@ export default function Login() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full" onClick={handleLogin} disabled={isLoading}>
+          <Button className="w-full" onClick={handleLogin} disabled={isLoading} aria-label={t("signIn")}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t("signIn")}
           </Button>
