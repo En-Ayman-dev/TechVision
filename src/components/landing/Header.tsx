@@ -11,6 +11,8 @@ import { cn } from '@/lib/utils';
 import type { NavItem } from '@/lib/types';
 import { useTranslations, useLocale } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
+import Image from "next/image";
+
 
 import {
   DropdownMenu,
@@ -79,9 +81,22 @@ export default function Header() {
     )}>
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-bold text-lg font-headline">
+
+          <Link
+            href="/"
+            className="flex items-center gap-3 font-bold text-lg font-headline"
+          >
             <Code className="h-6 w-6 text-primary" />
-            <span>TechVision</span>
+            <div className="flex items-center gap-2">
+              <Image
+                src="/image/logo.svg"
+                alt="TechVision"
+                width={120}
+                height={32}
+                priority
+              />
+              {/* <span className="hidden sm:inline-block">TechVision</span> */}
+            </div>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             {navItems.map((item) => (
