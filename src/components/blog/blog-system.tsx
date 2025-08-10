@@ -1,7 +1,7 @@
 
 "use client"
 
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -11,6 +11,14 @@ import { useNotifications } from "@/components/ui/notification"
 import { Calendar, User, Tag, Eye, Heart, Share2, Edit, Trash2 } from "lucide-react"
 import { format } from "date-fns"
 import { useTranslations, useLocale } from 'next-intl';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog"
+
 
 import type { BlogPost } from "@/lib/types"; // استيراد نوع BlogPost الموحد
 
@@ -20,7 +28,6 @@ interface BlogSystemProps {
 }
 
 // دالة مساعدة لتحويل الوسم إلى مفتاح صالح في ملف الترجمة
-// const tagToKey = (tag: string) => tag.replace(/\./g, '_');
 const tagToKey = (tag: string) =>
   tag.replace(/\s+/g, '_').replace(/[^\w]/g, '');
 
@@ -199,116 +206,128 @@ interface BlogPostCardProps {
 
 function BlogPostCard({ post, isAdmin, onLike, onShare, onDelete, dir }: BlogPostCardProps) {
   const t = useTranslations('BlogSystem');
-  const iconMargin = dir === 'rtl' ? 'ml-1' : 'mr-1';
+  const iconMargin = dir === 'rtl' ? 'ml-1' : 'mr-2';
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const translateTag = (tag: string) => {
-    const key = tagToKey(tag);
-    try {
-      return t(`tags.${key}`);
-    } catch (err) {
-      console.warn(`Missing translation for tag: ${key}`);
-      return tag;
-    }
-  };
-
-  const translateCategory = (category: string) => {
-    const key = tagToKey(category);
-    try {
-      return t(`categories.${key}`);
-    } catch (err) {
-      console.warn(`Missing translation for category: ${key}`);
-      return category;
-    }
-  };
-
-
+  const truncatedContent = post.content.length > 150 ? post.content.slice(0, 150) + '...' : post.content;
 
   return (
-    <section id="BlogSystem" className="bg-secondary/50">
-      <Card className="hover:shadow-lg transition-shadow">
-        <CardHeader>
-          <div className="flex justify-between items-start">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                {post.featured && (
-                  <Badge variant="secondary">{t('card.featured')}</Badge>
-                )}
-                <Badge variant="outline">{translateCategory(post.category)}</Badge>
+    <>
+      <section id="BlogSystem" className="bg-secondary/50">
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  {post.featured && (
+                    <Badge variant="secondary">{t('card.featured')}</Badge>
+                  )}
+                  <Badge variant="outline">{(post.category)}</Badge>
+                </div>
+                <CardTitle className="text-xl hover:text-primary cursor-pointer" onClick={() => setIsDialogOpen(true)}>
+                  {post.title}
+                </CardTitle>
               </div>
-              <CardTitle className="text-xl hover:text-primary cursor-pointer">
-                {post.title}
-              </CardTitle>
+              {isAdmin && (
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="sm" aria-label={t('buttons.edit')}>
+                    <Edit className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onDelete(post.id)}
+                    aria-label={t('buttons.delete')}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
             </div>
-            {isAdmin && (
-              <div className="flex gap-2">
-                <Button variant="ghost" size="sm" aria-label={t('buttons.edit')}>
-                  <Edit className="w-4 h-4" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">
+              {truncatedContent}
+              {post.content.length > 150 && (
+                <Button variant="link" onClick={() => setIsDialogOpen(true)} className="p-0 h-auto align-baseline">
+                  {t('readMore')}
+                </Button>
+              )}
+            </p>
+
+            <div className={`flex flex-wrap gap-2 mb-4 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+              {post.tags.map(tag => (
+                <Badge key={tag} variant="secondary" className="text-xs">
+                  <Tag className={`w-3 h-3 ${iconMargin}`} />
+                  {(tag)}
+                </Badge>
+              ))}
+            </div>
+
+            <div className={`flex items-center justify-between text-sm text-muted-foreground ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+              <div className={`flex items-center gap-4 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+                <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+                  <User className="w-4 h-4" />
+                  {post.author}
+                </div>
+                <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+                  <Calendar className="w-4 h-4" />
+                  {format(new Date(post.publishedAt), "MMM dd, yyyy")}
+                </div>
+                <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+                  <Eye className="w-4 h-4" />
+                  {post.views}
+                </div>
+              </div>
+
+              <div className={`flex items-center gap-2 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onLike(post.id)}
+                  className="text-muted-foreground hover:text-red-500"
+                  aria-label={t('buttons.like')}
+                >
+                  <Heart className={`w-4 h-4 ${iconMargin}`} />
+                  {post.likes}
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => onDelete(post.id)}
-                  aria-label={t('buttons.delete')}
+                  onClick={() => onShare(post)}
+                  className="text-muted-foreground"
+                  aria-label={t('buttons.share')}
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Share2 className="w-4 h-4" />
                 </Button>
               </div>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground mb-4">{post.excerpt}</p>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
-          <div className={`flex flex-wrap gap-2 mb-4 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
-            {post.tags.map(tag => (
-              <Badge key={tag} variant="secondary" className="text-xs">
-                <Tag className={`w-3 h-3 ${iconMargin}`} />
-                {translateTag(tag)}
-              </Badge>
-            ))}
-          </div>
-
-          <div className={`flex items-center justify-between text-sm text-muted-foreground ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
-            <div className={`flex items-center gap-4 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
-              <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-screen-md max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-3xl font-bold">{post.title}</DialogTitle>
+            {/* تم نقل هذا العنصر إلى هنا لحل مشكلة التداخل في HTML */}
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1">
                 <User className="w-4 h-4" />
-                {post.author}
+                <span>{post.author}</span>
               </div>
-              <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
+              <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                {format(new Date(post.publishedAt), "MMM dd, yyyy")}
-              </div>
-              <div className={`flex items-center gap-1 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
-                <Eye className="w-4 h-4" />
-                {post.views}
+                <span>{format(new Date(post.publishedAt), "PPP")}</span>
               </div>
             </div>
-
-            <div className={`flex items-center gap-2 ${dir === 'rtl' ? 'rtl:space-x-reverse' : ''}`}>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onLike(post.id)}
-                className="text-muted-foreground hover:text-red-500"
-                aria-label={t('buttons.like')}
-
-              >
-                <Heart className={`w-4 h-4 ${iconMargin}`} />
-                {post.likes}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onShare(post)}
-                className="text-muted-foreground"
-                aria-label={t('buttons.share')}
-              >
-                <Share2 className="w-4 h-4" />
-              </Button>
-            </div>
+          </DialogHeader>
+          <div className="prose dark:prose-invert max-w-none text-muted-foreground">
+            {/* يمكنك استخدام مكتبة مثل 'react-markdown' لعرض المحتوى المنسق إذا كانت المدونة تدعم تنسيقات Markdown */}
+            <p>{post.content}</p>
           </div>
-        </CardContent>
-      </Card>
-    </section>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

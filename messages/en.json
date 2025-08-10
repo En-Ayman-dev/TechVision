@@ -251,6 +251,7 @@
     "seeOurWork": "See Our Work"
   },
   "Footer": {
+    "EnAyman": "Developed by En-Ayman Al-Zahabi",
     "companyName": "Tech Vision",
     "rightsReserved": "All rights reserved.",
     "aboutParagraph": "We are a passionate team of developers, designers, and strategists dedicated to crafting exceptional digital experiences.",
@@ -407,6 +408,7 @@
     "keywords": "TechVision, Web Development, Cloud Solutions, UI/UX Design, Cybersecurity, Next.js, React, Digital Transformation"
   },
     "BlogSystem": {
+    "readMore": "Read More",
     "header": {
       "title": "Blog",
       "subtitle": "Insights, tutorials, and updates from our team"
@@ -438,6 +440,7 @@
       "featured": "Featured"
     },
     "tags": {
+      "categories": "Categories",
       "Web_Development": "Web Development",
       "AI": "AI",
       "Trends": "Trends",

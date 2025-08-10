@@ -72,9 +72,9 @@ export default function Footer() {
             <h4 className="font-semibold mb-4 text-foreground">{t('importantLinks')}</h4>
             <ul className="space-y-2 text-sm">
               <li><Link href="/" className="hover:text-primary">{t('home')}</Link></li>
-              <li><Link href="/about" className="hover:text-primary">{t('about')}</Link></li>
-              <li><Link href="/services" className="hover:text-primary">{t('services')}</Link></li>
-              <li><Link href="/contact" className="hover:text-primary">{t('contact')}</Link></li>
+              <li><Link href="#about" className="hover:text-primary">{t('about')}</Link></li>
+              <li><Link href="#services" className="hover:text-primary">{t('services')}</Link></li>
+              <li><Link href="#contact" className="hover:text-primary">{t('contact')}</Link></li>
             </ul>
           </div>
 
@@ -150,6 +150,9 @@ export default function Footer() {
         {/* حقوق */}
         <div className="mt-12 border-t pt-6 text-center text-sm text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} {t('companyName')}. {t('rightsReserved')}</p>
+          <p className="mt-2 text-foreground">
+            &copy; {new Date().getFullYear()} {t('EnAyman')}.
+            </p>
         </div>
       </div>
     </footer>
