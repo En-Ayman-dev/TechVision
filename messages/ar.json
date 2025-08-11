@@ -81,8 +81,23 @@
       "teamDesc": "إجمالي أعضاء الفريق"
     },
     "messagesPage": {
-
+      "yourReplyPlaceholder": "اكتب ردك هنا...",
+      "originalMessage": "الرسالة الأصلية",
+      "subject": "الموضوع",
+      "recipient": "المستلم",
+      "replyToMessageDesc": "رد على هذه الرسالة",
+      "replyToMessage": "رد على الرسالة",
+      "sendReply": "إرسال الرد",
+      "reply": "رد",
+      "replySent": "تم إرسال الرد",
+      "yourReply": "ردك",
+      "replySentDesc": "تم إرسال ردك بنجاح.",
+      "replySentTitle": "تم إرسال الرد",
+      "loadMore": "تحميل المزيد",
+      "readMore": "اقرأ المزيد",
+      "inquiry": "استفسار",
       "title": "إدارة الرسائل",
+      "projectIdea": "فكرة المشروع",
       "messagesList": "قائمة الرسائل",
       "messagesListDesc": "هنا جميع الرسائل المرسلة عبر نموذج الاتصال الخاص بك.",
       "noMessagesFound": "لم يتم العثور على رسائل.",
@@ -347,7 +362,8 @@
     "subtitle": "دعنا نبني شيئًا رائعًا معًا. اتصل بنا اليوم للحصول على استشارة وعرض أسعار مجاني.",
     "button": "تواصل معنا"
   },
-      "ContactSection": {
+
+  "ContactSection": {
     "title": "اتصل بنا",
     "subtitle": "يسعدنا أن نسمع منك. املأ النموذج وسنتواصل معك في أقرب وقت ممكن.",
     "getInTouch": "تواصل معنا",
@@ -377,9 +393,12 @@
     "validation": {
       "nameMin": "يجب أن يتكون الاسم من حرفين على الأقل",
       "emailInvalid": "الرجاء إدخال عنوان بريد إلكتروني صالح",
-      "messageMin": "يجب أن تتكون الرسالة من 10 أحرف على الأقل"
+      "messageMin": "يجب أن تتكون الرسالة من 10 أحرف على الأقل",
+      "projectIdeaMin": "يجب أن تتكون فكرة المشروع من 20 حرفًا على الأقل."
     },
     "toast": {
+      "aiSuggestionsTitle": "اقتراحات الذكاء الاصطناعي",
+      "aiSuggestionsDescription": "تم اقتراح بعض الأفكار بناءً على رسالتك.",
       "aiSuggestionTitle": "اقتراحات الذكاء الاصطناعي",
       "aiSuggestionDescription": "تم تطبيق اقتراحات الذكاء الاصطناعي على رسالتك.",
       "successTitle": "تم إرسال الرسالة بنجاح!",
@@ -389,8 +408,25 @@
       "aiErrorTitle": "اقتراحات الذكاء الاصطناعي غير متاحة",
       "aiErrorDescription": "المساعد الذكي غير متاح حاليًا. الرجاء المحاولة مرة أخرى لاحقًا.",
       "aiWarningTitle": "الرسالة قصيرة جدًا",
-      "aiWarningDescription": "الرجاء كتابة 10 أحرف على الأقل للحصول على اقتراحات من الذكاء الاصطناعي."
-    }
+      "aiWarningDescription": "الرجاء كتابة 10 أحرف على الأقل للحصول على اقتراحات من الذكاء الاصطناعي.",
+      "ideaWarningTitle": "فكرة المشروع قصيرة جدًا",
+      "ideaWarningDescription": "الرجاء كتابة 20 حرفًا على الأقل لتوليد فكرة أكاديمية.",
+      "ideaErrorTitle": "فشل توليد الفكرة الأكاديمية",
+      "ideaErrorDescription": "المساعد الذكي غير متاح حاليًا. الرجاء المحاولة مرة أخرى لاحقًا.",
+      "structuredProjectIdeaTitle": "تم توليد فكرة مشروع منظمة",
+      "structuredProjectIdeaDescription": "تم إنشاء فكرة مشروع منظمة بناءً على مدخلاتك. يمكنك نسخها واستخدامها."
+    },
+    "toggleModeLabel": "تبديل الوضع",
+    "messagePlaceholder_general": "أدخل رسالتك العامة هنا...",
+    "messageLabel_general": "الرسالة العامة",
+    "acceptIdea": "قبول فكرة المشروع",
+    "inquiryLabel": "استفسار",
+    "inquiryPlaceholder": "أدخل استفسارك هنا...",
+    "structuredProjectIdeaDescription": "تم إنشاء فكرة مشروع منظمة بناءً على مدخلاتك. يمكنك نسخها واستخدامها.",
+    "structuredProjectIdeaTitle": "تم توليد فكرة مشروع أكاديمية",
+    "projectIdeaLabel": "فكرة المشروع",
+    "projectIdeaPlaceholder": "على سبيل المثال: تطبيق ويب لإدارة المشاريع",
+    "generateAcademicIdea": "توليد فكرة أكاديمية"
   },
   "LoadingScreen": {
     "message": "تهيئة الحلول المبتكرة ..."
@@ -467,5 +503,4 @@
     "noResults": "لم يتم العثور على نتائج",
     "noResultsMessage": "لا توجد نتائج تطابق استعلام البحث الخاص بك."
   }
-  
 }

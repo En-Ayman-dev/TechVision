@@ -31,9 +31,9 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'raw.githubusercontent.com',
       },
-            {
+        {
         protocol: 'https',
-        hostname: 'fonts.googleapis.com',
+        hostname: 'support.google.com',
       },
     ],
   },

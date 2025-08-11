@@ -67,6 +67,8 @@ export interface Message {
   email: string;
   message: string;
   submittedAt: string;
+  inquiry?: string; // NEW: New inquiry field
+
 }
 
 export interface Project {
