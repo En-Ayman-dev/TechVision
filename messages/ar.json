@@ -6,7 +6,9 @@
     "portfolio": "أعمالنا",
     "contact": "اتصل بنا",
     "getAQuote": "احصل على عرض سعر",
-    "BlogSystem":"المدونة"
+    "BlogSystem":"المدونة",
+    "studentService": "خدمات الطلاب"
+    
   },
     "Admin": {
     "Dashboard": "لوحة التحكم",
@@ -112,7 +114,9 @@
       "inboxDesc": "هنا الرسائل المرسلة عبر نموذج الاتصال الخاص بك.",
       "sender": "المرسل",
       "message": "الرسالة",
-      "received": "تم الاستلام"
+      "received": "تم الاستلام",
+      "beneficiaryType": "نوع المستفيد",
+      "requestType": "نوع الطلب"
     },
     "projectsPage": {
       "title": "إدارة المشاريع",
@@ -394,7 +398,9 @@
       "nameMin": "يجب أن يتكون الاسم من حرفين على الأقل",
       "emailInvalid": "الرجاء إدخال عنوان بريد إلكتروني صالح",
       "messageMin": "يجب أن تتكون الرسالة من 10 أحرف على الأقل",
-      "projectIdeaMin": "يجب أن تتكون فكرة المشروع من 20 حرفًا على الأقل."
+      "projectIdeaMin": "يجب أن تتكون فكرة المشروع من 20 حرفًا على الأقل.",
+      "beneficiaryTypeRequired": "نوع المستفيد مطلوب.",
+      "requestTypeRequired": "نوع الطلب مطلوب."
     },
     "toast": {
       "aiSuggestionsTitle": "اقتراحات الذكاء الاصطناعي",
@@ -426,11 +432,54 @@
     "structuredProjectIdeaTitle": "تم توليد فكرة مشروع أكاديمية",
     "projectIdeaLabel": "فكرة المشروع",
     "projectIdeaPlaceholder": "على سبيل المثال: تطبيق ويب لإدارة المشاريع",
-    "generateAcademicIdea": "توليد فكرة أكاديمية"
+    "generateAcademicIdea": "توليد فكرة أكاديمية",
+    "beneficiaryType": "نوع المستفيد *",
+    "beneficiaryTypePlaceholder": "اختر نوع المستفيد",
+    "beneficiaryTypeOptions": {
+      "student": "طالب",
+      "individual": "فرد",
+      "company": "شركة/مؤسسة"
+    },
+    "requestType": "نوع الطلب *",
+    "requestTypePlaceholder": "اختر نوع الطلب",
+    "requestTypeOptions": {
+      "graduationProject": "مشروع تخرج",
+      "appDevelopment": "تطوير تطبيق/موقع",
+      "techConsultation": "استشارة تقنية",
+      "problemSolving": "حل مشكلة"
+    }
+  },
+  "StudentServiceSection": {
+    "title": "خدمة الطلاب",
+    "subtitle": "نقدم الدعم الفني والتعليمي لمساعدة الطلاب والمهتمين بالبرمجة على تحقيق أهدافهم الأكاديمية والمهنية.",
+    "services": {
+      "codeReview": {
+        "title": "مراجعة الأكواد",
+        "description": "نقدم مراجعة معمقة لأكوادك لضمان أفضل الممارسات والأداء."
+      },
+      "graduationProjects": {
+        "title": "استشارات مشاريع التخرج",
+        "description": "نوجهك في اختيار فكرة مشروع تخرجك ونقدم الدعم التقني اللازم."
+      },
+      "projectIdeas": {
+        "title": "أفكار مشاريع تقنية",
+        "description": "نساعدك في توليد أفكار مشاريع مبتكرة ومناسبة لمستواك التقني."
+      },
+      "problemSolving": {
+        "title": "حلول لمشاكل تقنية",
+        "description": "نقدم حلولاً للمشاكل التقنية المعقدة التي قد تواجهها أثناء التطوير."
+      },
+      "practicalExamples": {
+        "title": "أمثلة عملية",
+        "description": "نوفر أمثلة عملية ومبسطة لمساعدتك على فهم المفاهيم البرمجية بشكل أفضل."
+      }
+    },
+    "ctaButton": "أرسل فكرتك الآن"
   },
   "LoadingScreen": {
     "message": "تهيئة الحلول المبتكرة ..."
   },
+
   "WelcomeNotification": {
     "title": "أهلاً بك في تك فيجن!",
     "description": "يسعدنا وجودك هنا. استكشف أعمالنا وخدماتنا."

@@ -68,6 +68,8 @@ export interface Message {
   message: string;
   submittedAt: string;
   inquiry?: string; // NEW: New inquiry field
+  beneficiaryType?: string; // NEW: Beneficiary type field
+  requestType?: string; // NEW: Request type field
 
 }
 

@@ -31,6 +31,7 @@ export default function Header() {
   const navItems: NavItem[] = [
     { label: t('about'), href: '#about' },
     { label: t('services'), href: '#services' },
+    { label: t('studentService'), href: '#student-service' },
     { label: t('portfolio'), href: '#portfolio' },
     { label: t('BlogSystem'), href: '#BlogSystem' },
     { label: t('contact'), href: '#contact' },

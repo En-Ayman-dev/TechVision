@@ -14,6 +14,8 @@ import FaqSection from '@/components/landing/FaqSection';
 import CtaSection from '@/components/landing/CtaSection';
 import BlogPage from './blog/page';
 import { ContactSectionEnhanced } from '@/components/landing/ContactSectionEnhanced';
+import StudentServiceSection from '@/components/landing/StudentServiceSection';
+
 
 // Dynamically import the Portfolio section as it is a client component with state
 const PortfolioSection = dynamic(() => import('@/components/landing/PortfolioSection'), {
@@ -43,6 +45,8 @@ export default async function Home() {
           <AboutSection />
           <ServicesSection />
           <WhyChooseUsSection />
+          <StudentServiceSection />
+
           <PortfolioSection />
           <TeamSection />
           <TestimonialsSection />

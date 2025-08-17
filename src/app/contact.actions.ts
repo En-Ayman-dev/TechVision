@@ -1,4 +1,3 @@
-
 "use server";
 
 import * as z from "zod";
@@ -11,6 +10,8 @@ const contactSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   message: z.string().min(1, "Message cannot be empty."), // الحقل الرئيسي الآن يمكن أن يكون إما فكرة مشروع أو رسالة عامة
   inquiry: z.string().optional(), // حقل جديد للاستفسارات
+  beneficiaryType: z.string().min(1, "Beneficiary type is required."),
+  requestType: z.string().min(1, "Request type is required."),
 });
 
 export async function sendMessageAction(data: FormData) {
@@ -19,6 +20,8 @@ export async function sendMessageAction(data: FormData) {
     email: data.get("email"),
     message: data.get("message"),
     inquiry: data.get("projectIdea") || "لا يوجد اي استفسار حالياً", // استخدام الحقل الجديد للاستفسارات
+    beneficiaryType: data.get("beneficiaryType"),
+    requestType: data.get("requestType"),
   });
 
   if (!parsed.success) {
@@ -81,4 +84,3 @@ export async function generateProjectIdeaAction(projectIdea: string) {
     return { success: false, message: "The AI assistant is currently unavailable. Please try again later." };
   }
 }
-
