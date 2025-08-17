@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     register: true,
     skipWaiting: true,
   },
+  
   typescript: {
     ignoreBuildErrors: true,
   },

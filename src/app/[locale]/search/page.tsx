@@ -24,10 +24,9 @@ interface SearchPageProps {
 }
 
 export default async function SearchPage({ params, searchParams }: SearchPageProps) {
-    // استخراج القيم مباشرة من searchParams
-    const paramsData = await searchParams;
-    const query = paramsData.q ?? "";
-    const filtersString = paramsData.filters ?? "";
+    // تم إزالة 'await' من searchParams
+    const query = searchParams.q ?? "";
+    const filtersString = searchParams.filters ?? "";
 
     const filters = filtersString.split(',').filter(f => f);
 
