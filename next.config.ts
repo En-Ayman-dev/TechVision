@@ -36,14 +36,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
- async rewrites() {
-    return [
-      {
-        source: '/ar/image/:path*',
-        destination: '/image/:path*',
-      },
-    ];
-  },
+async rewrites() {
+  return [
+    {
+      source: '/:locale/image/:path*',
+      destination: '/image/:path*',
+    },
+  ];
+}
+
 };
 
 const withIntl = createWithIntl('./src/i18n.ts');
