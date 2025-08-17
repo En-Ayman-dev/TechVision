@@ -28,12 +28,12 @@ export default async function AboutSection() {
           </div>
           <div className="w-full h-auto">
             <Image
-              src="/image/About.png" 
+              src="/image/About.avif"
               alt={t('imageAlt')}
               width={600}
               height={400}
+              unoptimized
               className="rounded-lg shadow-xl"
-              data-ai-hint="team collaboration"
               priority
             />
           </div>

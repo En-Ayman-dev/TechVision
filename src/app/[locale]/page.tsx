@@ -17,6 +17,8 @@ import { ContactSectionEnhanced } from '@/components/landing/ContactSectionEnhan
 import StudentServiceSection from '@/components/landing/StudentServiceSection';
 
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 // Dynamically import the Portfolio section as it is a client component with state
 const PortfolioSection = dynamic(() => import('@/components/landing/PortfolioSection'), {
   loading: () => <div className="container"><Skeleton className="h-[600px] w-full" /></div>,

@@ -113,7 +113,7 @@ export default function Header() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsSearchOpen(true)}
-                aria-label="Open search"
+                aria-label="Opensearch"
               >
                 <Search className="h-[1.2rem] w-[1.2rem]" />
               </Button>
