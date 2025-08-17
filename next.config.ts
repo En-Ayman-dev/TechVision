@@ -1,17 +1,8 @@
-/** @type {import('next').NextConfig} */
-import withPWA from 'next-pwa';
+
 import createWithIntl from 'next-intl/plugin';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
-  pwa: {
-    dest: 'public',
-    register: true,
-    skipWaiting: true,
-  },
-  
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -45,7 +36,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async rewrites() {
+ async rewrites() {
     return [
       {
         source: '/ar/image/:path*',
@@ -56,6 +47,5 @@ const nextConfig: NextConfig = {
 };
 
 const withIntl = createWithIntl('./src/i18n.ts');
-const withPWAConfig = withPWA(nextConfig);
 
-export default withIntl(withPWAConfig);
+export default withIntl(nextConfig);
