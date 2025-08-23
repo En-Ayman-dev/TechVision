@@ -2,13 +2,15 @@
 {
   "Header": {
     "about": "نبذة عنا",
+    "sidebar": "الشريط الجانبي",
+    "home": "الرئيسية",
     "services": "خدماتنا",
     "portfolio": "أعمالنا",
     "contact": "اتصل بنا",
     "getAQuote": "احصل على عرض سعر",
     "BlogSystem":"المدونة",
-    "studentService": "خدمات الطلاب"
-    
+    "studentService": "خدمات الطلاب",
+    "Faq": "الأسئلة الشائعة"
   },
     "Admin": {
     "Dashboard": "لوحة التحكم",

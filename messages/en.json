@@ -1,13 +1,16 @@
 
 {
   "Header": {
-    "about": "About",
+    "about": "About Us",
+    "sidebar": "Sidebar",
+    "home": "Home",
     "services": "Services",
     "portfolio": "Portfolio",
     "contact": "Contact",
     "getAQuote": "Get a Quote",
-    "BlogSystem":"Blog",
-    "studentService": "Student Services"
+    "BlogSystem": "Blog",
+    "studentService": "Student Services",
+    "Faq": "FAQ"
   },
     "Admin": {
     "Dashboard": "Dashboard",
