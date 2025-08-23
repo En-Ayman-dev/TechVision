@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Accordion,
   AccordionContent,
@@ -6,6 +8,7 @@ import {
 } from "@/components/ui/accordion";
 import type { FaqItem } from '@/lib/types';
 import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
 
 export default function FaqSection() {
   const t = useTranslations('FaqSection');
@@ -17,27 +20,64 @@ export default function FaqSection() {
       answer: t(`items.${key.replace('q', 'a')}`)
   }));
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
     <section id="faq" className="bg-background">
       <div className="container mx-auto px-4 py-10">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">{t('title')}</h2>
-          <p className="mt-4 max-w-2xl mx-auto text-lg leading-8 text-muted-foreground">
+        <motion.div
+          className="text-center"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.25 }}
+        >
+          <motion.h2
+            className="text-3xl font-bold tracking-tight font-headline sm:text-4xl"
+            variants={itemVariants}
+          >
+            {t('title')}
+          </motion.h2>
+          <motion.p
+            className="mt-4 max-w-2xl mx-auto text-lg leading-8 text-muted-foreground"
+            variants={itemVariants}
+          >
             {t('subtitle')}
-          </p>
-        </div>
-        <div className="mt-12 max-w-3xl mx-auto">
+          </motion.p>
+        </motion.div>
+        <motion.div
+          className="mt-12 max-w-3xl mx-auto"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.25 }}
+        >
           <Accordion type="single" collapsible className="w-full">
             {faqItems.map((item, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-lg text-left">{item.question}</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  {item.answer}
-                </AccordionContent>
-              </AccordionItem>
+              <motion.div key={index} variants={itemVariants}>
+                <AccordionItem value={`item-${index}`}>
+                  <AccordionTrigger className="text-lg text-left">{item.question}</AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    {item.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              </motion.div>
             ))}
           </Accordion>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
