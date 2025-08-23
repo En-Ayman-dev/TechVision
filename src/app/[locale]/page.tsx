@@ -1,5 +1,4 @@
 
-
 import dynamic from 'next/dynamic';
 import Header from '@/components/landing/Header';
 import Footer from '@/components/landing/Footer';
@@ -37,6 +36,7 @@ const TestimonialsSection = dynamic(() => import('@/components/landing/Testimoni
 
 export default async function Home() {
   const t = await getTranslations();
+  
   return (
     <>
       <div className="flex flex-col min-h-[100dvh]">
@@ -49,7 +49,7 @@ export default async function Home() {
           <WhyChooseUsSection />
           <StudentServiceSection />
 
-          <PortfolioSection />
+          <PortfolioSection projects={[]} />
           <TeamSection />
           <TestimonialsSection />
           <FaqSection />
@@ -62,3 +62,4 @@ export default async function Home() {
     </>
   );
 }
+

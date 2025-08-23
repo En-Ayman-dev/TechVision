@@ -1,41 +1,78 @@
+
+"use client";
+
+import { motion } from "framer-motion";
+import { easeOut } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 
 export default function HeroSection() {
-  const t = useTranslations('HeroSection');
+  const t = useTranslations("HeroSection");
+
+  // تعريف متغيرات الأنيميشن
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3, // تأخير بين ظهور العناصر الفرعية
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: easeOut,
+      },
+    },
+  };
 
   return (
-    <section id="hero" className="relative overflow-hidden bg-background">
-      <div className="absolute inset-0 z-0 opacity-50">
-        <div className="absolute top-[-20rem] left-[-20rem] h-[40rem] w-[40rem] rounded-full bg-primary/10 blur-[150px]" />
-        <div className="absolute bottom-[-20rem] right-[-20rem] h-[40rem] w-[40rem] rounded-full bg-accent/10 blur-[150px]" />
-      </div>
-
-      <div className="container relative z-10 mx-auto px-4 text-center">
-        <div className="py-20 md:py-32">
-          <div className="mx-auto max-w-4xl">
-            <h1 className="text-4xl font-bold tracking-tight font-headline sm:text-5xl md:text-6xl lg:text-7xl">
-              {t('title')}
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-muted-foreground sm:text-xl">
-              {t('subtitle')}
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Button size="lg" asChild>
-                <Link href="#services">
-                  {t('exploreServices')}
-                </Link>
+    <section id="hero-section" className="relative">
+      <div className="container relative z-10 mx-auto px-4 py-16 text-center lg:py-24">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.h1
+            variants={itemVariants ? itemVariants : undefined}
+            className="text-4xl font-bold md:text-5xl lg:text-6xl"
+          >
+            {t("title")}
+          </motion.h1>
+          <motion.p
+            variants={itemVariants}
+            className="mt-4 text-lg md:text-xl"
+          >
+            {t("subtitle")}
+          </motion.p>
+          <motion.div
+            variants={itemVariants}
+            className="mt-8 flex justify-center space-x-4"
+          >
+            <Link href="#contact-section" passHref>
+              <Button size="lg" className="rounded-full">
+                {t("exploreServices")}
               </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="#portfolio">
-                  {t('seeOurWork')} <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+            </Link>
+            <Link href="#projects-section" passHref>
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-full"
+              >
+                {t("seeOurWork")}
               </Button>
-            </div>
-          </div>
-        </div>
+            </Link>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
