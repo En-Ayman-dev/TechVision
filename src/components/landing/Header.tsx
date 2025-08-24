@@ -1,196 +1,120 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Menu, X, Code, Globe, Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { ThemeToggle } from './ThemeToggle';
-import { SearchComponent } from '@/components/ui/search';
-import { useNotifications } from '@/components/ui/notification';
-import { cn } from '@/lib/utils';
-import type { NavItem } from '@/lib/types';
-import { useTranslations, useLocale } from 'next-intl';
-import { usePathname, useRouter } from 'next/navigation';
+import { useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { AlignRight } from "lucide-react";
+import { MainSidebar } from "./MainSidebar";
+import { ThemeToggle } from "./ThemeToggle";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-export default function Header() {
-  const t = useTranslations('Header');
-  const locale = useLocale();
-  const pathname = usePathname();
-  const router = useRouter();
-  const { addNotification } = useNotifications();
-
-  const navItems: NavItem[] = [
-    { label: t('about'), href: '#about' },
-    { label: t('services'), href: '#services' },
-    { label: t('studentService'), href: '#student-service' },
-    { label: t('portfolio'), href: '#portfolio' },
-    { label: t('BlogSystem'), href: '#BlogSystem' },
-    { label: t('contact'), href: '#contact' },
-  ];
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-  const searchFilters = [
-    { id: "services", label: "Services", value: "services", category: "Content" },
-    { id: "portfolio", label: "Portfolio", value: "portfolio", category: "Content" },
-    { id: "team", label: "Team", value: "team", category: "Content" },
-    { id: "blog", label: "Blog", value: "blog", category: "Content" },
-  ];
-
-  const handleSearch = (query: string, filters: any[]) => {
-    if (query.trim()) {
-      const params = new URLSearchParams();
-      params.set('q', query);
-      if (filters && filters.length > 0) {
-        params.set('filters', filters.map(f => f.value).join(','));
-      }
-      router.push(`/${locale}/search?${params.toString()}`);
-      setIsSearchOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const changeLanguage = (newLocale: string) => {
-    const pathWithoutLocale = pathname.startsWith(`/${locale}`)
-      ? pathname.substring(`/${locale}`.length)
-      : pathname;
-    router.push(`/${newLocale}${pathWithoutLocale || '/'}`);
-  };
+export function Header({
+  lang,
+  pathname,
+}: {
+  lang: string;
+  pathname: string;
+}) {
+  const t = useTranslations("Header");
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const currentPathname = usePathname();
 
   return (
-    <header className={cn(
-      "sticky top-0 z-50 w-full transition-all duration-300",
-      isScrolled ? "bg-background/80 backdrop-blur-sm shadow-md" : "bg-transparent"
-    )}>
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-
-          <Link
-            href="/"
-            className="flex items-center gap-3 font-bold text-lg font-headline"
-          >
-            <Code className="h-6 w-6 text-primary" />
-            <div className="flex items-center gap-2">
-              <Image
-                src="/image/logo.svg"
-                alt="TechVision"
-                width={120}
-                height={32}
-                priority
-              />
-              {/* <span className="hidden sm:inline-block">TechVision</span> */}
-            </div>
+    <header className="fixed top-0 z-50 w-full border-b backdrop-blur-sm">
+      <div className="container flex h-16 items-center">
+        {/* Logo and Mobile Sidebar Trigger */}
+        <div className="flex w-full items-center justify-between lg:w-auto lg:gap-4">
+          <Link href="/" className="flex items-center space-x-2">
+            <Image
+              src="/image/logo.svg"
+              alt="TechVision Logo"
+              width={120}
+              height={32}
+            />
           </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            {navItems.map((item) => (
-              <Link key={item.label} href={item.href} className="transition-colors hover:text-primary">
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="flex items-center gap-4">
-            {/* Search Button for Desktop */}
-            <div className="relative hidden md:flex">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsSearchOpen(true)}
-                aria-label="Opensearch"
-              >
-                <Search className="h-[1.2rem] w-[1.2rem]" />
-              </Button>
-              {isSearchOpen && (
-                <div className="absolute right-0 top-12 w-80 z-50">
-                  <SearchComponent
-                    placeholder="Search..."
-                    onSearch={handleSearch}
-                    availableFilters={searchFilters}
-                    className="bg-background border rounded-md shadow-lg"
-                  />
-                </div>
-              )}
-            </div>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" aria-label="Change language">
-                  <Globe className="h-[1.2rem] w-[1.2rem]" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => changeLanguage('en')}>English</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage('ar')}>العربية</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
+          {/* Mobile Menu Button */}
+          <div className="flex items-center gap-2 lg:hidden">
             <ThemeToggle />
-            <Button className="hidden md:flex" asChild>
-              <Link href="#contact">{t('getAQuote')}</Link>
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" className="lg:hidden">
+                  <AlignRight />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <SheetHeader>
+                  <SheetTitle>{t("menu")}</SheetTitle>
+                </SheetHeader>
+                <MainSidebar locale={lang} onClose={() => setIsSheetOpen(false)} />
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
-      </div>
-      {isMenuOpen && (
-        <div className="md:hidden bg-background/95 backdrop-blur-sm pb-4">
-          <nav className="container mx-auto px-4 flex flex-col gap-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="text-lg font-medium transition-colors hover:text-primary"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="pt-2">
-              <SearchComponent
-                placeholder="Search..."
-                onSearch={handleSearch}
-                availableFilters={searchFilters}
-              />
-            </div>
-            <Button asChild>
-              <Link href="#contact" onClick={() => setIsMenuOpen(false)}>{t('getAQuote')}</Link>
-            </Button>
-          </nav>
-        </div>
-      )}
 
-      {/* Search Overlay for Desktop */}
-      {isSearchOpen && (
-        <div
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
-          onClick={() => setIsSearchOpen(false)}
-        />
-      )}
+        {/* Desktop Navigation */}
+        <nav className="hidden w-full items-center justify-between lg:flex">
+          <div className="mx-auto flex gap-6">
+            <Link
+              href="/"
+              className={cn(
+                "transition-colors hover:text-foreground/80",
+                currentPathname === "/" ? "text-foreground" : "text-foreground/60"
+              )}
+            >
+              {t("home")}
+            </Link>
+            <Link
+              href="/portfolio"
+              className={cn(
+                "transition-colors hover:text-foreground/80",
+                currentPathname === "/portfolio" ? "text-foreground" : "text-foreground/60"
+              )}
+            >
+              {t("portfolio")}
+            </Link>
+            <Link
+              href="/services"
+              className={cn(
+                "transition-colors hover:text-foreground/80",
+                currentPathname === "/services" ? "text-foreground" : "text-foreground/60"
+              )}
+            >
+              {t("services")}
+            </Link>
+            <Link
+              href="/about"
+              className={cn(
+                "transition-colors hover:text-foreground/80",
+                currentPathname === "/about" ? "text-foreground" : "text-foreground/60"
+              )}
+            >
+              {t("about")}
+            </Link>
+            <Link
+              href="/blog"
+              className={cn(
+                "transition-colors hover:text-foreground/80",
+                currentPathname === "/blog" ? "text-foreground" : "text-foreground/60"
+              )}
+            >
+              {t("BlogSystem")}
+            </Link>
+          </div>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Link href="/contact" passHref>
+              <Button>{t("contact")}</Button>
+            </Link>
+          </div>
+        </nav>
+      </div>
     </header>
   );
 }
+
+export default Header;

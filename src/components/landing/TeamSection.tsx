@@ -13,6 +13,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { TeamMember } from "@/lib/types";
 
 
+interface TeamSectionProps {
+  teams: TeamMember[];
+}
+
 // Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -30,19 +34,10 @@ const itemVariants = {
 };
 
 
-export default function TeamSection() {
+export default function TeamSection({ teams }: TeamSectionProps) {
   const t = useTranslations('TeamSection');
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const isLoading = teams.length === 0;
 
-  useEffect(() => {
-    const fetchTeamMembers = async () => {
-      const fetchedMembers = await getTeamAction();
-      setTeamMembers(fetchedMembers);
-      setIsLoading(false);
-    };
-    fetchTeamMembers();
-  }, []);
 
   return (
     <section id="team" className="bg-secondary/50">
@@ -79,28 +74,28 @@ export default function TeamSection() {
               <Skeleton key={index} className="h-[250px] rounded-lg" />
             ))
           ) : (
-            teamMembers.map((member) => (
-              <motion.div key={member.id} variants={itemVariants}>
+            teams.map((team) => (
+              <motion.div key={team.id} variants={itemVariants}>
                 <Card className="text-center">
                   <CardContent className="p-6">
                     <Image
-                      src={member.image}
-                      alt={member.name}
+                      src={team.image}
+                      alt={team.name}
                       width={150}
                       height={150}
                       className="rounded-full mx-auto mb-4"
-                      data-ai-hint={member.dataAiHint}
+                      data-ai-hint={team.dataAiHint}
                     />
-                    <h3 className="text-lg font-semibold font-headline">{member.name}</h3>
-                    <p className="text-primary">{member.role}</p>
+                    <h3 className="text-lg font-semibold font-headline">{team.name}</h3>
+                    <p className="text-primary">{team.role}</p>
                     <div className="mt-4 flex justify-center gap-4">
                       <Button variant="outline" size="icon" asChild>
-                        <Link href={member.social.twitter || '#'} aria-label={`${member.name}'s Twitter`}>
+                        <Link href={team.social.twitter || '#'} aria-label={`${team.name}'s Twitter`}>
                           <Twitter className="h-4 w-4" />
                         </Link>
                       </Button>
                       <Button variant="outline" size="icon" asChild>
-                        <Link href={member.social.linkedin || '#'} aria-label={`${member.name}'s LinkedIn`}>
+                        <Link href={team.social.linkedin || '#'} aria-label={`${team.name}'s LinkedIn`}>
                           <Linkedin className="h-4 w-4" />
                         </Link>
                       </Button>

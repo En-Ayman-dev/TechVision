@@ -7,7 +7,7 @@ import WhyChooseUsClient from './WhyChooseUsClient';
 import type { SiteSettings } from '@/lib/types';
 
 interface WhyChooseUsContentProps {
-    settings: SiteSettings | null;
+  settings: SiteSettings | null;
 }
 
 const containerVariants = {

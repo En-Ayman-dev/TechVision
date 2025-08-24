@@ -54,9 +54,9 @@ export async function getContactSuggestionsAction(message: string) {
   try {
     const isArabicInput = isArabic(message);
     const languageHint = isArabicInput ? "in Arabic" : "in English";
-    
+
     const result = await suggestFaqAction({ userInput: message, languageHint });
-    
+
     return { success: true, suggestions: result.suggestions };
   } catch (error) {
     console.error("Failed to get AI suggestions:", error);
@@ -71,12 +71,12 @@ export async function generateProjectIdeaAction(projectIdea: string) {
   if (projectIdea.length < 20) {
     return { success: false, message: "Project idea must be at least 20 characters long." };
   }
-  
+
   try {
     const locale = await getLocale();
-    const result = await generateStructuredIdea({ 
-      projectIdea, 
-      language: locale === 'ar' ? 'Arabic' : 'English' 
+    const result = await generateStructuredIdea({
+      projectIdea,
+      language: locale === 'ar' ? 'Arabic' : 'English'
     });
     return { success: true, structuredIdea: result.structuredIdea };
   } catch (error) {

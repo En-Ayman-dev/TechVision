@@ -1,6 +1,7 @@
 import { BlogSystem } from "@/components/blog/blog-system"
 import { FadeIn } from "@/components/ui/animations"
 import { getBlogPostsAction } from "@/app/actions";
+import CtaSection from "@/components/landing/CtaSection";
 
 
 export default async function BlogPage() {
@@ -12,6 +13,7 @@ export default async function BlogPage() {
           <BlogSystem posts={posts} />
         </FadeIn>
       </div>
+        <CtaSection />
     </div>
   )
 }

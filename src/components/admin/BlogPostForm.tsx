@@ -37,7 +37,7 @@ export function BlogPostForm({ isOpen, onOpenChange, post, onSubmit }: BlogPostF
     published: z.boolean().optional(),
     featured: z.boolean().optional(),
   });
-  
+
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const form = useForm<z.infer<typeof blogPostSchema>>({
@@ -79,10 +79,10 @@ export function BlogPostForm({ isOpen, onOpenChange, post, onSubmit }: BlogPostF
       ...values,
       tags: values.tags ? values.tags.split(",").map(tag => tag.trim()) : [],
     };
-    
+
     startTransition(async () => {
       const result = await action(postData);
-      
+
       if (result.success) {
         toast({
           title: post ? t("updateSuccess") : t("addSuccess"),
@@ -93,7 +93,7 @@ export function BlogPostForm({ isOpen, onOpenChange, post, onSubmit }: BlogPostF
         toast({ title: tGeneral("error"), description: result.message, variant: "destructive" });
       }
     });
-   };
+  };
 
 
   return (

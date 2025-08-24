@@ -83,38 +83,38 @@ export interface Project {
 }
 
 export interface SiteSettings {
-    stats: {
-        satisfaction: number;
-        projects: number;
-        experience: number;
-        team: number;
-    }
+  stats: {
+    satisfaction: number;
+    projects: number;
+    experience: number;
+    team: number;
+  }
 }
 
 export interface ThemeSettings {
-    light: {
-        background: string;
-        primary: string;
-        accent: string;
-    },
-    dark: {
-        background: string;
-        primary: string;
-        accent: string;
-    }
+  light: {
+    background: string;
+    primary: string;
+    accent: string;
+  },
+  dark: {
+    background: string;
+    primary: string;
+    accent: string;
+  }
 }
-export  interface BlogPost {
-    id: string;
-    title: string;
-    content: string;
-    excerpt: string;
-    author: string;
-    publishedAt: string;
-    updatedAt: string;
-    tags: string[];
-    category: string;
-    views: number;
-    likes: number;
-    featured: boolean;
-    published: boolean;
+export interface BlogPost {
+  id: string;
+  title: string;
+  content: string;
+  excerpt: string;
+  author: string;
+  publishedAt: string;
+  updatedAt: string;
+  tags: string[];
+  category: string;
+  views: number;
+  likes: number;
+  featured: boolean;
+  published: boolean;
 }

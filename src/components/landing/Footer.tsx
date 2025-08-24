@@ -151,7 +151,7 @@ export default function Footer() {
           <p>&copy; {new Date().getFullYear()} {t('companyName')}. {t('rightsReserved')}</p>
           <p className="mt-2 text-foreground">
             &copy; {new Date().getFullYear()} {t('EnAyman')}.
-            </p>
+          </p>
         </div>
       </div>
     </footer>

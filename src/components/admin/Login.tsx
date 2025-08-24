@@ -30,11 +30,11 @@ export default function Login() {
     try {
       await login(email, password);
     } catch (error: any) {
-        toast({
-            title: t("failed"),
-            description: error.message || t("failedDesc"),
-            variant: "destructive"
-        })
+      toast({
+        title: t("failed"),
+        description: error.message || t("failedDesc"),
+        variant: "destructive"
+      })
     }
     setIsLoading(false);
   };
@@ -62,12 +62,12 @@ export default function Login() {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">{t("password")}</Label>
-            <Input 
-                id="password" 
-                type="password" 
-                required 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+            <Input
+              id="password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
         </CardContent>

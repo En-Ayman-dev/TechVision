@@ -1,64 +1,55 @@
-
-'use client';
-
-import { useLocale, useTranslations } from "next-intl";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
+import { ThemeToggle } from "./ThemeToggle";
+import Link from "next/link";
 
-export function MainSidebar() {
+interface MainSidebarProps {
+    locale: string;
+    onClose: () => void;
+}
+
+export function MainSidebar({ locale, onClose }: MainSidebarProps) {
     const t = useTranslations("Header");
-    const locale = useLocale();
-    const pathname = usePathname();
+    const currentPathname = usePathname();
 
-    const sidebarLinks = [
-        {
-            title: t("home"),
-            href: `/${locale}`,
-        },
-        {
-            title: t("services"),
-            href: `/${locale}/services`,
-        },
-        {
-            title: t("portfolio"),
-            href: `/${locale}/portfolio`,
-        },
-        {
-            title: t("about"),
-            href: `/${locale}/about`,
-        },
-        {
-            title: t("Faq"),
-            href: `/${locale}/faq`,
-        },
-        {
-            title: t("contact"),
-            href: `/${locale}/contact`,
-        },
+    const navItems = [
+        { label: t("home"), href: "/" },
+        { label: t("portfolio"), href: "/portfolio" },
+        { label: t("services"), href: "/services" },
+        { label: t("about"), href: "/about" },
+        { label: t("BlogSystem"), href: "/blog" },
     ];
 
     return (
-        <nav className="flex flex-col gap-2 p-4 pt-0">
-            <h2 className="text-xl font-bold tracking-tight">{t("sidebar")}</h2>
-            <Separator className="mb-2" />
-            {sidebarLinks.map((link) => (
-                <Link
-                    key={link.title}
-                    href={link.href}
-                    className={cn(
-                        buttonVariants({ variant: "ghost" }),
-                        pathname === link.href
-                            ? "bg-muted hover:bg-muted"
-                            : "hover:bg-transparent hover:underline",
-                        "justify-start text-lg"
-                    )}
-                >
-                    {link.title}
+        <div className="flex h-full flex-col justify-between p-4">
+            <div className="flex flex-col gap-4">
+                {/* Navigation Links */}
+                <nav className="flex flex-col space-y-2">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={onClose}
+                            className={cn(
+                                "p-2 text-foreground/60 transition-colors hover:text-foreground",
+                                currentPathname === item.href && "text-foreground"
+                            )}
+                        >
+                            {item.label}
+                        </Link>
+                    ))}
+                </nav>
+            </div>
+
+            {/* Footer / Contact Button and Theme Toggle */}
+            <div className="flex items-center justify-between p-4">
+                <Link href="/contact" passHref>
+                    <Button onClick={onClose}>{t("contact")}</Button>
                 </Link>
-            ))}
-        </nav>
+                <ThemeToggle />
+            </div>
+        </div>
     );
 }

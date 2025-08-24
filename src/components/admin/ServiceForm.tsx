@@ -42,9 +42,9 @@ const serviceSchema = z.object({
 const iconOptions = ["Code", "Cloud", "PenTool", "Database", "Shield", "LineChart"];
 
 export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: ServiceFormProps) {
-  
-  const t = useTranslations('Admin.servicesPage'); 
-  const tg = useTranslations('Admin.general'); 
+
+  const t = useTranslations('Admin.servicesPage');
+  const tg = useTranslations('Admin.general');
   const [isPending, startTransition] = useTransition();
   const [isGenerating, startGeneratingTransition] = useTransition();
   const { toast } = useToast();
@@ -86,7 +86,7 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
       if (result.success && result.description) {
         form.setValue("description", result.description, { shouldValidate: true });
         toast({
-           title: tg('descriptionGenerated'),
+          title: tg('descriptionGenerated'),
           description: tg('descriptionGeneratedDesc'),
         });
       } else {
@@ -115,7 +115,7 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
         onSubmit();
       } else {
         toast({
-          title:  tg('error'),
+          title: tg('error'),
           description: result.message,
           variant: "destructive",
         });
@@ -157,7 +157,7 @@ export function ServiceForm({ isOpen, onOpenChange, service, onSubmit }: Service
               <Label htmlFor="description">{tg('description')}</Label>
               <Button type="button" size="sm" variant="outline" onClick={handleGenerateDescription} disabled={isGenerating} aria-label={tg('generate')}>
                 {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
-                  {tg('generate')}
+                {tg('generate')}
               </Button>
             </div>
             <Textarea id="description" {...form.register("description")} />

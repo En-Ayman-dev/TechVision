@@ -1,27 +1,41 @@
-// src/components/I18nProviderClient.tsx
-"use client"; // هذا المكون هو Client Component
+"use client";
 
-import { useEffect } from 'react';
-import { I18nextProvider } from 'react-i18next';
-import i18n from '@/i18n'; // استيراد مثيل i18n المهيأ لجانب العميل
+import { ReactNode } from "react";
+import { NextIntlClientProvider } from "next-intl";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
+import { Toaster } from "@/components/ui/toaster";
+import { NotificationProvider } from "@/components/ui/notification";
+import { Header } from "@/components/landing/Header";
+import Footer from "@/components/landing/Footer";
+import { ThemeProvider } from "next-themes";
 
-interface I18nProviderClientProps {
-  children: React.ReactNode;
-  locale: string; // استقبال اللغة كـ prop
+interface Props {
+  children: ReactNode;
+  locale: string;
+  messages: Record<string, any>;
 }
 
-export default function I18nProviderClient({ children, locale }: I18nProviderClientProps) {
-  useEffect(() => {
-    // تغيير لغة i18n عندما تتغير الـ locale
-    if (i18n.language !== locale) {
-      i18n.changeLanguage(locale);
-    }
-  }, [locale]); // إعادة تشغيل الـ effect عند تغير الـ locale
-
+export default function I18nProviderClient({ children, locale, messages }: Props) {
   return (
-    // تأكد من أن هذا هو الكود الصحيح بدون أي أخطاء بناء جملة
-    <I18nextProvider i18n={i18n}>
-      {children}
-    </I18nextProvider>
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <NotificationProvider>
+          <Header lang={locale} pathname="/" />
+          <main className="min-h-screen">
+            {children}
+          </main>
+          <Footer />
+          <Toaster />
+          <SpeedInsights />
+          <Analytics />
+        </NotificationProvider>
+      </ThemeProvider>
+    </NextIntlClientProvider>
   );
 }

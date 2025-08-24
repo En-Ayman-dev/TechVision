@@ -3,11 +3,14 @@
 import { Card, CardHeader, CardDescription } from "@/components/ui/card";
 import { Code, Cloud, PenTool, Database, Shield, LineChart } from 'lucide-react';
 import { useTranslations } from "next-intl";
-import { getServicesAction } from "@/app/actions";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Service } from "@/lib/types";
+
+// Define the component props interface
+interface ServicesSectionProps {
+  services: Service[];
+}
 
 const iconMap: { [key: string]: React.ElementType } = {
   Code,
@@ -34,19 +37,9 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-export default function ServicesSection() {
+export default function ServicesSection({ services }: ServicesSectionProps) {
   const t = useTranslations('ServicesSection');
-  const [services, setServices] = useState<Service[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchServices = async () => {
-      const fetchedServices = await getServicesAction();
-      setServices(fetchedServices);
-      setIsLoading(false);
-    };
-    fetchServices();
-  }, []);
+  const isLoading = services.length === 0;
 
   return (
     <section id="services" className="bg-background">
@@ -79,7 +72,6 @@ export default function ServicesSection() {
           variants={containerVariants}
         >
           {isLoading ? (
-            // Show skeleton loaders while data is being fetched
             Array.from({ length: 6 }).map((_, index) => (
               <Skeleton key={index} className="h-48 rounded-lg" />
             ))

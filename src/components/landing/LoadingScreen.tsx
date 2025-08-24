@@ -18,7 +18,7 @@ export default function LoadingScreen() {
       setIsMounted(false);
       return;
     }
-    
+
     document.body.style.overflow = 'hidden';
 
     const timer = setInterval(() => {

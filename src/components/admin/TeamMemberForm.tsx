@@ -33,7 +33,7 @@ export function TeamMemberForm({ isOpen, onOpenChange, member, onSubmit }: TeamM
   const tGeneral = useTranslations("Admin.general");
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
-  
+
   const teamMemberSchema = z.object({
     id: z.string().optional(),
     name: z.string().min(2, t("nameMin")),
@@ -45,7 +45,7 @@ export function TeamMemberForm({ isOpen, onOpenChange, member, onSubmit }: TeamM
     }),
     dataAiHint: z.string().optional(),
   });
-  
+
   const form = useForm<z.infer<typeof teamMemberSchema>>({
     resolver: zodResolver(teamMemberSchema),
     defaultValues: {

@@ -27,18 +27,18 @@ interface WhyChooseUsClientProps {
 }
 
 export default function WhyChooseUsClient({ settings }: WhyChooseUsClientProps) {
-    const t = useTranslations('WhyChooseUsSection.stats');
+  const t = useTranslations('WhyChooseUsSection.stats');
 
-    if (!settings) {
-        return null; // Or return skeleton loaders
-    }
+  if (!settings) {
+    return null; // Or return skeleton loaders
+  }
 
-    return (
-        <>
-            <AnimatedStat value={settings.stats.satisfaction} label={t('satisfaction')} suffix="%" />
-            <AnimatedStat value={settings.stats.projects} label={t('projects')} suffix="+" />
-            <AnimatedStat value={settings.stats.experience} label={t('experience')} />
-            <AnimatedStat value={settings.stats.team} label={t('team')} />
-        </>
-    )
+  return (
+    <>
+      <AnimatedStat value={settings.stats.satisfaction} label={t('satisfaction')} suffix="%" />
+      <AnimatedStat value={settings.stats.projects} label={t('projects')} suffix="+" />
+      <AnimatedStat value={settings.stats.experience} label={t('experience')} />
+      <AnimatedStat value={settings.stats.team} label={t('team')} />
+    </>
+  )
 }

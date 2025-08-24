@@ -14,10 +14,10 @@ export default function FaqSection() {
   const t = useTranslations('FaqSection');
 
   const keys = ['q1', 'q2', 'q3', 'q4'] as const;
-  
+
   const faqItems: FaqItem[] = keys.map(key => ({
-      question: t(`items.${key}`),
-      answer: t(`items.${key.replace('q', 'a')}`)
+    question: t(`items.${key}`),
+    answer: t(`items.${key.replace('q', 'a')}`)
   }));
 
   const containerVariants = {

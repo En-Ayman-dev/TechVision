@@ -1,70 +1,4 @@
 
-// import Image from 'next/image';
-// import { Card, CardContent } from '@/components/ui/card';
-// import {
-//   Carousel,
-//   CarouselContent,
-//   CarouselItem,
-//   CarouselNext,
-//   CarouselPrevious,
-// } from "@/components/ui/carousel";
-// import { getTranslations } from 'next-intl/server';
-// import { getTestimonialsAction } from '@/app/actions';
-
-// export default async function TestimonialsSection() {
-//   const t = await getTranslations('TestimonialsSection');
-//   const testimonials = await getTestimonialsAction();
-
-//   if (!testimonials || testimonials.length === 0) {
-//     return null;
-//   }
-
-//   return (
-//     <section id="testimonials" className="bg-background">
-//       <div className="container mx-auto px-4 py-10">
-//         <div className="text-center">
-//           <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">{t('title')}</h2>
-//           <p className="mt-4 max-w-2xl mx-auto text-lg leading-8 text-muted-foreground">
-//             {t('subtitle')}
-//           </p>
-//         </div>
-//         <Carousel
-//           opts={{
-//             align: "start",
-//             loop: true,
-//           }}
-//           className="w-full max-w-4xl mx-auto mt-12"
-//         >
-//           <CarouselContent>
-//             {testimonials.map((testimonial, index) => (
-//               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-//                 <div className="p-1">
-//                   <Card>
-//                     <CardContent className="flex flex-col items-center text-center p-8">
-//                       <Image
-//                         src={testimonial.image}
-//                         alt={testimonial.author}
-//                         width={80}
-//                         height={80}
-//                         className="rounded-full mb-4"
-//                         data-ai-hint={testimonial.dataAiHint}
-//                       />
-//                       <p className="text-lg italic text-foreground mb-4">"{testimonial.quote}"</p>
-//                       <h3 className="font-semibold text-lg font-headline">{testimonial.author}</h3>
-//                       <p className="text-muted-foreground">{testimonial.role}</p>
-//                     </CardContent>
-//                   </Card>
-//                 </div>
-//               </CarouselItem>
-//             ))}
-//           </CarouselContent>
-//           <CarouselPrevious />
-//           <CarouselNext />
-//         </Carousel>
-//       </div>
-//     </section>
-//   );
-// }
 "use client";
 
 import Image from 'next/image';
@@ -77,12 +11,14 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useTranslations } from 'next-intl';
-import { getTestimonialsAction } from '@/app/actions';
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Testimonial } from '@/lib/types';
 
+// Define the component props interface
+interface TestimonialsSectionProps {
+  testimonials: Testimonial[];
+}
 
 // Animation variants
 const containerVariants = {
@@ -100,23 +36,11 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-export default function TestimonialsSection() {
+export default function TestimonialsSection({ testimonials }: TestimonialsSectionProps) {
   const t = useTranslations('TestimonialsSection');
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchTestimonials = async () => {
-      const fetchedTestimonials = await getTestimonialsAction();
-      setTestimonials(fetchedTestimonials);
-      setIsLoading(false);
-    };
-    fetchTestimonials();
-  }, []);
 
-  if (!isLoading && testimonials.length === 0) {
-    return null;
-  }
+  const isLoading = testimonials.length === 0;
 
   return (
     <section id="testimonials" className="bg-background">
@@ -141,7 +65,7 @@ export default function TestimonialsSection() {
             {t('subtitle')}
           </motion.p>
         </motion.div>
-        
+
         {isLoading ? (
           <div className="w-full max-w-4xl mx-auto mt-12 flex gap-4">
             <Skeleton className="w-full h-80" />

@@ -32,9 +32,9 @@ export async function getSearchResultsAction(query: string, filters: string[]): 
   if (filters.includes("portfolio")) {
     projects.forEach((project) => {
       if (
-(project.title?.toLowerCase() || "").includes(normalizedQuery) ||
-(project.description?.toLowerCase() || "").includes(normalizedQuery) ||
-(project.category?.toLowerCase() || "").includes(normalizedQuery)
+        (project.title?.toLowerCase() || "").includes(normalizedQuery) ||
+        (project.description?.toLowerCase() || "").includes(normalizedQuery) ||
+        (project.category?.toLowerCase() || "").includes(normalizedQuery)
 
       ) {
         results.push({ type: "Project", data: project });
@@ -46,8 +46,8 @@ export async function getSearchResultsAction(query: string, filters: string[]): 
   if (filters.includes("team")) {
     teamMembers.forEach((member) => {
       if (
-(member.name?.toLowerCase() || "").includes(normalizedQuery) ||
-(member.role?.toLowerCase() || "").includes(normalizedQuery)
+        (member.name?.toLowerCase() || "").includes(normalizedQuery) ||
+        (member.role?.toLowerCase() || "").includes(normalizedQuery)
 
       ) {
         results.push({ type: "TeamMember", data: member });
@@ -59,8 +59,8 @@ export async function getSearchResultsAction(query: string, filters: string[]): 
   if (filters.includes("services")) {
     services.forEach((service) => {
       if (
-(service.title?.toLowerCase() || "").includes(normalizedQuery) ||
-(service.description?.toLowerCase() || "").includes(normalizedQuery)
+        (service.title?.toLowerCase() || "").includes(normalizedQuery) ||
+        (service.description?.toLowerCase() || "").includes(normalizedQuery)
 
       ) {
         results.push({ type: "Service", data: service });
@@ -72,11 +72,11 @@ export async function getSearchResultsAction(query: string, filters: string[]): 
   if (filters.includes("blog")) {
     blogPosts.forEach((post) => {
       if (
-(post.title?.toLowerCase() || "").includes(normalizedQuery) ||
-(post.excerpt?.toLowerCase() || "").includes(normalizedQuery) ||
-(post.content?.toLowerCase() || "").includes(normalizedQuery) ||
-post.tags?.some(tag => (tag?.toLowerCase() || "").includes(normalizedQuery)) ||
-(post.category?.toLowerCase() || "").includes(normalizedQuery)
+        (post.title?.toLowerCase() || "").includes(normalizedQuery) ||
+        (post.excerpt?.toLowerCase() || "").includes(normalizedQuery) ||
+        (post.content?.toLowerCase() || "").includes(normalizedQuery) ||
+        post.tags?.some(tag => (tag?.toLowerCase() || "").includes(normalizedQuery)) ||
+        (post.category?.toLowerCase() || "").includes(normalizedQuery)
       ) {
         results.push({ type: "BlogPost", data: post });
       }

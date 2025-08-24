@@ -46,7 +46,7 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
     image: z.string().url(t("imageUrlValidation")),
     dataAiHint: z.string().optional(),
   });
-  
+
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
     defaultValues: {

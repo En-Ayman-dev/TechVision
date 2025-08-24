@@ -35,7 +35,7 @@ export function TestimonialForm({ isOpen, onOpenChange, testimonial, onSubmit }:
   const [isPending, startTransition] = useTransition();
   const [isGenerating, startGeneratingTransition] = useTransition();
   const { toast } = useToast();
-  
+
   const testimonialSchema = z.object({
     id: z.string().optional(),
     quote: z.string().min(10, t("quoteMin")),
@@ -44,7 +44,7 @@ export function TestimonialForm({ isOpen, onOpenChange, testimonial, onSubmit }:
     image: z.string().url(t("imageUrlValidation")),
     dataAiHint: z.string().optional(),
   });
-  
+
   const form = useForm<z.infer<typeof testimonialSchema>>({
     resolver: zodResolver(testimonialSchema),
     defaultValues: {

@@ -1,4 +1,4 @@
- {
+{
   "extends": [
     "development"
   ],
@@ -31,6 +31,7 @@
       {
         "label": "off"
       }
-    ]
+    ],
+    "no-inline-styles": "off"
   }
 }

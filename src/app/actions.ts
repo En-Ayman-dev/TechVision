@@ -34,9 +34,9 @@ const contactSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
   message: z.string().min(10, { message: "Message must be at least 10 characters." }),
   inquiry: z.string().optional().or(z.literal("")), // Allows empty string or undefined
-    beneficiaryType: z.string().optional().or(z.literal("")),
+  beneficiaryType: z.string().optional().or(z.literal("")),
   requestType: z.string().optional().or(z.literal("")),
-  
+
 });
 
 const projectSchema = z.object({
@@ -69,21 +69,21 @@ const serviceSchema = z.object({
 });
 
 const testimonialSchema = z.object({
-    id: z.string().optional(),
-    quote: z.string().min(10, "Quote must be at least 10 characters."),
-    author: z.string().min(2, "Author must be at least 2 characters."),
-    role: z.string().min(2, "Role must be at least 2 characters."),
-    image: z.string().url("Image must be a valid URL."),
-    dataAiHint: z.string().optional(),
+  id: z.string().optional(),
+  quote: z.string().min(10, "Quote must be at least 10 characters."),
+  author: z.string().min(2, "Author must be at least 2 characters."),
+  role: z.string().min(2, "Role must be at least 2 characters."),
+  image: z.string().url("Image must be a valid URL."),
+  dataAiHint: z.string().optional(),
 });
 
 const siteSettingsSchema = z.object({
-    stats: z.object({
-        satisfaction: z.coerce.number().min(0).max(100),
-        projects: z.coerce.number().min(0),
-        experience: z.coerce.number().min(0),
-        team: z.coerce.number().min(0),
-    })
+  stats: z.object({
+    satisfaction: z.coerce.number().min(0).max(100),
+    projects: z.coerce.number().min(0),
+    experience: z.coerce.number().min(0),
+    team: z.coerce.number().min(0),
+  })
 });
 
 const partnerSchema = z.object({
@@ -160,9 +160,9 @@ export async function sendContactMessageAction(data: z.infer<typeof contactSchem
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
-    const newMessage = { 
-        ...validatedFields.data, 
-        submittedAt: new Date().toISOString() 
+    const newMessage = {
+      ...validatedFields.data,
+      submittedAt: new Date().toISOString()
     };
     await messagesCollection.add(newMessage);
     revalidatePath("/[locale]/admin/messages", "page");
@@ -294,50 +294,50 @@ export async function getTeamAction(): Promise<TeamMember[]> {
 }
 
 export async function addTeamMemberAction(data: z.infer<typeof teamMemberSchema>) {
-    if (!teamCollection) return { success: false, message: "Database not configured." };
-    const validatedFields = teamMemberSchema.safeParse(data);
-    if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+  if (!teamCollection) return { success: false, message: "Database not configured." };
+  const validatedFields = teamMemberSchema.safeParse(data);
+  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
-    try {
-        const { id, ...memberData } = validatedFields.data;
-        await teamCollection.add(memberData);
-        revalidatePath("/[locale]/admin/team", "page");
-        revalidatePath("/", "layout");
-        revalidatePath("/[locale]/admin", "page");
-        return { success: true, message: "Team member added successfully." };
-    } catch (error) {
-        return { success: false, message: "Failed to add team member." };
-    }
+  try {
+    const { id, ...memberData } = validatedFields.data;
+    await teamCollection.add(memberData);
+    revalidatePath("/[locale]/admin/team", "page");
+    revalidatePath("/", "layout");
+    revalidatePath("/[locale]/admin", "page");
+    return { success: true, message: "Team member added successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to add team member." };
+  }
 }
 
 export async function updateTeamMemberAction(data: z.infer<typeof teamMemberSchema>) {
-    if (!teamCollection) return { success: false, message: "Database not configured." };
-    const validatedFields = teamMemberSchema.safeParse(data);
-    if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
-    
-    try {
-        const { id, ...memberData } = validatedFields.data;
-        if (!id) throw new Error("Team member ID is missing.");
-        await teamCollection.doc(id).set(memberData, { merge: true });
-        revalidatePath("/[locale]/admin/team", "page");
-        revalidatePath("/", "layout");
-        return { success: true, message: "Team member updated successfully." };
-    } catch (error) {
-        return { success: false, message: "Failed to update team member." };
-    }
+  if (!teamCollection) return { success: false, message: "Database not configured." };
+  const validatedFields = teamMemberSchema.safeParse(data);
+  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+
+  try {
+    const { id, ...memberData } = validatedFields.data;
+    if (!id) throw new Error("Team member ID is missing.");
+    await teamCollection.doc(id).set(memberData, { merge: true });
+    revalidatePath("/[locale]/admin/team", "page");
+    revalidatePath("/", "layout");
+    return { success: true, message: "Team member updated successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to update team member." };
+  }
 }
 
 export async function deleteTeamMemberAction(id: string) {
-    if (!teamCollection) return { success: false, message: "Database not configured." };
-    try {
-        await teamCollection.doc(id).delete();
-        revalidatePath("/[locale]/admin/team", "page");
-        revalidatePath("/", "layout");
-        revalidatePath("/[locale]/admin", "page");
-        return { success: true, message: "Team member deleted." };
-    } catch (error) {
-        return { success: false, message: "Failed to delete team member." };
-    }
+  if (!teamCollection) return { success: false, message: "Database not configured." };
+  try {
+    await teamCollection.doc(id).delete();
+    revalidatePath("/[locale]/admin/team", "page");
+    revalidatePath("/", "layout");
+    revalidatePath("/[locale]/admin", "page");
+    return { success: true, message: "Team member deleted." };
+  } catch (error) {
+    return { success: false, message: "Failed to delete team member." };
+  }
 }
 
 
@@ -401,48 +401,48 @@ export async function getTestimonialsAction(): Promise<Testimonial[]> {
 }
 
 export async function addTestimonialAction(data: z.infer<typeof testimonialSchema>) {
-    if (!testimonialsCollection) return { success: false, message: "Database not configured." };
-    const validatedFields = testimonialSchema.safeParse(data);
-    if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+  if (!testimonialsCollection) return { success: false, message: "Database not configured." };
+  const validatedFields = testimonialSchema.safeParse(data);
+  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
-    try {
-        const { id, ...testimonialData } = validatedFields.data;
-        await testimonialsCollection.add(testimonialData);
-        revalidatePath("/[locale]/admin/testimonials", "page");
-        revalidatePath("/", "layout");
-        return { success: true, message: "Testimonial added successfully." };
-    } catch (error) {
-        return { success: false, message: "Failed to add testimonial." };
-    }
+  try {
+    const { id, ...testimonialData } = validatedFields.data;
+    await testimonialsCollection.add(testimonialData);
+    revalidatePath("/[locale]/admin/testimonials", "page");
+    revalidatePath("/", "layout");
+    return { success: true, message: "Testimonial added successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to add testimonial." };
+  }
 }
 
 export async function updateTestimonialAction(data: z.infer<typeof testimonialSchema>) {
-    if (!testimonialsCollection) return { success: false, message: "Database not configured." };
-    const validatedFields = testimonialSchema.safeParse(data);
-    if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+  if (!testimonialsCollection) return { success: false, message: "Database not configured." };
+  const validatedFields = testimonialSchema.safeParse(data);
+  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
-    try {
-        const { id, ...testimonialData } = validatedFields.data;
-        if (!id) throw new Error("Testimonial ID is missing.");
-        await testimonialsCollection.doc(id).set(testimonialData, { merge: true });
-        revalidatePath("/[locale]/admin/testimonials", "page");
-        revalidatePath("/", "layout");
-        return { success: true, message: "Testimonial updated successfully." };
-    } catch (error) {
-        return { success: false, message: "Failed to update testimonial." };
-    }
+  try {
+    const { id, ...testimonialData } = validatedFields.data;
+    if (!id) throw new Error("Testimonial ID is missing.");
+    await testimonialsCollection.doc(id).set(testimonialData, { merge: true });
+    revalidatePath("/[locale]/admin/testimonials", "page");
+    revalidatePath("/", "layout");
+    return { success: true, message: "Testimonial updated successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to update testimonial." };
+  }
 }
 
 export async function deleteTestimonialAction(id: string) {
-    if (!testimonialsCollection) return { success: false, message: "Database not configured." };
-    try {
-        await testimonialsCollection.doc(id).delete();
-        revalidatePath("/[locale]/admin/testimonials", "page");
-        revalidatePath("/", "layout");
-        return { success: true, message: "Testimonial deleted." };
-    } catch (error) {
-        return { success: false, message: "Failed to delete testimonial." };
-    }
+  if (!testimonialsCollection) return { success: false, message: "Database not configured." };
+  try {
+    await testimonialsCollection.doc(id).delete();
+    revalidatePath("/[locale]/admin/testimonials", "page");
+    revalidatePath("/", "layout");
+    return { success: true, message: "Testimonial deleted." };
+  } catch (error) {
+    return { success: false, message: "Failed to delete testimonial." };
+  }
 }
 
 
@@ -453,36 +453,36 @@ export async function getSiteSettingsAction(): Promise<SiteSettings> {
   }
   const doc = await settingsCollection.doc('main').get();
   if (!doc.exists) {
-      // Create default settings if they don't exist
-      const defaultSettings: SiteSettings = {
-          stats: { satisfaction: 98, projects: 150, experience: 12, team: 42 }
-      };
-      await settingsCollection.doc('main').set(defaultSettings);
-      return defaultSettings;
+    // Create default settings if they don't exist
+    const defaultSettings: SiteSettings = {
+      stats: { satisfaction: 98, projects: 150, experience: 12, team: 42 }
+    };
+    await settingsCollection.doc('main').set(defaultSettings);
+    return defaultSettings;
   }
   return doc.data() as SiteSettings;
 }
 
 export async function updateSiteSettingsAction(data: z.infer<typeof siteSettingsSchema>) {
-    if (!settingsCollection) return { success: false, message: "Database not configured." };
-    const validatedFields = siteSettingsSchema.safeParse(data);
-    if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+  if (!settingsCollection) return { success: false, message: "Database not configured." };
+  const validatedFields = siteSettingsSchema.safeParse(data);
+  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
-    try {
-        await settingsCollection.doc('main').set(validatedFields.data, { merge: true });
-        revalidatePath("/[locale]/admin/settings", "page");
-        revalidatePath("/", "layout");
-        return { success: true, message: "Settings updated successfully." };
-    } catch (error) {
-        return { success: false, message: "Failed to update settings." };
-    }
+  try {
+    await settingsCollection.doc('main').set(validatedFields.data, { merge: true });
+    revalidatePath("/[locale]/admin/settings", "page");
+    revalidatePath("/", "layout");
+    return { success: true, message: "Settings updated successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to update settings." };
+  }
 }
 
 // Partner Actions
 export async function getPartnersAction(): Promise<Partner[]> {
-    if (!partnersCollection) return [];
-    const snapshot = await partnersCollection.get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Partner));
+  if (!partnersCollection) return [];
+  const snapshot = await partnersCollection.get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Partner));
 }
 
 export async function addPartnerAction(data: z.infer<typeof partnerSchema>) {
@@ -539,7 +539,7 @@ function parseHsl(css: string): ThemeSettings {
 
   const lightBgMatch = css.match(/:root\s*\{[^}]*--background:\s*([^;]+);/);
   if (lightBgMatch) settings.light.background = lightBgMatch[1].trim();
-  
+
   const lightPrimaryMatch = css.match(/:root\s*\{[^}]*--primary:\s*([^;]+);/);
   if (lightPrimaryMatch) settings.light.primary = lightPrimaryMatch[1].trim();
 
@@ -547,53 +547,53 @@ function parseHsl(css: string): ThemeSettings {
   if (lightAccentMatch) settings.light.accent = lightAccentMatch[1].trim();
 
   const darkBlockMatch = css.match(/\.dark\s*\{([^}]+)\}/);
-    if (darkBlockMatch) {
+  if (darkBlockMatch) {
     const darkCss = darkBlockMatch[1];
     const darkBgMatch = darkCss.match(/--background:\s*([^;]+);/);
     if (darkBgMatch) settings.dark.background = darkBgMatch[1].trim();
 
     const darkPrimaryMatch = darkCss.match(/--primary:\s*([^;]+);/);
     if (darkPrimaryMatch) settings.dark.primary = darkPrimaryMatch[1].trim();
-    
+
     const darkAccentMatch = darkCss.match(/--accent:\s*([^;]+);/);
     if (darkAccentMatch) settings.dark.accent = darkAccentMatch[1].trim();
   }
-  
+
   return settings;
 }
 
 export async function getThemeSettingsAction(): Promise<ThemeSettings> {
-    const cssContent = await fs.readFile(globalsCssPath, 'utf8');
-    return parseHsl(cssContent);
+  const cssContent = await fs.readFile(globalsCssPath, 'utf8');
+  return parseHsl(cssContent);
 }
 
 export async function updateThemeSettingsAction(data: z.infer<typeof themeSettingsSchema>) {
-    const validatedFields = themeSettingsSchema.safeParse(data);
-    if (!validatedFields.success) {
-        return { success: false, message: "Validation failed.", errors: validatedFields.error.flatten().fieldErrors };
-    }
+  const validatedFields = themeSettingsSchema.safeParse(data);
+  if (!validatedFields.success) {
+    return { success: false, message: "Validation failed.", errors: validatedFields.error.flatten().fieldErrors };
+  }
 
-    try {
-        let cssContent = await fs.readFile(globalsCssPath, 'utf8');
-        const { light, dark } = validatedFields.data;
-        
-        // Update light theme variables in :root
-        cssContent = cssContent.replace(/(:root\s*\{[\s\S]*?--background:\s*)[^;]+(;[\s\S]*?\})/, `$1${light.background}$2`);
-        cssContent = cssContent.replace(/(:root\s*\{[\s\S]*?--primary:\s*)[^;]+(;[\s\S]*?\})/, `$1${light.primary}$2`);
-        cssContent = cssContent.replace(/(:root\s*\{[\s\S]*?--accent:\s*)[^;]+(;[\s\S]*?\})/, `$1${light.accent}$2`);
+  try {
+    let cssContent = await fs.readFile(globalsCssPath, 'utf8');
+    const { light, dark } = validatedFields.data;
 
-        // Update dark theme variables in .dark
-        cssContent = cssContent.replace(/(\.dark\s*\{[\s\S]*?--background:\s*)[^;]+(;[\s\S]*?\})/, `$1${dark.background}$2`);
-        cssContent = cssContent.replace(/(\.dark\s*\{[\s\S]*?--primary:\s*)[^;]+(;[\s\S]*?\})/, `$1${dark.primary}$2`);
-        cssContent = cssContent.replace(/(\.dark\s*\{[\s\S]*?--accent:\s*)[^;]+(;[\s\S]*?\})/, `$1${dark.accent}$2`);
+    // Update light theme variables in :root
+    cssContent = cssContent.replace(/(:root\s*\{[\s\S]*?--background:\s*)[^;]+(;[\s\S]*?\})/, `$1${light.background}$2`);
+    cssContent = cssContent.replace(/(:root\s*\{[\s\S]*?--primary:\s*)[^;]+(;[\s\S]*?\})/, `$1${light.primary}$2`);
+    cssContent = cssContent.replace(/(:root\s*\{[\s\S]*?--accent:\s*)[^;]+(;[\s\S]*?\})/, `$1${light.accent}$2`);
 
-        await fs.writeFile(globalsCssPath, cssContent, 'utf8');
-        revalidatePath("/", "layout");
-        return { success: true, message: "Theme updated successfully." };
-    } catch (error) {
-        console.error("Error updating theme:", error);
-        return { success: false, message: "Failed to update theme file." };
-    }
+    // Update dark theme variables in .dark
+    cssContent = cssContent.replace(/(\.dark\s*\{[\s\S]*?--background:\s*)[^;]+(;[\s\S]*?\})/, `$1${dark.background}$2`);
+    cssContent = cssContent.replace(/(\.dark\s*\{[\s\S]*?--primary:\s*)[^;]+(;[\s\S]*?\})/, `$1${dark.primary}$2`);
+    cssContent = cssContent.replace(/(\.dark\s*\{[\s\S]*?--accent:\s*)[^;]+(;[\s\S]*?\})/, `$1${dark.accent}$2`);
+
+    await fs.writeFile(globalsCssPath, cssContent, 'utf8');
+    revalidatePath("/", "layout");
+    return { success: true, message: "Theme updated successfully." };
+  } catch (error) {
+    console.error("Error updating theme:", error);
+    return { success: false, message: "Failed to update theme file." };
+  }
 }
 
 
@@ -635,8 +635,8 @@ export async function addBlogPostAction(data: z.infer<typeof blogPostSchema>) {
 
   try {
     const { id, ...postData } = validatedFields.data;
-const postRef = await db.collection('blogPosts').add({
-        ...postData,
+    const postRef = await db.collection('blogPosts').add({
+      ...postData,
       publishedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -665,7 +665,7 @@ export async function updateBlogPostAction(data: z.infer<typeof blogPostSchema>)
     const { id, ...postData } = validatedFields.data;
     if (!id) throw new Error("Post ID is missing.");
     // await db.collection('blogPosts').doc(id).set(postData, { merge: true });
-        const postRef = db.collection('blogPosts').doc(id);
+    const postRef = db.collection('blogPosts').doc(id);
     await postRef.set(postData, { merge: true });
     if (!postRef.id) {
       return { success: false, message: "Failed to update blog post." };
@@ -674,7 +674,7 @@ export async function updateBlogPostAction(data: z.infer<typeof blogPostSchema>)
     revalidatePath("/[locale]/blog", "page");
     return { success: true, message: "Blog post updated successfully." };
   } catch (error) {
-     console.error("Error updating blog post:", error);
+    console.error("Error updating blog post:", error);
     return { success: false, message: "Failed to update blog post." };
   }
 }
@@ -733,17 +733,17 @@ export async function generateTestimonialQuoteAction(authorName: string) {
 // =============================================================================
 
 export async function addMessageAction(name: string, email: string, message: string) {
-    if (!messagesCollection) return { success: false, message: "Database not configured." };
-    try {
-        await messagesCollection.add({
-            name,
-            email,
-            message,
-            submittedAt: new Date().toISOString(),
-        });
-        revalidatePath("/ar");
-        return { success: true, message: "Message sent successfully." };
-    } catch (error: any) {
-        return { success: false, message: error.message };
-    }
+  if (!messagesCollection) return { success: false, message: "Database not configured." };
+  try {
+    await messagesCollection.add({
+      name,
+      email,
+      message,
+      submittedAt: new Date().toISOString(),
+    });
+    revalidatePath("/ar");
+    return { success: true, message: "Message sent successfully." };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
 }

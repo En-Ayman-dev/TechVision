@@ -36,14 +36,14 @@ export function PartnerForm({ isOpen, onOpenChange, partner, onSubmit }: Partner
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const iconOptions = ["Globe", "CircuitBoard", "Rocket", "Bot", "Building"];
-  
+
   const partnerSchema = z.object({
     id: z.string().optional(),
     name: z.string().min(2, t("nameMin")),
     logo: z.string().min(1, t("logoRequired")),
     dataAiHint: z.string().optional(),
   });
-  
+
   const form = useForm<z.infer<typeof partnerSchema>>({
     resolver: zodResolver(partnerSchema),
     defaultValues: {

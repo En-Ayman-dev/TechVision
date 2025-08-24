@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Project } from "@/lib/types";
+import { Skeleton } from "../ui/skeleton";
 
 interface PortfolioSectionProps {
     projects: Project[];
@@ -14,7 +15,7 @@ interface PortfolioSectionProps {
 
 export default function PortfolioSection({ projects }: PortfolioSectionProps) {
     const t = useTranslations("PortfolioSection");
-
+    const isLoading = projects.length === 0;
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -47,27 +48,36 @@ export default function PortfolioSection({ projects }: PortfolioSectionProps) {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.25 }}
             >
-                {projects.map((project) => (
-                    <motion.div key={project.id} variants={itemVariants}>
-                        <Card className="flex h-full flex-col overflow-hidden transition-shadow duration-300 hover:shadow-xl">
-                            <Image
-                                src={project.image || "/image/placeholder.svg"}
-                                alt={project.title}
-                                width={600}
-                                height={400}
-                                className="h-48 w-full object-cover"
-                            />
-                            <CardContent className="flex flex-grow flex-col p-6">
-                                <h3 className="text-xl font-semibold">
-                                    {project.title}
-                                </h3>
-                                <p className="mt-2 text-muted-foreground">
-                                    {project.description}
-                                </p>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
-                ))}
+                {isLoading ? (
+                    // Use isLoading to show skeleton loaders
+                    Array.from({ length: 5 }).map((_, index) => (
+                        <div key={index} className="flex flex-col items-center justify-center text-center">
+                            <Skeleton className="h-12 w-12 rounded-full mb-2" />
+                            <Skeleton className="h-4 w-20" />
+                        </div>
+                    ))
+                ) : (
+                    projects.map((project) => (
+                        <motion.div key={project.id} variants={itemVariants}>
+                            <Card className="flex h-full flex-col overflow-hidden transition-shadow duration-300 hover:shadow-xl">
+                                <Image
+                                    src={project.image || "/image/placeholder.svg"}
+                                    alt={project.title}
+                                    width={600}
+                                    height={400}
+                                    className="h-48 w-full object-cover"
+                                />
+                                <CardContent className="flex flex-grow flex-col p-6">
+                                    <h3 className="text-xl font-semibold">
+                                        {project.title}
+                                    </h3>
+                                    <p className="mt-2 text-muted-foreground">
+                                        {project.description}
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    )))}
             </motion.div>
         </section>
     );

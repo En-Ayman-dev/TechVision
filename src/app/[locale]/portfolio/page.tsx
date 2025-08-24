@@ -1,13 +1,12 @@
-// import { PortfolioSection } from "@/components/landing/PortfolioSection";
-// import { CtaSection } from "@/components/landing/CtaSection";
-
+import { getProjectsAction } from "@/app/actions";
 import CtaSection from "@/components/landing/CtaSection";
 import PortfolioSection from "@/components/landing/PortfolioSection";
 
-export default function PortfolioPage() {
+export default async function PortfolioPage() {
+  const projects = await getProjectsAction();
   return (
     <>
-      <PortfolioSection projects={[]} />
+      <PortfolioSection projects={projects} />
       <CtaSection />
     </>
   );

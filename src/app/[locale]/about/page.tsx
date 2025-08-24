@@ -1,22 +1,18 @@
-// import { AboutSection } from "@/components/landing/AboutSection";
-// import { TeamSection } from "@/components/landing/TeamSection";
-// import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
-// import { WhyChooseUsSection } from "@/components/landing/WhyChooseUsSection";
-// import { CtaSection } from "@/components/landing/CtaSection";
-
+import { getTeamAction } from "@/app/actions";
 import AboutSection from "@/components/landing/AboutSection";
 import CtaSection from "@/components/landing/CtaSection";
-import TeamSection from "@/components/landing/TeamSection";
-import TestimonialsSection from "@/components/landing/TestimonialsSection";
 import WhyChooseUsSection from "@/components/landing/WhyChooseUsSection";
+import TeamPage from "../team/page";
+import TestimonialsPage from "../testimonials/page";
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const team = await getTeamAction();
   return (
     <>
       <WhyChooseUsSection />
       <AboutSection />
-      <TeamSection />
-      <TestimonialsSection />
+      <TeamPage />
+      <TestimonialsPage />
       <CtaSection />
     </>
   );
