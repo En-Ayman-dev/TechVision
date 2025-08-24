@@ -5,6 +5,7 @@
     "keywords": "Tech Vision, web development, cloud solutions, UI/UX design, cybersecurity, Next.js, React, digital transformation"
   },
   "Header": {
+    "menu_description": "Sidebar for navigating between pages",
     "menu": "Menu",
     "about": "About",
     "sidebar": "Sidebar",

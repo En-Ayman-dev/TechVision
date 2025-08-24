@@ -17,11 +17,10 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export async function generateMetadata({
-  params: { locale },
-}: {
-  params: { locale: string };
-}) {
+export async function generateMetadata(
+  { params }: { params: Promise<{ locale: string }> }
+) {
+  const { locale } = await params;
   const messages = await getMessages();
   const t = (messages as any).Metadata;
 
@@ -36,15 +35,23 @@ export async function generateMetadata({
   };
 }
 
-export default async function LocaleLayout({ children, params: { locale } }: Props) {
+export default async function LocaleLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   if (!locales.includes(locale)) notFound();
+
   unstable_setRequestLocale(locale);
   const messages = await getMessages();
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={inter.className}>
-        <I18nProviderClient locale={locale} messages={messages}>
+        <I18nProviderClient locale={locale} messages={messages} >
           {children}
         </I18nProviderClient>
       </body>
