@@ -5,6 +5,8 @@
     "keywords": "Tech Vision, web development, cloud solutions, UI/UX design, cybersecurity, Next.js, React, digital transformation"
   },
   "Header": {
+    "search_description": "Use the search bar to find content.",
+    "search_title": "Search",
     "menu_description": "Sidebar for navigating between pages",
     "menu": "Menu",
     "about": "About",
@@ -543,6 +545,8 @@
     }
   },
   "Search": {
+    "search_button": "Search",
+    "filters_button": "Filter Results",
     "title": "Search Results",
     "noQueryMessage": "Please enter a word to search for.",
     "resultsFor": "Search results for \"{query}\"",

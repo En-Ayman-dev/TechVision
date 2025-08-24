@@ -5,6 +5,8 @@
     "keywords": "تك فيجن, تطوير ويب, حلول سحابية, تصميم UI/UX, أمن سيبراني, Next.js, React, تحول رقمي"
   },
   "Header": {
+    "search_description": "استخدم شريط البحث للعثور على المحتوى.",
+    "search_title": "بحث",
     "menu_description": "القائمة الجانبية للتنقل بين الصفحات",
     "menu": "القائمة",
     "about": "نبذة عنا",
@@ -543,6 +545,8 @@
     }
   },
     "Search": {
+    "search_button": "بحث",
+    "filters_button": "تصفية النتائج",
     "title": "نتائج البحث",
     "noQueryMessage": "الرجاء إدخال كلمة للبحث عنها.",
     "resultsFor": "نتائج البحث عن \"{query}\"",
