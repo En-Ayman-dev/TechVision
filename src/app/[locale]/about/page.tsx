@@ -8,12 +8,12 @@ import TestimonialsPage from "../testimonials/page";
 export default async function AboutPage() {
   const team = await getTeamAction();
   return (
-    <>
+    <div className="pt-16">
       <WhyChooseUsSection />
       <AboutSection />
       <TeamPage />
       <TestimonialsPage />
       <CtaSection />
-    </>
+    </div>
   );
 }

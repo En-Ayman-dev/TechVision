@@ -6,9 +6,9 @@ export default async function PartnersPage() {
     const partners = await getPartnersAction();
 
     return (
-        <>
+        <div className="pt-16">
             <PartnersSection partners={partners} />
             <CtaSection />
-        </>
+        </div>
     );
 }

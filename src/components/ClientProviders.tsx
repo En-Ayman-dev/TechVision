@@ -1,3 +1,4 @@
+// src/components/ClientProviders.tsx
 "use client";
 
 import { ReactNode } from "react";
@@ -7,15 +8,18 @@ import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/toaster";
 import { NotificationProvider } from "@/components/ui/notification";
 import { ThemeProvider } from "next-themes";
+import { AccessibilityProvider, AccessibilityToolbar } from "@/components/ui/accessibility";
+import { AbstractIntlMessages } from "next-intl"; // تم إضافة هذا السطر
 
 interface Props {
     children: ReactNode;
     locale: string;
+    messages: AbstractIntlMessages; // تم إضافة هذا السطر
 }
 
-export default function ClientProviders({ children, locale }: Props) {
+export default function ClientProviders({ children, locale, messages }: Props) {
     return (
-        <NextIntlClientProvider locale={locale}>
+        <NextIntlClientProvider locale={locale} messages={messages}> {/* تم إضافة الخاصية messages هنا */}
             <ThemeProvider
                 attribute="class"
                 defaultTheme="system"
@@ -23,10 +27,13 @@ export default function ClientProviders({ children, locale }: Props) {
                 disableTransitionOnChange
             >
                 <NotificationProvider>
-                    {children}
-                    <Toaster />
-                    <SpeedInsights />
-                    <Analytics />
+                    <AccessibilityProvider>
+                        {children}
+                        <Toaster />
+                        <SpeedInsights />
+                        <Analytics />
+                        <AccessibilityToolbar />
+                    </AccessibilityProvider>
                 </NotificationProvider>
             </ThemeProvider>
         </NextIntlClientProvider>

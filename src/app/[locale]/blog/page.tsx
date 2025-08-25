@@ -7,7 +7,7 @@ import CtaSection from "@/components/landing/CtaSection";
 export default async function BlogPage() {
   const posts = await getBlogPostsAction();
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen pt-12 bg-background">
       <div className="container mx-auto px-4 py-8">
         <FadeIn>
           <BlogSystem posts={posts} />

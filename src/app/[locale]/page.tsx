@@ -1,3 +1,5 @@
+// src/app/[locale]/page.tsx
+
 import AboutSection from '@/components/landing/AboutSection';
 import FaqSection from '@/components/landing/FaqSection';
 import HeroSection from '@/components/landing/HeroSection';
@@ -9,7 +11,7 @@ import TestimonialsPage from './testimonials/page';
 
 export default async function Home() {
   return (
-    <>
+    <div className="pt-16"> {/* تم إضافة هذا الـ div */}
       <HeroSection />
       <AboutSection />
       <TestimonialsPage />
@@ -18,6 +20,6 @@ export default async function Home() {
       <TeamPage />
       <FaqSection />
       <CtaSection />
-    </>
+    </div>
   );
 }

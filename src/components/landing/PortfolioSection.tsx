@@ -66,6 +66,7 @@ export default function PortfolioSection({ projects }: PortfolioSectionProps) {
                                     width={600}
                                     height={400}
                                     className="h-48 w-full object-cover"
+                                    priority
                                 />
                                 <CardContent className="flex flex-grow flex-col p-6">
                                     <h3 className="text-xl font-semibold">

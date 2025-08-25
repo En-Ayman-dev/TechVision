@@ -67,7 +67,7 @@ export function Header({
   const currentPathname = usePathname();
 
   return (
-    <header className="fixed top-0 z-50 w-full border-b backdrop-blur-sm">
+<header className="fixed top-0 z-50 w-full border-b backdrop-blur-md">
       <div className="container flex h-16 items-center">
         {/* Logo and Mobile Sidebar Trigger */}
         <div className="flex w-full items-center justify-between lg:w-auto lg:gap-4">

@@ -51,7 +51,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={inter.className}>
-        <I18nProviderClient locale={locale} messages={messages} >
+        <I18nProviderClient locale={locale} messages={messages}>
           {children}
         </I18nProviderClient>
       </body>
