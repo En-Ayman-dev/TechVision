@@ -1,26 +1,30 @@
 {
+  "ServicePage": {
+  "featuresTitle": "What Does the Service Include?",
+  "featuresSubtitle": "Here are the key features and benefits of this service."
+  },
   "Metadata": {
     "title": "Tech Vision | Innovative Tech & Digital Solutions",
-    "description": "Tech Vision is a leading technical partner specializing in web development, cloud solutions, UI/UX design, and cybersecurity. Let's elevate your business.",
+    "description": "Tech Vision is a leading tech partner specializing in web development, cloud solutions, UI/UX design, and cybersecurity. Let's elevate your business.",
     "keywords": "Tech Vision, web development, cloud solutions, UI/UX design, cybersecurity, Next.js, React, digital transformation"
   },
   "Header": {
     "search_description": "Use the search bar to find content.",
     "search_title": "Search",
-    "menu_description": "Sidebar for navigating between pages",
+    "menu_description": "Side menu for navigating between pages",
     "menu": "Menu",
-    "about": "About",
+    "about": "About Us",
     "sidebar": "Sidebar",
     "home": "Home",
     "services": "Services",
     "portfolio": "Portfolio",
     "contact": "Contact",
     "getAQuote": "Get a Quote",
-    "BlogSystem": "Blog",
+    "BlogSystem":"Blog",
     "studentService": "Student Services",
     "Faq": "FAQ"
   },
-  "Admin": {
+    "Admin": {
     "Dashboard": "Dashboard",
     "Messages": "Messages",
     "Projects": "Projects",
@@ -31,57 +35,57 @@
     "Partners": "Partners",
     "Site Settings": "Site Settings",
     "Theme": "Theme",
-    "logout": "Logout",
+    "logout":"Log out",
     "login": {
-      "title": "Login",
-      "description": "Enter your email below to log in to your account.",
+      "title": "Sign In",
+      "description": "Enter your email below to sign in to your account.",
       "email": "Email",
       "password": "Password",
       "signIn": "Sign In",
-      "failed": "Login Failed",
+      "failed": "Sign In Failed",
       "failedDesc": "An unexpected error occurred."
     },
     "general": {
-      "generateQuoteSuccess": "Quote Generated",
-      "name": "Name",
-      "title": "Title",
-      "description": "Description",
-      "icon": "Icon",
-      "actions": "Actions",
-      "hint": "Hint",
-      "edit": "Edit",
-      "delete": "Delete",
-      "areYouSure": "Are you sure?",
-      "deleteConfirmation": "This action cannot be undone. The service will be permanently deleted.",
-      "cancel": "Cancel",
-      "continue": "Continue",
-      "titleRequired": "Title Required",
-      "titleRequiredDesc": "Please enter a title to generate a description.",
-      "generationFailed": "Generation Failed",
-      "generationFailedDesc": "Could not generate the description at this time.",
-      "descriptionGenerated": "Description Generated",
-      "descriptionGeneratedDesc": "An AI-generated description has been created for you.",
-      "generate": "Generate",
-      "saveChanges": "Save Changes",
-      "add": "Add",
-      "loading": "Loading...",
-      "error": "Error",
-      "noItemsFound": "No {item} found.",
-      "category": "Category",
-      "image": "Image",
-      "validationFailed": "Validation Failed.",
-      "addTitle": "Add new {item}",
-      "editTitle": "Edit {item}",
-      "addDesc": "Fill out the details to add a new {item}.",
-      "editDesc": "Update your {item} details.",
-      "itemAdded": "Successfully added {item}.",
-      "itemUpdated": "Successfully updated {item}.",
-      "generateQuote": "An AI-generated quote has been created for you.",
-      "openMenu": "Open Menu",
-      "itemDeleted": "{item} deleted.",
-      "deleteMessage": "Delete {item}",
-      "itemDeletedDesc": "Item successfully deleted.",
-      "itemUpdatedDesc": "Item successfully updated."
+    "generateQuoteSuccess": "Quote Generated",
+    "name": "Name",
+    "title": "Title",
+    "description": "Description",
+    "icon": "Icon",
+    "actions": "Actions",
+    "hint":"Hint",
+    "edit": "Edit",
+    "delete": "Delete",
+    "areYouSure": "Are you sure?",
+    "deleteConfirmation": "This action cannot be undone. The service will be permanently deleted.",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "titleRequired": "Title is required",
+    "titleRequiredDesc": "Please enter a title to generate a description.",
+    "generationFailed": "Generation Failed",
+    "generationFailedDesc": "Could not generate the description at this time.",
+    "descriptionGenerated": "Description Generated",
+    "descriptionGeneratedDesc": "A description has been generated for you by AI.",
+    "generate": "Generate",
+    "saveChanges": "Save Changes",
+    "add": "Add",
+    "loading": "Loading...",
+    "error": "Error",
+    "noItemsFound": "No {item} found.",
+    "category": "Category",
+    "image": "Image",
+    "validationFailed": "Validation Failed.",
+    "addTitle": "Add New {item}",
+    "editTitle": "Edit {item}",
+    "addDesc": "Fill in the details to add a new {item}.",
+    "editDesc": "Update your {item} details.",
+    "itemAdded": "{item} added successfully.",
+    "itemUpdated": "{item} updated successfully.",
+    "generateQuote": "A quote has been generated for you by AI.",
+    "openMenu": "Open Menu",
+    "itemDeleted": "{item} deleted.",
+    "deleteMessage": "Delete {item}",
+    "itemDeletedDesc": "Item deleted successfully.",
+    "itemUpdatedDesc": "Item updated successfully."
     },
     "dashboardPage": {
       "title": "Dashboard",
@@ -111,17 +115,17 @@
       "title": "Message Management",
       "projectIdea": "Project Idea",
       "messagesList": "Messages List",
-      "messagesListDesc": "Here are all messages sent via your contact form.",
+      "messagesListDesc": "Here are all the messages sent through your contact form.",
       "noMessagesFound": "No messages found.",
       "messageDetails": "Message Details",
       "item": "Message",
       "deleteMessage": "Delete Message",
       "deleteMessageDesc": "Are you sure you want to delete this message? This action cannot be undone.",
       "deleteSuccess": "Message Deleted",
-      "deleteSuccessDesc": "The message has been successfully deleted.",
+      "deleteSuccessDesc": "Message deleted successfully.",
       "deleteError": "Delete Error",
       "inboxTitle": "Inbox",
-      "inboxDesc": "Here are the messages sent via your contact form.",
+      "inboxDesc": "Here are the messages sent through your contact form.",
       "sender": "Sender",
       "message": "Message",
       "received": "Received",
@@ -129,6 +133,13 @@
       "requestType": "Request Type"
     },
     "projectsPage": {
+      "detailedDescriptionPlaceholder": "Enter a detailed project description here...",
+      "detailedDescription": "Detailed Description",
+      "liveUrlPlaceholder": "Enter the live project URL here...",
+      "liveUrl": "Live URL",
+      "githubUrlPlaceholder": "Enter the GitHub project URL here...",
+      "githubUrl": "GitHub URL",
+      "urlValidation": "The URL must be valid.",
       "title": "Project Management",
       "projectsList": "Projects List",
       "projectsListDesc": "Here are all the projects in your portfolio.",
@@ -138,8 +149,8 @@
       "descMin": "The description must be at least 10 characters.",
       "imageUrl": "Image URL",
       "imageHint": "AI Image Hint",
-      "imageHintPlaceholder": "e.g., 'A dashboard mockup'",
-      "titleRequired": "Title Required",
+      "imageHintPlaceholder": "e.g., 'dashboard wireframe'",
+      "titleRequired": "Title is required",
       "titleRequiredDesc": "Please enter a title to generate a description.",
       "item": "Project",
       "image": "Image",
@@ -148,44 +159,60 @@
     "teamPage": {
       "title": "Team Management",
       "teamList": "Team Members",
-      "teamListDesc": "Here are all your team members.",
+      "teamListDesc": "Here are all the members of your team.",
       "addMember": "Add Member",
       "nameMin": "The name must be at least 2 characters.",
       "roleMin": "The role must be at least 2 characters.",
       "imageUrl": "Image URL",
       "social": "Social Links",
       "imageHint": "AI Image Hint",
-      "imageHintPlaceholder": "e.g., 'A professional businessman'",
+      "imageHintPlaceholder": "e.g., 'professional businessman'",
       "item": "Team Member",
-      "titleRequired": "Title Required",
+      "titleRequired": "Title is required", 
       "titleRequiredDesc": "Please enter a title to generate a description.",
-      "roleRequired": "Role Required",
+      "roleRequired": "Role is required",
       "roleRequiredDesc": "Please enter a role to generate a description.",
       "imageUrlValidation": "The image must be a valid URL (e.g., https://placehold.co/400x400.png).",
-      "twitterUrlValidation": "The Twitter URL must be valid or empty.",
-      "linkedinUrlValidation": "The LinkedIn URL must be valid or empty.",
+      "twitterUrlValidation": "The Twitter link must be valid or empty.",
+      "linkedinUrlValidation": "The LinkedIn link must be valid or empty.",
       "twitter": "Twitter URL",
       "twitterUrl": "Twitter URL",
       "linkedinUrl": "LinkedIn URL",
       "role": "Role"
     },
     "servicesPage": {
+      "ai":{
+        "titleLabel":"Service Title",
+        "titleHint":"Service Title Hint",
+        "generateButton":"Generate",
+        "successTitle":"Service Created Successfully!",
+        "successDesc":"You can now see the service in the services list.",
+        "titlePlaceholder":"Enter service title here..."
+      },
+      "tabs":{
+        "ai": "AI Generation",
+        "manual": "Manual Editing"
+      },
+      "item": "Service",
+      "features": "Features",
+      "addFeature": "Add Feature",
+      "heroImage": "Service Image",
       "manageServices": "Manage Services",
       "servicesList": "Services List",
-      "servicesListDescription": "Here are all the services you offer.",
-      "addService": "Add Service",
-      "editService": "Edit Service",
-      "deleteService": "Delete Service",
-      "addServiceDescription": "Fill out the details to add a new service.",
-      "editServiceDescription": "Update your service details.",
-      "serviceAdded": "Service Added",
-      "serviceUpdated": "Service Updated",
-      "serviceDeleted": "Service Deleted",
-      "serviceDeletedDesc": "The service has been successfully deleted.",
-      "noServicesFound": "No services found."
+    "servicesListDescription": "Here are all the services you offer.",
+    "addService": "Add Service",
+    "editService": "Edit Service",
+    "deleteService": "Delete Service",
+    "addServiceDescription": "Fill in the details to add a new service.",
+    "editServiceDescription": "Update your service details.",
+    "serviceAdded": "Service Added",
+    "serviceUpdated": "Service Updated",
+    "serviceDeleted": "Service Deleted",
+    "serviceDeletedDesc": "Service deleted successfully.",
+    "noServicesFound": "No services found."
     },
     "testimonialsPage": {
-      "generate": "Generate",
+      "generate":"Generate",
       "title": "Testimonials Management",
       "testimonialsList": "Testimonials List",
       "testimonialsListDesc": "Here are all customer testimonials.",
@@ -198,29 +225,29 @@
       "roleMin": "The role must be at least 2 characters.",
       "imageUrl": "Image URL",
       "imageHint": "AI Image Hint",
-      "imageHintPlaceholder": "e.g., 'A happy client'",
-      "authorRequired": "Author Name Required",
+      "imageHintPlaceholder": "e.g., 'happy customer'",
+      "authorRequired": "Author's name is required",
       "authorRequiredDesc": "Please enter the author's name to generate a quote.",
-      "item": "Customer Testimonial",
+      "item": "Testimonial",
       "imageUrlValidation": "The image must be a valid URL (e.g., https://placehold.co/100x100.png)."
     },
     "partnersPage": {
       "title": "Partners Management",
       "partnersList": "Partners List",
-      "partnersListDesc": "Here are all the partners displayed on your site.",
+      "partnersListDesc": "Here are all the partners displayed on your website.",
       "addPartner": "Add Partner",
       "nameMin": "The name must be at least 2 characters.",
       "logo": "Logo",
       "selectLogo": "Select a logo",
       "imageHint": "AI Image Hint",
-      "imageHintPlaceholder": "e.g., 'A company building'",
+      "imageHintPlaceholder": "e.g., 'company building'",
       "item": "Partner",
-      "logoRequired": "Logo required"
+      "logoRequired": "Logo is required"
     },
     "settingsPage": {
       "title": "Site Settings",
       "statsTitle": "Why Choose Us Section Stats",
-      "statsDesc": "Update the numbers that appear in the 'Why Choose Us' section.",
+      "statsDesc": "Update the numbers shown in the 'Why Choose Us' section.",
       "satisfaction": "Customer Satisfaction (%)",
       "projects": "Completed Projects",
       "experience": "Years of Experience",
@@ -242,52 +269,72 @@
       "description": "Main navigation for the admin dashboard."
     },
     "BlogForm": {
+      "tabs":{
+        "ai": "AI Generation",
+        "manual": "Manual Editing"
+      },
+      "ai": {
+        "titlePlaceholder": "Enter article title here...",
+        "titleHint": "Use an engaging title that reflects the article content.",
+        "languageLabel": "Choose Language",
+        "titleLabel": "Article Title",
+        "successTitle": "Article Created Successfully!",
+        "successDesc": "You can now see the article in the articles list.",
+        "generateButton": "Generate"
+        },
+      "featuredImagePlaceholder": "Enter article image URL here...",
+      "excerptPlaceholder": "Enter article excerpt here...",
+      "excerpt": "Excerpt",
+      "excerptMin": "The excerpt must be at least 10 characters.",
+      "imageUrlValidation": "The image must be a valid URL (e.g., https://placehold.co/100x100.png).",
+      "featuredImage": "Featured Image",
+
       "titleMin": "The title must be at least 2 characters.",
       "authorMin": "The author's name must be at least 2 characters.",
       "categoryMin": "The category must be at least 2 characters.",
       "contentMin": "The content must be at least 10 characters.",
-      "updateSuccess": "Post updated",
-      "addSuccess": "Post added",
-      "editPost": "Edit Post",
-      "addPost": "Add New Post",
-      "dialogDesc": "Fill out the details to manage the blog post.",
+      "updateSuccess": "Article Updated",
+      "addSuccess": "Article Added",
+      "editPost": "Edit Article",
+      "addPost": "Add New Article",
+      "dialogDesc": "Fill in the details to manage the blog article.",
       "author": "Author",
-      "tags": "Tags (separate by comma)",
+      "tags": "Keywords (separate with commas)",
       "tagsPlaceholder": "e.g., React, Next.js, AI",
       "content": "Content",
-      "publishPost": "Publish Post",
-      "featuredPost": "Featured Post"
-    },
-    "BlogSystem": {
-      "title": "Blog Management",
-      "addPost": "Add New Post",
-      "postsList": "Posts List",
-      "postsListDesc": "Here are all the posts in your blog.",
-      "postTitle": "Title",
-      "postAuthor": "Author",
-      "postCategory": "Category",
-      "openMenu": "Open Menu",
-      "deleteConfirmation": "This action cannot be undone. This will permanently delete the post.",
-      "noPostsFound": "No posts found.",
-      "deleteSuccess": "Post Deleted",
-      "deleteSuccessDesc": "Blog post successfully deleted."
-    }
+      "publishPost": "Publish Article",
+      "featuredPost": "Featured Article"
+  },
+  "BlogSystem": {
+    "title": "Blog Management",
+    "addPost": "Add New Article",
+    "postsList": "Articles List",
+    "postsListDesc": "Here are all the articles in your blog.",
+    "postTitle": "Title",
+    "postAuthor": "Author",
+    "postCategory": "Category",
+    "openMenu": "Open Menu",
+    "deleteConfirmation": "This action cannot be undone. This will permanently delete the article.",
+    "noPostsFound": "No articles found.",
+    "deleteSuccess": "Article Deleted",
+    "deleteSuccessDesc": "Blog article deleted successfully."
+  }
   },
   "HeroSection": {
     "title": "Innovate, Create, Elevate.",
-    "subtitle": "Tech Vision is your strategic partner in the digital world. We build cutting-edge solutions that drive growth and transform businesses.",
+    "subtitle": "Tech Vision is your strategic partner in the world of digitalization. We build advanced solutions that drive growth and transform businesses.",
     "exploreServices": "Explore Our Services",
     "seeOurWork": "See Our Work"
   },
   "Footer": {
-    "EnAyman": "Programmed and Developed by Engineer Ayman Al-Dhahbi",
+    "EnAyman":"            Programmed and Developed by Engineer Ayman Al-Zahabi",
     "companyName": "Tech Vision",
     "rightsReserved": "All rights reserved.",
     "aboutParagraph": "We are a team of passionate developers, designers, and strategists dedicated to crafting exceptional digital experiences.",
     "importantLinks": "Important Links",
-    "home": "Home",
+    "home": "Home Page",
     "about": "About Us",
-    "services": "Services",
+    "services": "Our Services",
     "contact": "Contact Us",
     "visionTitle": "Our Vision",
     "visionText": "To be a leading force in digital innovation, shaping the future of technology for businesses worldwide.",
@@ -297,11 +344,11 @@
     "resourcesTitle": "Globally Trusted Resources"
   },
   "PartnersSection": {
-    "title": "Trusted by the World's Most Innovative Teams"
+    "title": "Trusted by the world's most innovative teams"
   },
   "AboutSection": {
     "title": "About Tech Vision",
-    "paragraph": "We are a team of passionate developers, designers, and strategists dedicated to crafting exceptional digital experiences. Our mission is to empower businesses with technology that is not only powerful, but also user-friendly and elegant.",
+    "paragraph": "We are a team of passionate developers, designers, and strategists dedicated to crafting exceptional digital experiences. Our mission is to empower businesses with technology that is not only powerful but also user-friendly and elegant.",
     "visionTitle": "Our Vision",
     "visionText": "To be a leading force in digital innovation, shaping the future of technology for businesses worldwide.",
     "valuesTitle": "Our Values",
@@ -310,6 +357,7 @@
   },
   "ServicesSection": {
     "title": "Our Services",
+    "learnMore": "Learn More",
     "subtitle": "We offer a comprehensive suite of technical services designed to help you achieve your business goals."
   },
   "WhyChooseUsSection": {
@@ -321,7 +369,7 @@
         "description": "We adhere to the highest standards to deliver robust and reliable solutions."
       },
       "agile": {
-        "title": "Agile & Fast",
+        "title": "Agility & Speed",
         "description": "Our agile methodology ensures rapid development and on-time delivery."
       },
       "customer": {
@@ -331,12 +379,18 @@
     },
     "stats": {
       "satisfaction": "Customer Satisfaction",
-      "projects": "Projects Completed",
+      "projects": "Completed Project",
       "experience": "Years of Experience",
       "team": "Expert Team Member"
     }
   },
   "PortfolioSection": {
+    "Dialog": {
+      "viewDetails": "View Details",
+      "livePreview": "Live Preview",
+      "title": "Project Details",
+      "description": "Explore the details of this project."
+    },
     "title": "Our Work",
     "subtitle": "We are proud of the solutions we have delivered. Explore some of our recent projects.",
     "categories": {
@@ -358,21 +412,21 @@
   },
   "FaqSection": {
     "title": "Frequently Asked Questions",
-    "subtitle": "Have questions? We have answers.",
+    "subtitle": "Got questions? We have answers.",
     "items": {
       "q1": "What is the typical project timeline?",
-      "a1": "Project timelines vary by scope and complexity. A standard website may take 4-6 weeks, while a complex web application can take several months. We provide a detailed timeline after our initial consultation.",
+      "a1": "Project timelines vary depending on scope and complexity. A standard website might take 4-6 weeks, while a complex web application could take several months. We provide a detailed timeline after our initial consultation.",
       "q2": "How do you handle project management?",
-      "a2": "We use agile methodologies and tools like Jira or Trello to manage projects. You'll have a dedicated project manager and regular check-ins to keep you updated on progress.",
+      "a2": "We use agile methodologies and tools like Jira or Trello to manage projects. You will have a dedicated project manager and regular check-ins to keep you updated on progress.",
       "q3": "Do you offer post-project support?",
-      "a3": "Yes, we offer various support and maintenance packages to ensure your application remains secure, updated, and runs smoothly.",
+      "a3": "Yes, we offer various support and maintenance packages to ensure your application remains secure, up-to-date, and running smoothly.",
       "q4": "What technologies do you specialize in?",
-      "a4": "We specialize in modern web technologies including React, Next.js, Node.js, and various cloud platforms like AWS and Google Cloud. We choose the best tech stack for your specific needs."
+      "a4": "We specialize in modern web technologies including React, Next.js, Node.js, and various cloud platforms like AWS and Google Cloud. We select the best tech stack for your specific needs."
     }
   },
   "CtaSection": {
-    "title": "Ready to Start Your Next Project?",
-    "subtitle": "Let's build something amazing together. Contact us today for a free consultation and quote.",
+    "title": "Ready to start your next project?",
+    "subtitle": "Let's build something great together. Contact us today for a free consultation and quote.",
     "button": "Contact Us"
   },
   "ContactSection": {
@@ -384,12 +438,12 @@
     "address": "Address",
     "businessHours": "Business Hours",
     "whyChooseUs": "Why Choose Us?",
-    "reason1": "Fast response within 24 hours",
-    "reason2": "Free consultation & project estimate",
-    "reason3": "Team of experienced developers",
+    "reason1": "Quick response within 24 hours",
+    "reason2": "Free consultation and project estimate",
+    "reason3": "Experienced team of developers",
     "reason4": "Ongoing support and maintenance",
     "name": "Name *",
-    "namePlaceholder": "Your Name",
+    "namePlaceholder": "Your name",
     "emailLabel": "Email *",
     "emailPlaceholder": "ayman.alzhabi.dev@gmail.com",
     "messageLabel": "Message *",
@@ -397,9 +451,9 @@
     "getAISuggestions": "Get AI Suggestions",
     "sendMessage": "Send Message",
     "requiredFields": "* Required fields. We respect your privacy and will never share your information.",
-    "addressLine1": "Rad'a Street - In front of Al-Ahlam Hall",
-    "addressLine2": "Sana'a Street - In front of Gucci Store - Next to Al-Hameini Pharmacy",
-    "mondayFriday": "Monday to Wednesday: 4:00 PM - 2:00 AM",
+    "addressLine1": "Rada'a Street - In front of Al-Ahlam Hall",
+    "addressLine2": "Sana'a Street - In front of Koutchi Store - next to Al-Humaini Pharmacy",
+    "mondayFriday": "Monday - Wednesday: 4:00 PM - 2:00 AM",
     "saturday": "Saturday: 10:00 AM - 4:00 PM",
     "sunday": "Sunday: Closed",
     "validation": {
@@ -412,23 +466,23 @@
     },
     "toast": {
       "aiSuggestionsTitle": "AI Suggestions",
-      "aiSuggestionsDescription": "Some ideas were suggested based on your message.",
+      "aiSuggestionsDescription": "Some ideas have been suggested based on your message.",
       "aiSuggestionTitle": "AI Suggestions",
       "aiSuggestionDescription": "AI suggestions have been applied to your message.",
-      "successTitle": "Message sent successfully!",
+      "successTitle": "Message Sent Successfully!",
       "successDescription": "We will get back to you as soon as possible.",
-      "errorTitle": "Message sending failed",
+      "errorTitle": "Failed to Send Message",
       "errorDescription": "Please try again later or contact us directly.",
-      "aiErrorTitle": "AI Suggestions not available",
-      "aiErrorDescription": "The smart assistant is currently unavailable. Please try again later.",
+      "aiErrorTitle": "AI Suggestions Not Available",
+      "aiErrorDescription": "The AI assistant is currently unavailable. Please try again later.",
       "aiWarningTitle": "Message is too short",
       "aiWarningDescription": "Please write at least 10 characters to get AI suggestions.",
       "ideaWarningTitle": "Project idea is too short",
       "ideaWarningDescription": "Please write at least 20 characters to generate an academic idea.",
-      "ideaErrorTitle": "Academic idea generation failed",
-      "ideaErrorDescription": "The smart assistant is currently unavailable. Please try again later.",
+      "ideaErrorTitle": "Failed to Generate Academic Idea",
+      "ideaErrorDescription": "The AI assistant is currently unavailable. Please try again later.",
       "structuredProjectIdeaTitle": "Structured project idea generated",
-      "structuredProjectIdeaDescription": "A structured project idea was created based on your input. You can copy and use it."
+      "structuredProjectIdeaDescription": "A structured project idea has been generated based on your input. You can copy and use it."
     },
     "toggleModeLabel": "Toggle Mode",
     "messagePlaceholder_general": "Enter your general message here...",
@@ -436,34 +490,34 @@
     "acceptIdea": "Accept Project Idea",
     "inquiryLabel": "Inquiry",
     "inquiryPlaceholder": "Enter your inquiry here...",
-    "structuredProjectIdeaDescription": "A structured academic project idea was created based on your input. You can copy and use it.",
+    "structuredProjectIdeaDescription": "A structured academic project idea has been generated based on your input. You can copy and use it.",
     "structuredProjectIdeaTitle": "Academic Project Idea Generated",
     "projectIdeaLabel": "Project Idea",
-    "projectIdeaPlaceholder": "e.g., A web application for project management",
+    "projectIdeaPlaceholder": "e.g., A web app for project management",
     "generateAcademicIdea": "Generate Academic Idea",
     "beneficiaryType": "Beneficiary Type *",
-    "beneficiaryTypePlaceholder": "Select Beneficiary Type",
+    "beneficiaryTypePlaceholder": "Choose beneficiary type",
     "beneficiaryTypeOptions": {
       "student": "Student",
       "individual": "Individual",
       "company": "Company/Organization"
     },
     "requestType": "Request Type *",
-    "requestTypePlaceholder": "Select Request Type",
+    "requestTypePlaceholder": "Choose request type",
     "requestTypeOptions": {
       "graduationProject": "Graduation Project",
       "appDevelopment": "App/Website Development",
-      "techConsultation": "Technical Consultation",
+      "techConsultation": "Tech Consultation",
       "problemSolving": "Problem Solving"
     }
   },
   "StudentServiceSection": {
-    "title": "Student Services",
+    "title": "Student Service",
     "subtitle": "We provide technical and educational support to help students and coding enthusiasts achieve their academic and professional goals.",
     "services": {
       "codeReview": {
         "title": "Code Review",
-        "description": "We offer in-depth code reviews to ensure best practices and performance."
+        "description": "We offer in-depth review of your code to ensure best practices and performance."
       },
       "graduationProjects": {
         "title": "Graduation Project Consultations",
@@ -479,17 +533,17 @@
       },
       "practicalExamples": {
         "title": "Practical Examples",
-        "description": "We provide simple and practical examples to help you better understand programming concepts."
+        "description": "We provide practical and simplified examples to help you better understand programming concepts."
       }
     },
-    "ctaButton": "Submit Your Idea Now"
+    "ctaButton": "Send Your Idea Now"
   },
   "LoadingScreen": {
     "message": "Initializing innovative solutions..."
   },
   "WelcomeNotification": {
     "title": "Welcome to Tech Vision!",
-    "description": "We're glad to have you here. Explore our work and services."
+    "description": "We are glad you are here. Explore our work and services."
   },
   "BlogSystem": {
     "readMore": "Read More",
@@ -512,14 +566,14 @@
     "notifications": {
       "liked": {
         "title": "Post Liked!",
-        "description": "Thanks for your feedback."
+        "description": "Thank you for your feedback."
       },
       "linkCopied": {
         "title": "Link Copied!",
         "description": "The blog link has been copied to the clipboard."
       }
     },
-    "noPostsFound": "No posts found.",
+    "noPostsFound": "No articles found.",
     "card": {
       "featured": "Featured"
     },
@@ -541,16 +595,16 @@
       "Development": "Development",
       "Design": "Design",
       "Ai": "AI",
-      "Explore_the_latest_trends_shaping_the_future_of_web_development_from_AI_integration_to_new_frameworks": "Explore the latest trends shaping the future of web development, from AI integration to new frameworks"
+      "Explore_the_latest_trends_shaping_the_future_of_web_development_from_AI_integration_to_new_frameworks": "Explore the latest trends shaping the future of web development from AI integration to new frameworks"
     }
   },
-  "Search": {
+    "Search": {
     "search_button": "Search",
     "filters_button": "Filter Results",
     "title": "Search Results",
     "noQueryMessage": "Please enter a word to search for.",
     "resultsFor": "Search results for \"{query}\"",
-    "foundResults": "Found {count} result",
+    "foundResults": "{count} results found",
     "noResults": "No results found",
     "noResultsMessage": "There are no results that match your search query."
   }
