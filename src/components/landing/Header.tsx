@@ -77,6 +77,7 @@ export function Header({
               alt="TechVision Logo"
               width={120}
               height={32}
+              unoptimized={true}
               priority
             />
           </Link>

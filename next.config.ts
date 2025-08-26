@@ -10,7 +10,8 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['res.cloudinary.com'], // السماح بتحميل الصور من Cloudinary
+    domains: ['res.cloudinary.com'],
+    dangerouslyAllowSVG: true,
     remotePatterns: [
       {
         protocol: 'https',

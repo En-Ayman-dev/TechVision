@@ -37,7 +37,7 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
   const t = useTranslations("Admin.projectsPage");
   const tGeneral = useTranslations("Admin.general");
 
-
+  // --- 1. Updated Zod Schema ---
   const projectSchema = z.object({
     id: z.string().optional(),
     title: z.string().min(2, t("titleMin")),
@@ -45,20 +45,30 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
     description: z.string().min(10, t("descMin")),
     image: z.string().url(t("imageUrlValidation")),
     dataAiHint: z.string().optional(),
+    
+    // New optional fields
+    detailedDescription: z.string().optional(),
+    githubUrl: z.string().url({ message: t("urlValidation") }).optional().or(z.literal('')),
+    liveUrl: z.string().url({ message: t("urlValidation") }).optional().or(z.literal('')),
   });
 
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
+    // --- 2. Updated Default Values ---
     defaultValues: {
       title: "",
       category: "",
       description: "",
       image: "https://placehold.co/600x400.png",
-      dataAiHint: ""
+      dataAiHint: "",
+      detailedDescription: "",
+      githubUrl: "",
+      liveUrl: "",
     },
   });
 
   useEffect(() => {
+    // --- 3. Updated Form Reset Logic ---
     if (project) {
       form.reset(project);
     } else {
@@ -67,12 +77,15 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
         category: "",
         description: "",
         image: "https://placehold.co/600x400.png",
-        dataAiHint: ""
+        dataAiHint: "",
+        detailedDescription: "",
+        githubUrl: "",
+        liveUrl: "",
       });
     }
   }, [project, form, isOpen]);
 
-  const handleGenerateDescription = () => {
+  const handleGenerateDescription = (isDetailed = false) => {
     const title = form.getValues("title");
     if (!title || title.length < 2) {
       toast({
@@ -83,9 +96,11 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
       return;
     }
     startGeneratingTransition(async () => {
+      // Note: You might want a different action for detailed descriptions
       const result = await generateProjectDescriptionAction(title);
       if (result.success && result.description) {
-        form.setValue("description", result.description, { shouldValidate: true });
+        const fieldToUpdate = isDetailed ? "detailedDescription" : "description";
+        form.setValue(fieldToUpdate, result.description, { shouldValidate: true });
         toast({
           title: tGeneral("descriptionGenerated"),
           description: tGeneral("descriptionGeneratedDesc"),
@@ -126,14 +141,15 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>{project ? tGeneral("editTitle", { item: t("item") }) : tGeneral("addTitle", { item: t("item") })}</DialogTitle>
           <DialogDescription>
             {project ? tGeneral("editDesc", { item: t("item") }) : tGeneral("addDesc", { item: t("item") })}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4 py-4">
+        {/* --- 4. Added scroll for longer form --- */}
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-6">
           <div className="grid gap-2">
             <Label htmlFor="title">{tGeneral("title")}</Label>
             <Input id="title" {...form.register("title")} />
@@ -146,8 +162,8 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
           </div>
           <div className="grid gap-2">
             <div className="flex justify-between items-center">
-              <Label htmlFor="description" id={tGeneral("description")}>{tGeneral("description")}</Label>
-              <Button type="button" size="sm" variant="outline" onClick={handleGenerateDescription} disabled={isGenerating} aria-label={tGeneral("generate")}>
+              <Label htmlFor="description">{tGeneral("description")}</Label>
+              <Button type="button" size="sm" variant="outline" onClick={() => handleGenerateDescription(false)} disabled={isGenerating} aria-label={tGeneral("generate")}>
                 {isGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                 {tGeneral("generate")}
               </Button>
@@ -155,6 +171,25 @@ export function ProjectForm({ isOpen, onOpenChange, project, onSubmit }: Project
             <Textarea id="description" {...form.register("description")} />
             {form.formState.errors.description && <p className="text-destructive text-sm">{form.formState.errors.description.message}</p>}
           </div>
+          
+          {/* --- 5. New Fields Added to the Form --- */}
+          <div className="grid gap-2">
+            <Label htmlFor="detailedDescription">{t("detailedDescription")}</Label>
+            <Textarea id="detailedDescription" {...form.register("detailedDescription")} rows={5} placeholder={t("detailedDescriptionPlaceholder")} />
+            {form.formState.errors.detailedDescription && <p className="text-destructive text-sm">{form.formState.errors.detailedDescription.message}</p>}
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="liveUrl">{t("liveUrl")}</Label>
+            <Input id="liveUrl" {...form.register("liveUrl")} placeholder="https://example.com" />
+            {form.formState.errors.liveUrl && <p className="text-destructive text-sm">{form.formState.errors.liveUrl.message}</p>}
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="githubUrl">{t("githubUrl")}</Label>
+            <Input id="githubUrl" {...form.register("githubUrl")} placeholder="https://github.com/user/repo" />
+            {form.formState.errors.githubUrl && <p className="text-destructive text-sm">{form.formState.errors.githubUrl.message}</p>}
+          </div>
+          {/* ------------------------------------ */}
+
           <div className="grid gap-2">
             <Label htmlFor="image">{t("imageUrl")}</Label>
             <Input id="image" {...form.register("image")} />

@@ -9,18 +9,20 @@ import { NotificationProvider } from "@/components/ui/notification";
 import { Header } from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import { ThemeProvider } from "next-themes";
-import { AccessibilityProvider, AccessibilityToolbar } from "@/components/ui/accessibility"; // تم إضافة هذا السطر
-import { AbstractIntlMessages } from "next-intl"; // تم إضافة هذا السطر
+import { AccessibilityProvider, AccessibilityToolbar } from "@/components/ui/accessibility";
+import { AbstractIntlMessages } from "next-intl";
 
 interface Props {
   children: ReactNode;
   locale: string;
-  messages: AbstractIntlMessages; // تم تعديل هذا السطر
+  messages: AbstractIntlMessages;
+  timeZone?: string;
+  now?: Date;
 }
 
-export default function I18nProviderClient({ children, locale, messages }: Props) {
+export default function I18nProviderClient({ children, locale, messages, timeZone = "Asia/Riyadh", now = new Date() }: Props) {
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages} timeZone={timeZone} now={now}>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"
@@ -29,14 +31,14 @@ export default function I18nProviderClient({ children, locale, messages }: Props
       >
         <NotificationProvider>
           <Header lang={locale} pathname="/" />
-          <main className="min-h-screen pt-16"> {/* تم إضافة pt-16 هنا */}
-            <AccessibilityProvider> {/* تم إضافة هذا السطر */}
+          <main className="min-h-screen pt-16">
+            <AccessibilityProvider>
               {children}
-              <AccessibilityToolbar /> {/* تم إضافة هذا السطر */}
-            </AccessibilityProvider> {/* تم إضافة هذا السطر */}
+              <AccessibilityToolbar />
+            </AccessibilityProvider>
           </main>
-          <Footer />
           <Toaster />
+          <Footer />
           <SpeedInsights />
           <Analytics />
         </NotificationProvider>

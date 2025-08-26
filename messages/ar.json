@@ -1,4 +1,8 @@
 {
+  "ServicePage": {
+  "featuresTitle": "ماذا تشمل الخدمة؟",
+  "featuresSubtitle": "إليك الميزات والفوائد الرئيسية لهذه الخدمة."
+  },
   "Metadata": {
     "title": "تك فيجن | حلول تقنية ورقمية مبتكرة",
     "description": "تك فيجن هي شريك تقني رائد متخصص في تطوير الويب، الحلول السحابية، تصميم واجهات المستخدم، والأمن السيبراني. دعنا نرتقي بأعمالك.",
@@ -129,6 +133,13 @@
       "requestType": "نوع الطلب"
     },
     "projectsPage": {
+      "detailedDescriptionPlaceholder": "أدخل وصفًا تفصيليًا للمشروع هنا...",
+      "detailedDescription": "الوصف التفصيلي",
+      "liveUrlPlaceholder": "أدخل رابط المشروع المباشر هنا...",
+      "liveUrl": "رابط المشروع المباشر",
+      "githubUrlPlaceholder": "أدخل رابط مشروع GitHub هنا...",
+      "githubUrl": "رابط مشروع GitHub",
+      "urlValidation": "يجب أن يكون الرابط صالحًا.",
       "title": "إدارة المشاريع",
       "projectsList": "قائمة المشاريع",
       "projectsListDesc": "هنا جميع المشاريع في محفظتك.",
@@ -170,8 +181,24 @@
       "role": "الدور"
     },
     "servicesPage": {
-    "manageServices": "إدارة الخدمات",
-    "servicesList": "قائمة الخدمات",
+      "ai":{
+        "titleLabel":"عنوان الخدمة",
+        "titleHint":"تلميح عنوان الخدمة",
+        "generateButton":"توليد ",
+        "successTitle":"تم إنشاء الخدمة بنجاح!",
+        "successDesc":"يمكنك الآن رؤية الخدمة في قائمة الخدمات.",
+        "titlePlaceholder":"أدخل عنوان الخدمة هنا..."
+      },
+      "tabs":{
+        "ai": "توليد الذكاء الاصطناعي",
+        "manual": "التعديل اليدوي"
+      },
+      "item": "خدمة",
+      "features": "الميزات",
+      "addFeature": "إضافة ميزة",
+      "heroImage": "صورة للخدمة",
+      "manageServices": "إدارة الخدمات",
+      "servicesList": "قائمة الخدمات",
     "servicesListDescription": "هنا جميع الخدمات التي تقدمها.",
     "addService": "إضافة خدمة",
     "editService": "تعديل الخدمة",
@@ -242,6 +269,26 @@
       "description": "التنقل الرئيسي للوحة تحكم المسؤول."
     },
     "BlogForm": {
+      "tabs":{
+        "ai": "توليد الذكاء الاصطناعي",
+        "manual": "التعديل اليدوي"
+      },
+      "ai": {
+        "titlePlaceholder": "أدخل عنوان المقالة هنا...",
+        "titleHint": "استخدم عنوانًا جذابًا يعكس محتوى المقالة.",
+        "languageLabel": "اختر اللغة",
+        "titleLabel": "عنوان المقالة",
+        "successTitle": "تم إنشاء المقالة بنجاح!",
+        "successDesc": "يمكنك الآن رؤية المقالة في قائمة المقالات.",
+        "generateButton": "توليد "
+        },
+      "featuredImagePlaceholder": "أدخل رابط صورة المقالة هنا...",
+      "excerptPlaceholder": "أدخل مقتطف المقالة هنا...",
+      "excerpt": "المقتطف",
+      "excerptMin": "يجب أن يتكون المقتطف من 10 أحرف على الأقل.",
+      "imageUrlValidation": "يجب أن تكون الصورة رابط URL صالحًا (مثال: https://placehold.co/100x100.png).",
+      "featuredImage": "الصورة المميزة",
+
       "titleMin": "يجب أن يتكون العنوان من حرفين على الأقل.",
       "authorMin": "يجب أن يتكون اسم المؤلف من حرفين على الأقل.",
       "categoryMin": "يجب أن تتكون الفئة من حرفين على الأقل.",
@@ -310,6 +357,7 @@
   },
   "ServicesSection": {
     "title": "خدماتنا",
+    "learnMore": "تعرف على المزيد",
     "subtitle": "نحن نقدم مجموعة شاملة من الخدمات التقنية المصممة لمساعدتك على تحقيق أهداف عملك."
   },
   "WhyChooseUsSection": {
@@ -337,6 +385,12 @@
     }
   },
   "PortfolioSection": {
+    "Dialog": {
+      "viewDetails": "عرض التفاصيل",
+      "livePreview": "معاينة حية",
+      "title": "تفاصيل المشروع",
+      "description": "استكشف تفاصيل هذا المشروع."
+    },
     "title": "أعمالنا",
     "subtitle": "نحن فخورون بالحلول التي قدمناها. استكشف بعض مشاريعنا الأخيرة.",
     "categories": {

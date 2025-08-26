@@ -50,7 +50,7 @@ export default function CtaSection() {
             className="mt-8"
             variants={itemVariants}
           >
-            <Link href="#contact" passHref>
+            <Link href="/contact" className="hover:text-primary" passHref>
               <Button size="lg" variant="secondary">
                 {t('button')}
               </Button>

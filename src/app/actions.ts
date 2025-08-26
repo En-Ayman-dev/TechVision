@@ -16,6 +16,7 @@ import {
 import { firestore } from "firebase-admin";
 
 import nodemailer from 'nodemailer';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const transporter = nodemailer.createTransport({
   service: 'gmail', // Use your email service provider, e.g., 'gmail'
@@ -39,13 +40,20 @@ const contactSchema = z.object({
 
 });
 
+// --- 1. Define the UPDATED schema here ---
+// This schema must match the one in your ProjectForm.tsx
 const projectSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(2, "Title must be at least 2 characters."),
   category: z.string().min(2, "Category must be at least 2 characters."),
   description: z.string().min(10, "Description must be at least 10 characters."),
-  image: z.string().url("Image must be a valid URL."),
+  image: z.string().url("Invalid image URL."),
   dataAiHint: z.string().optional(),
+  
+  // New optional fields
+  detailedDescription: z.string().optional(),
+  githubUrl: z.string().url("Invalid GitHub URL.").optional().or(z.literal('')),
+  liveUrl: z.string().url("Invalid Live URL.").optional().or(z.literal('')),
 });
 
 const teamMemberSchema = z.object({
@@ -60,13 +68,30 @@ const teamMemberSchema = z.object({
   dataAiHint: z.string().optional(),
 });
 
-const serviceSchema = z.object({
-  id: z.string().optional(),
-  icon: z.string().min(2, "Icon name is required."),
-  title: z.string().min(2, "Title must be at least 2 characters."),
-  description: z.string().min(10, "Description must be at least 10 characters."),
-  dataAiHint: z.string().optional(),
-});
+// // --- 1. Define the UPDATED schema for bilingual content ---
+// const bilingualContentSchema = z.object({
+//   en: z.string().min(1, "English content is required."),
+//   ar: z.string().min(1, "Arabic content is required."),
+// });
+
+// const serviceFeatureSchema = z.object({
+//     title: bilingualContentSchema,
+//     description: bilingualContentSchema,
+//     icon: z.string().min(1, "Feature icon is required."),
+// });
+
+// const serviceSchema = z.object({
+//   id: z.string().optional(),
+//   slug: z.string().optional(),
+//   icon: z.string().min(2, "Icon name is required."),
+//   title: bilingualContentSchema,
+//   description: bilingualContentSchema,
+//   detailedContent: bilingualContentSchema,
+//   heroImage: z.string().url("Invalid URL.").optional().or(z.literal('')),
+//   features: z.array(serviceFeatureSchema).optional(),
+//   dataAiHint: z.string().optional(),
+// });
+
 
 const testimonialSchema = z.object({
   id: z.string().optional(),
@@ -231,21 +256,30 @@ export async function suggestFaqAction(input: { userInput: string; languageHint:
 }
 
 
-// Project Actions
+// --- 2. Your Project Actions (Unchanged and Updated) ---
+
+// This action does not need any changes.
 export async function getProjectsAction(): Promise<Project[]> {
   if (!projectsCollection) return [];
   const snapshot = await projectsCollection.get();
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Project));
 }
 
+// This action is now updated to handle the new fields correctly.
 export async function addProjectAction(data: z.infer<typeof projectSchema>) {
   if (!projectsCollection) return { success: false, message: "Database not configured." };
+  
   const validatedFields = projectSchema.safeParse(data);
-  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+  if (!validatedFields.success) {
+    return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+  }
 
   try {
+    // The validated data now includes the new optional fields.
+    // The spread operator will automatically include them in the new project document.
     const { id, ...projectData } = validatedFields.data;
     await projectsCollection.add(projectData);
+    
     revalidatePath("/[locale]/admin/projects", "page");
     revalidatePath("/", "layout");
     revalidatePath("/[locale]/admin", "page");
@@ -255,15 +289,23 @@ export async function addProjectAction(data: z.infer<typeof projectSchema>) {
   }
 }
 
+// This action is now updated to handle the new fields correctly.
 export async function updateProjectAction(data: z.infer<typeof projectSchema>) {
   if (!projectsCollection) return { success: false, message: "Database not configured." };
+  
   const validatedFields = projectSchema.safeParse(data);
-  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+  if (!validatedFields.success) {
+    return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+  }
 
   try {
+    // The validated data now includes the new optional fields.
+    // The spread operator + merge:true will add/update them correctly.
     const { id, ...projectData } = validatedFields.data;
     if (!id) throw new Error("Project ID is missing.");
+    
     await projectsCollection.doc(id).set(projectData, { merge: true });
+    
     revalidatePath("/[locale]/admin/projects", "page");
     revalidatePath("/", "layout");
     return { success: true, message: "Project updated successfully." };
@@ -272,6 +314,7 @@ export async function updateProjectAction(data: z.infer<typeof projectSchema>) {
   }
 }
 
+// This action does not need any changes.
 export async function deleteProjectAction(id: string) {
   if (!projectsCollection) return { success: false, message: "Database not configured." };
   try {
@@ -340,58 +383,85 @@ export async function deleteTeamMemberAction(id: string) {
   }
 }
 
+// // --- 2. NEW Action to get a single service by its slug ---
+// export async function getServiceBySlugAction(slug: string): Promise<Service | null> {
+//   // FIX: Added null check for servicesCollection
+//   if (!servicesCollection) {
+//     console.error("Services collection is not configured.");
+//     return null;
+//   }
+//   try {
+//     const decodedSlug = decodeURIComponent(slug);
+//     const snapshot = await servicesCollection.where('slug', '==', decodedSlug).limit(1).get();
+//     if (snapshot.empty) {
+//       return null;
+//     }
+//     const doc = snapshot.docs[0];
+//     return { id: doc.id, ...doc.data() } as Service;
+//   } catch (error) {
+//     console.error(`Failed to fetch service by slug "${slug}":`, error);
+//     return null;
+//   }
+// }
 
-// Service Actions
-export async function getServicesAction(): Promise<Service[]> {
-  if (!servicesCollection) return [];
-  const snapshot = await servicesCollection.get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Service));
-}
+// // Service Actions
+// export async function getServicesAction(): Promise<Service[]> {
+//   if (!servicesCollection) return [];
+//   const snapshot = await servicesCollection.get();
+//   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Service));
+// }
 
-export async function addServiceAction(data: z.infer<typeof serviceSchema>) {
-  if (!servicesCollection) return { success: false, message: "Database not configured." };
-  const validatedFields = serviceSchema.safeParse(data);
-  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+// // --- 3. UPDATED Action to handle new structure ---
+// export async function addServiceAction(data: z.infer<typeof serviceSchema>) {
+//   if (!servicesCollection) return { success: false, message: "Database not configured." };
+//   const validatedFields = serviceSchema.safeParse(data);
+//   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
-  try {
-    const { id, ...serviceData } = validatedFields.data;
-    await servicesCollection.add(serviceData);
-    revalidatePath("/[locale]/admin/services", "page");
-    revalidatePath("/", "layout");
-    return { success: true, message: "Service added successfully." };
-  } catch (error) {
-    return { success: false, message: "Failed to add service." };
-  }
-}
+//   try {
+//     const { id, ...serviceData } = validatedFields.data;
+//     const slug = generateSlug(serviceData.title.en); // Generate slug from English title
 
-export async function updateServiceAction(data: z.infer<typeof serviceSchema>) {
-  if (!servicesCollection) return { success: false, message: "Database not configured." };
-  const validatedFields = serviceSchema.safeParse(data);
-  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+//     await servicesCollection.add({ ...serviceData, slug });
+//     revalidatePath("/[locale]/admin/services", "page");
+//     revalidatePath("/", "layout");
+//     return { success: true, message: "Service added successfully." };
+//   } catch (error) {
+//     return { success: false, message: "Failed to add service." };
+//   }
+// }
 
-  try {
-    const { id, ...serviceData } = validatedFields.data;
-    if (!id) throw new Error("Service ID is missing.");
-    await servicesCollection.doc(id).set(serviceData, { merge: true });
-    revalidatePath("/[locale]/admin/services", "page");
-    revalidatePath("/", "layout");
-    return { success: true, message: "Service updated successfully." };
-  } catch (error) {
-    return { success: false, message: "Failed to update service." };
-  }
-}
+// // --- 4. UPDATED Action to handle new structure ---
+// export async function updateServiceAction(data: z.infer<typeof serviceSchema>) {
+//   if (!servicesCollection) return { success: false, message: "Database not configured." };
+//   const validatedFields = serviceSchema.safeParse(data);
+//   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
-export async function deleteServiceAction(id: string) {
-  if (!servicesCollection) return { success: false, message: "Database not configured." };
-  try {
-    await servicesCollection.doc(id).delete();
-    revalidatePath("/[locale]/admin/services", "page");
-    revalidatePath("/", "layout");
-    return { success: true, message: "Service deleted." };
-  } catch (error) {
-    return { success: false, message: "Failed to delete service." };
-  }
-}
+//   try {
+//     const { id, ...serviceData } = validatedFields.data;
+//     if (!id) throw new Error("Service ID is missing.");
+//     const slug = generateSlug(serviceData.title.en); // Re-generate slug in case title changes
+
+//     await servicesCollection.doc(id).set({ ...serviceData, slug }, { merge: true });
+//     revalidatePath("/[locale]/admin/services", "page");
+//     revalidatePath("/", "layout");
+//     revalidatePath(`/[locale]/services/${slug}`, "page"); // Revalidate the specific service page
+//     return { success: true, message: "Service updated successfully." };
+//   } catch (error) {
+//     return { success: false, message: "Failed to update service." };
+//   }
+// }
+
+// export async function deleteServiceAction(id: string) {
+//   if (!servicesCollection) return { success: false, message: "Database not configured." };
+//   try {
+//     await servicesCollection.doc(id).delete();
+//     revalidatePath("/[locale]/admin/services", "page");
+//     revalidatePath("/", "layout");
+//     return { success: true, message: "Service deleted." };
+//   } catch (error) {
+//     return { success: false, message: "Failed to delete service." };
+//   }
+// }
 
 // Testimonial Actions
 export async function getTestimonialsAction(): Promise<Testimonial[]> {
@@ -597,10 +667,12 @@ export async function updateThemeSettingsAction(data: z.infer<typeof themeSettin
 }
 
 
-// Blog Post Actions (with Firestore)
+// The Schema remains the same
 const blogPostSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(2, "Title must be at least 2 characters."),
+  slug: z.string().optional(), 
+  featuredImage: z.string().url("Invalid image URL.").optional().or(z.literal('')),
   content: z.string().min(10, "Content must be at least 10 characters."),
   excerpt: z.string().optional(),
   author: z.string().min(2, "Author must be at least 2 characters."),
@@ -614,6 +686,61 @@ const blogPostSchema = z.object({
   published: z.boolean().optional(),
 });
 
+// --- UPDATED Helper function to generate a URL-friendly slug for both English and Arabic ---
+const generateSlug = (title: string) => {
+    return title
+        .toLowerCase()
+        // Remove specific punctuation marks but keep Arabic and English characters
+        .replace(/[.:,;?_&]/g, '') 
+        .replace(/[^a-z0-9\s\-\u0600-\u06FF]/g, '') // Allow Arabic characters (Unicode range)
+        .trim()
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/-+/g, '-'); // Remove duplicate hyphens
+}
+
+// NEW Action to get a single post by its slug
+export async function getBlogPostBySlugAction(slug: string): Promise<BlogPost | null> {
+  try {
+    // Decode the slug to handle non-English characters correctly
+    const decodedSlug = decodeURIComponent(slug);
+    
+    const snapshot = await db.collection('blogPosts').where('slug', '==', decodedSlug).limit(1).get();
+    
+    if (snapshot.empty) {
+      console.warn(`No blog post found for slug: ${decodedSlug}`);
+      return null;
+    }
+    const doc = snapshot.docs[0];
+    return { id: doc.id, ...doc.data() } as BlogPost;
+  } catch (error) {
+    console.error(`Failed to fetch blog post by slug "${slug}":`, error);
+    return null;
+  }
+}
+
+// Add this function to your src/app/actions.ts file, alongside other blog actions.
+
+export async function getRelatedPostsAction(category: string, currentPostId: string): Promise<BlogPost[]> {
+  try {
+    const snapshot = await db.collection('blogPosts')
+      .where('category', '==', category)
+      .where('published', '==', true)
+      .limit(4) // Fetch 4 to ensure we can show 3 even if one is the current post
+      .get();
+      
+    const posts = snapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() } as BlogPost))
+      .filter(post => post.id !== currentPostId); // Exclude the current post from related posts
+
+    return posts.slice(0, 3); // Return a maximum of 3 related posts
+  } catch (error) {
+    console.error("Failed to fetch related posts:", error);
+    return [];
+  }
+}
+
+
+// This action remains mostly the same for fetching all posts
 export async function getBlogPostsAction(): Promise<BlogPost[]> {
   try {
     const snapshot = await db.collection('blogPosts').get();
@@ -627,6 +754,7 @@ export async function getBlogPostsAction(): Promise<BlogPost[]> {
   }
 }
 
+// UPDATED Action to automatically create a slug
 export async function addBlogPostAction(data: z.infer<typeof blogPostSchema>) {
   const validatedFields = blogPostSchema.safeParse(data);
   if (!validatedFields.success) {
@@ -635,26 +763,25 @@ export async function addBlogPostAction(data: z.infer<typeof blogPostSchema>) {
 
   try {
     const { id, ...postData } = validatedFields.data;
+    const slug = generateSlug(postData.title);
+    
     const postRef = await db.collection('blogPosts').add({
       ...postData,
+      slug: slug,
       publishedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    if (!postRef.id) {
-      return { success: false, message: "Failed to create blog post reference." };
-    }
-    console.log("PostRef ID:", postRef.id);
-    console.log("PostData:", postData);
+    
     revalidatePath("/[locale]/admin/blog", "page");
     revalidatePath("/[locale]/blog", "page");
     return { success: true, message: "Blog post added successfully." };
   } catch (error) {
     console.error("Error adding blog post:", error);
-
     return { success: false, message: "Failed to add blog post." };
   }
 }
 
+// UPDATED Action to handle slug updates
 export async function updateBlogPostAction(data: z.infer<typeof blogPostSchema>) {
   const validatedFields = blogPostSchema.safeParse(data);
   if (!validatedFields.success) {
@@ -664,20 +791,26 @@ export async function updateBlogPostAction(data: z.infer<typeof blogPostSchema>)
   try {
     const { id, ...postData } = validatedFields.data;
     if (!id) throw new Error("Post ID is missing.");
-    // await db.collection('blogPosts').doc(id).set(postData, { merge: true });
+    
+    const slug = generateSlug(postData.title);
     const postRef = db.collection('blogPosts').doc(id);
-    await postRef.set(postData, { merge: true });
-    if (!postRef.id) {
-      return { success: false, message: "Failed to update blog post." };
-    }
+    
+    await postRef.set({
+        ...postData,
+        slug: slug,
+        updatedAt: new Date().toISOString(),
+    }, { merge: true });
+
     revalidatePath("/[locale]/admin/blog", "page");
     revalidatePath("/[locale]/blog", "page");
+    revalidatePath(`/[locale]/blog/${slug}`, "page");
     return { success: true, message: "Blog post updated successfully." };
   } catch (error) {
     console.error("Error updating blog post:", error);
     return { success: false, message: "Failed to update blog post." };
   }
 }
+
 export async function deleteBlogPostAction(id: string) {
   try {
     await db.collection('blogPosts').doc(id).delete();
@@ -688,8 +821,6 @@ export async function deleteBlogPostAction(id: string) {
     return { success: false, message: "Failed to delete blog post." };
   }
 }
-
-
 
 // =============================================================================
 // AI Generation Actions
@@ -725,6 +856,233 @@ export async function generateTestimonialQuoteAction(authorName: string) {
   } catch (error) {
     console.error("Error generating testimonial quote:", error);
     return { success: false, quote: null, message: "AI generation failed." };
+  }
+}
+
+// Initialize the Generative AI client
+// IMPORTANT: You must set your GEMINI_API_KEY in your environment variables (.env.local)
+// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+
+// Zod schema for the expected AI output
+const aiResponseSchema = z.object({
+  title: z.string(),
+  excerpt: z.string(),
+  content: z.string(),
+  category: z.string(),
+  tags: z.array(z.string()),
+});
+
+// --- NEW AI Blog Post Generation Action (FINAL FIX) ---
+export async function generateBlogPostAction(title: string, language: 'ar' | 'en') {
+  if (!title) {
+    return { success: false, message: "Title is required to generate a blog post." };
+  }
+  if (!process.env.GOOGLE_API_KEY) {
+    console.error("Google API key is not configured on the server.");
+    return { success: false, message: "AI service is not configured correctly." };
+  }
+
+  const langInstruction = language === 'ar' ? "in Arabic" : "in English";
+
+  const prompt = `
+    Act as an expert tech blogger, content creator, and SEO specialist. Your audience consists of developers, tech enthusiasts, and business owners.
+    Your task is to generate a complete, engaging, and SEO-optimized blog post based on the following title: "${title}".
+
+    The entire response must be ${langInstruction}.
+
+    Please provide the output in a structured JSON format. The JSON object must contain the following keys:
+    - "title": A catchy, SEO-friendly title. You can slightly improve the original title if you see fit.
+    - "excerpt": A short, compelling summary of the post, perfect for SEO meta descriptions (around 150-160 characters).
+    - "content": The full blog post content, formatted in clean HTML. Use tags like <h2>, <h3>, <p>, <ul>, <li>, and <strong> to structure the content logically and make it readable. The content should be comprehensive, informative, and well-written.
+    - "category": A single, relevant category for the post (e.g., "Web Development", "Artificial Intelligence", "Data Science").
+    - "tags": An array of 3 to 5 relevant keywords/tags as strings.
+
+    The tone should be professional yet accessible. Ensure the HTML is valid. Your entire response must be ONLY the raw JSON object, without any surrounding text, comments, or markdown formatting like \`\`\`json.
+  `;
+
+  try {
+    // --- The Fix is Here: Using the latest stable model name ---
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text();
+    
+    // Clean the response to ensure it's valid JSON
+    const jsonString = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
+    const parsedJson = JSON.parse(jsonString);
+    
+    // Validate the parsed JSON against our schema
+    const validatedData = aiResponseSchema.safeParse(parsedJson);
+
+    if (!validatedData.success) {
+      console.error("AI response validation failed:", validatedData.error.flatten());
+      return { success: false, message: "The AI returned data in an unexpected format. Please try again." };
+    }
+
+    return { success: true, data: validatedData.data };
+
+  } catch (error) {
+    console.error("Error generating blog post with AI:", error);
+    return { success: false, message: "An error occurred while communicating with the AI. Please check the server logs." };
+  }
+}
+
+// --- 1. SHARED INITIALIZATION & SCHEMAS (DEFINED ONLY ONCE) ---
+
+// Ensure genAI is initialized only once at the top of your file
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
+
+// Shared Zod schema for bilingual content
+const bilingualContentSchema = z.object({
+  en: z.string().min(1, "English content is required."),
+  ar: z.string().min(1, "Arabic content is required."),
+});
+
+// Shared Zod schema for a single service feature
+const serviceFeatureSchema = z.object({
+    title: bilingualContentSchema,
+    description: bilingualContentSchema,
+    icon: z.string().min(1, "Feature icon is required."),
+});
+
+// Schema for data coming FROM THE FORM (for add/update)
+const serviceFormSchema = z.object({
+  id: z.string().optional(),
+  slug: z.string().optional(),
+  icon: z.string().min(2, "Icon name is required."),
+  title: bilingualContentSchema,
+  description: bilingualContentSchema,
+  detailedContent: bilingualContentSchema,
+  heroImage: z.string().url("Invalid URL.").optional().or(z.literal('')),
+  features: z.array(serviceFeatureSchema).optional(),
+  dataAiHint: z.string().optional(),
+});
+
+// Schema for data coming FROM THE AI
+const aiServiceResponseSchema = z.object({
+  title: bilingualContentSchema,
+  description: bilingualContentSchema,
+  detailedContent: bilingualContentSchema,
+  features: z.array(serviceFeatureSchema).min(3).max(3),
+});
+
+
+// --- 2. ALL SERVICE-RELATED ACTIONS ---
+
+// NEW AI Full Service Generation Action
+export async function generateFullServiceAction(serviceTitle: string) {
+  if (!serviceTitle) {
+    return { success: false, message: "Service title is required." };
+  }
+  if (!process.env.GOOGLE_API_KEY) {
+    console.error("Google API key is not configured on the server.");
+    return { success: false, message: "AI service is not configured correctly." };
+  }
+
+  const prompt = `
+    Act as a Chief Marketing Officer and a Principal Solutions Architect for a high-end tech company called "TechVision".
+    Your task is to generate a complete, bilingual (English and Arabic) content package for a new service page based on the following service title: "${serviceTitle}".
+    The entire response must be a single, raw JSON object. Do not include any markdown formatting like \`\`\`json or any text before or after the JSON object.
+    The JSON object must contain the following keys:
+    - "title": An object with "en" and "ar" keys for the service title.
+    - "description": An object with "en" and "ar" keys for a short, compelling summary (around 150-160 characters), perfect for a service card.
+    - "detailedContent": An object with "en" and "ar" keys for the full service page content, formatted in clean HTML. Use tags like <h2>, <h3>, <p>, <ul>, and <li>.
+    - "features": An array of exactly 3 feature objects. Each object must contain:
+        - "title": An object with "en" and "ar" keys for the feature title.
+        - "description": An object with "en" and "ar" keys for the feature description.
+        - "icon": A relevant icon name as a string from the lucide-react library (e.g., "CheckCircle2", "Database", "Cloud").
+    Ensure all Arabic text is professional and correctly translated. The tone should be expert, confident, and focused on business value.
+  `;
+
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text();
+    const jsonString = responseText.trim();
+    const parsedJson = JSON.parse(jsonString);
+    const validatedData = aiServiceResponseSchema.safeParse(parsedJson);
+
+    if (!validatedData.success) {
+      console.error("AI service response validation failed:", validatedData.error.flatten());
+      return { success: false, message: "The AI returned data in an unexpected format. Please try again." };
+    }
+    return { success: true, data: validatedData.data };
+
+  } catch (error) {
+    console.error("Error generating full service content with AI:", error);
+    return { success: false, message: "An error occurred while communicating with the AI." };
+  }
+}
+
+// Action to get a single service by its slug
+export async function getServiceBySlugAction(slug: string): Promise<Service | null> {
+  if (!servicesCollection) { console.error("Services collection is not configured."); return null; }
+  try {
+    const decodedSlug = decodeURIComponent(slug);
+    const snapshot = await servicesCollection.where('slug', '==', decodedSlug).limit(1).get();
+    if (snapshot.empty) return null;
+    const doc = snapshot.docs[0];
+    return { id: doc.id, ...doc.data() } as Service;
+  } catch (error) {
+    console.error(`Failed to fetch service by slug "${slug}":`, error);
+    return null;
+  }
+}
+
+// Action to get all services
+export async function getServicesAction(): Promise<Service[]> {
+  if (!servicesCollection) return [];
+  const snapshot = await servicesCollection.get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Service));
+}
+
+// Action to add a new service
+export async function addServiceAction(data: z.infer<typeof serviceFormSchema>) {
+  if (!servicesCollection) return { success: false, message: "Database not configured." };
+  const validatedFields = serviceFormSchema.safeParse(data);
+  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+
+  try {
+    const { id, ...serviceData } = validatedFields.data;
+    const slug = generateSlug(serviceData.title.en);
+    await servicesCollection.add({ ...serviceData, slug });
+    revalidatePath("/[locale]/admin/services", "page");
+    revalidatePath("/", "layout");
+    return { success: true, message: "Service added successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to add service." };
+  }
+}
+
+// Action to update an existing service
+export async function updateServiceAction(data: z.infer<typeof serviceFormSchema>) {
+  if (!servicesCollection) return { success: false, message: "Database not configured." };
+  const validatedFields = serviceFormSchema.safeParse(data);
+  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+
+  try {
+    const { id, ...serviceData } = validatedFields.data;
+    if (!id) throw new Error("Service ID is missing.");
+    const slug = generateSlug(serviceData.title.en);
+    await servicesCollection.doc(id).set({ ...serviceData, slug }, { merge: true });
+    revalidatePath("/[locale]/admin/services", "page");
+    revalidatePath("/", "layout");
+    revalidatePath(`/[locale]/services/${slug}`, "page");
+    return { success: true, message: "Service updated successfully." };
+  } catch (error) {
+    return { success: false, message: "Failed to update service." };
+  }
+}
+
+// Action to delete a service
+export async function deleteServiceAction(id: string) {
+  if (!servicesCollection) return { success: false, message: "Database not configured." };
+  try {
+    await servicesCollection.doc(id).delete();
+    revalidatePath("/[locale]/admin/services", "page");
+    revalidatePath("/", "layout");
+    return { success: true, message: "Service deleted." };
+  } catch (error) {
+    return { success: false, message: "Failed to delete service." };
   }
 }
 
