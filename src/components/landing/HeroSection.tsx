@@ -1,14 +1,16 @@
-
 "use client";
 
 import { motion } from "framer-motion";
 import { easeOut } from "framer-motion";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { cn } from "@/lib/utils"; // علشان cn تشتغل
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import Link from 'next/link';
 
 export default function HeroSection() {
   const t = useTranslations("HeroSection");
+  const currentPathname = usePathname();
 
   // تعريف متغيرات الأنيميشن
   const containerVariants = {
@@ -42,7 +44,7 @@ export default function HeroSection() {
           animate="visible"
         >
           <motion.h1
-            variants={itemVariants ? itemVariants : undefined}
+            variants={itemVariants}
             className="text-4xl font-bold md:text-5xl lg:text-6xl"
           >
             {t("title")}
@@ -57,12 +59,28 @@ export default function HeroSection() {
             variants={itemVariants}
             className="mt-8 flex justify-center space-x-4"
           >
-            <Link href="#contact-section" passHref>
+            <Link
+              href="/services"
+              className={cn(
+                "transition-colors hover:text-foreground/80",
+                currentPathname === "/services"
+                  ? "text-foreground"
+                  : "text-foreground/60"
+              )}
+            >
               <Button size="lg" className="rounded-full">
                 {t("exploreServices")}
               </Button>
             </Link>
-            <Link href="#projects-section" passHref>
+            <Link
+              href="/portfolio"
+              className={cn(
+                "transition-colors hover:text-foreground/80",
+                currentPathname === "/portfolio"
+                  ? "text-foreground"
+                  : "text-foreground/60"
+              )}
+            >
               <Button
                 size="lg"
                 variant="outline"
