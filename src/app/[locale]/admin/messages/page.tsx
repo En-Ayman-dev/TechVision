@@ -62,7 +62,7 @@ export default function MessagesPage() {
 
   const [isFullMessageDialogOpen, setIsFullMessageDialogOpen] = useState(false);
   const [fullMessageContent, setFullMessageContent] = useState({ title: '', content: '' });
-  
+
   const [isReplyDialogOpen, setIsReplyDialogOpen] = useState(false);
   const [replyData, setReplyData] = useState({
     to: '',
@@ -115,7 +115,7 @@ export default function MessagesPage() {
     setFullMessageContent({ title, content });
     setIsFullMessageDialogOpen(true);
   };
-  
+
   const handleReplyClick = (message: Message) => {
     const originalMessage = `Beneficiary Type: ${message.beneficiaryType}\nRequest Type: ${message.requestType}\n\nProject Idea:\n${message.message}\n\nInquiry:\n${message.inquiry}`;
     setReplyData({
@@ -158,7 +158,7 @@ export default function MessagesPage() {
     }
     return text.substring(0, maxLength) + "...";
   };
-  
+
   const renderSkeletonRows = () => {
     return (
       <>
@@ -311,9 +311,9 @@ export default function MessagesPage() {
           </div>
         </DialogContent>
       </Dialog>
-       {/* Reply Dialog */}
-       <Dialog open={isReplyDialogOpen} onOpenChange={setIsReplyDialogOpen}>
-        <DialogContent className="sm:max-w-xl">
+      {/* Reply Dialog */}
+      <Dialog open={isReplyDialogOpen} onOpenChange={setIsReplyDialogOpen}>
+        <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t("replyToMessage")}</DialogTitle>
             <DialogDescription>
@@ -325,7 +325,7 @@ export default function MessagesPage() {
               <Label>{t("recipient")}</Label>
               <Input value={replyData.to} disabled />
             </div>
-             <div className="grid gap-2">
+            <div className="grid gap-2">
               <Label>{t("subject")}</Label>
               <Input
                 value={replyData.subject}

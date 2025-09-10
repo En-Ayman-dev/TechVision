@@ -13,11 +13,10 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { AlignRight, Search, Globe } from "lucide-react";
+import { AlignRight, Globe } from "lucide-react";
 import { MainSidebar } from "./MainSidebar";
 import { ThemeToggle } from "./ThemeToggle";
 import Link from "next/link";
-import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog"; // Added DialogTitle
 import {
   DropdownMenu,
   DropdownMenuContent,

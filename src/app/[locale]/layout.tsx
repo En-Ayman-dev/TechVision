@@ -32,8 +32,8 @@ export async function generateMetadata(
   return {
     title: t.title,
     description: t.description,
-        icons: {
-      icon: "/favicon.ico", // ضع أيقونتك في مجلد public/
+    icons: {
+      icon: "/favicon.ico",
     },
   };
 }
@@ -54,9 +54,11 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={inter.className}>
-        <I18nProviderClient locale={locale} messages={messages} timeZone="Asia/Riyadh" now={new Date()}>
-          {children}
-        </I18nProviderClient>
+        <div className="relative min-h-screen">
+          <I18nProviderClient locale={locale} messages={messages} timeZone="Asia/Riyadh" now={new Date()}>
+            {children}
+          </I18nProviderClient>
+        </div>
       </body>
     </html>
   );

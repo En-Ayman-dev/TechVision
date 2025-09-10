@@ -342,4 +342,34 @@ body {
   bottom: 0 !important; 
     z-index: 50;   
 }
+@media (max-width: 768px) {
+    /* Style for responsive tables on small screens */
+    .table-responsive thead {
+        display: none;
+    }
+    .table-responsive tr {
+        display: block;
+        border-bottom: 1px solid hsl(var(--border));
+        margin-bottom: 1rem;
+    }
+    .table-responsive td {
+        display: block;
+        text-align: right;
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+    }
+    .table-responsive td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-align: left;
+    }
+    .table-responsive td:last-child {
+        border-bottom: 0;
+    }
+    .table-responsive tr:last-child {
+        border-bottom: none;
+    }
+}
+
 /* End of src/app/globals.css */
