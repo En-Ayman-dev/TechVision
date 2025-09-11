@@ -607,5 +607,23 @@
     "foundResults": "{count} results found",
     "noResults": "No results found",
     "noResultsMessage": "There are no results that match your search query."
+  },
+  "AdminMessages": {
+    "replySubject":"",
+    "replyToMessage": "رد على رسالتك",
+    "from": "من",
+    "email": "البريد الإلكتروني",
+    "you": "أنت",
+    "ai":" مساعد الذكاء الاصطناعي",
+    "typeMessage": "اكتب رسالتك هنا...",
+    "send": "إرسال",
+    "typing": "يكتب...",
+    "copy": "نسخ",
+    "sendEmail": "إرسال بريد إلكتروني",
+    "sendWhatsapp": "إرسال رسالة واتساب",
+    "sendTelegram": "إرسال رسالة تيليجرام",
+    "copied": "تم النسخ",
+    "aiError": "حدث خطأ أثناء معالجة طلبك."
+
   }
 }

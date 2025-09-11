@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -16,12 +15,12 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { deleteMessageAction, getMessagesAction, sendReplyAction } from "@/app/actions";
+import { deleteMessageAction, getMessagesAction } from "@/app/actions"; // تم إزالة sendReplyAction
 import { format } from "date-fns";
 import { useEffect, useState, useTransition } from "react";
 import type { Message } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { Trash2, Reply, Send } from "lucide-react";
+import { Trash2, Reply } from "lucide-react"; // تم إزالة Send
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,15 +37,13 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslations } from "next-intl";
 import { Loader2 } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import Link from "next/link"; // للتنقل إلى صفحة الرد الجديدة
+
 
 const MESSAGE_LIMIT = 5;
 
@@ -63,14 +60,7 @@ export default function MessagesPage() {
   const [isFullMessageDialogOpen, setIsFullMessageDialogOpen] = useState(false);
   const [fullMessageContent, setFullMessageContent] = useState({ title: '', content: '' });
 
-  const [isReplyDialogOpen, setIsReplyDialogOpen] = useState(false);
-  const [replyData, setReplyData] = useState({
-    to: '',
-    subject: '',
-    originalMessage: '',
-    replyContent: '',
-    isSending: false
-  });
+  // تم حذف جميع حالات ودوائل الرد القديمة (isReplyDialogOpen, handleReplyClick, handleSendReply)
 
   const fetchMessages = () => {
     if (isPending) return;
@@ -114,41 +104,6 @@ export default function MessagesPage() {
   const handleViewFullMessage = (title: string, content: string) => {
     setFullMessageContent({ title, content });
     setIsFullMessageDialogOpen(true);
-  };
-
-  const handleReplyClick = (message: Message) => {
-    const originalMessage = `Beneficiary Type: ${message.beneficiaryType}\nRequest Type: ${message.requestType}\n\nProject Idea:\n${message.message}\n\nInquiry:\n${message.inquiry}`;
-    setReplyData({
-      to: message.email,
-      subject: `Re: Your inquiry from TechVision website`,
-      originalMessage,
-      replyContent: '',
-      isSending: false
-    });
-    setIsReplyDialogOpen(true);
-  };
-
-  const handleSendReply = async () => {
-    setReplyData(prev => ({ ...prev, isSending: true }));
-    const result = await sendReplyAction({
-      to: replyData.to,
-      subject: replyData.subject,
-      body: replyData.replyContent,
-    });
-    if (result.success) {
-      toast({
-        title: t("replySentTitle"),
-        description: t("replySentDesc"),
-      });
-      setIsReplyDialogOpen(false);
-    } else {
-      toast({
-        title: tGeneral("error"),
-        description: result.message,
-        variant: "destructive",
-      });
-    }
-    setReplyData(prev => ({ ...prev, isSending: false }));
   };
 
   const truncateText = (text: string, maxLength: number) => {
@@ -249,14 +204,16 @@ export default function MessagesPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleReplyClick(message)}
-                          aria-label={t("reply")}
-                        >
-                          <Reply className="h-4 w-4" />
-                        </Button>
+                        {/* تم استبدال الزر القديم بـ Link الجديد */}
+                        <Link href={`/admin/messages/reply/${message.id}`}>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={t("reply")}
+                          >
+                            <Reply className="h-4 w-4" />
+                          </Button>
+                        </Link>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button variant="ghost" size="icon" aria-label={tGeneral("deleteMessage", { item: message.name })}>
@@ -311,58 +268,7 @@ export default function MessagesPage() {
           </div>
         </DialogContent>
       </Dialog>
-      {/* Reply Dialog */}
-      <Dialog open={isReplyDialogOpen} onOpenChange={setIsReplyDialogOpen}>
-        <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{t("replyToMessage")}</DialogTitle>
-            <DialogDescription>
-              {t("replyToMessageDesc", { email: replyData.to })}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label>{t("recipient")}</Label>
-              <Input value={replyData.to} disabled />
-            </div>
-            <div className="grid gap-2">
-              <Label>{t("subject")}</Label>
-              <Input
-                value={replyData.subject}
-                onChange={(e) => setReplyData(prev => ({ ...prev, subject: e.target.value }))}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label>{t("originalMessage")}</Label>
-              <Textarea value={replyData.originalMessage} rows={5} readOnly className="resize-none" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="reply-content">{t("yourReply")}</Label>
-              <Textarea
-                id="reply-content"
-                placeholder={t("yourReplyPlaceholder")}
-                rows={8}
-                value={replyData.replyContent}
-                onChange={(e) => setReplyData(prev => ({ ...prev, replyContent: e.target.value }))}
-              />
-            </div>
-          </div>
-          <AlertDialogFooter>
-            <Button variant="outline" onClick={() => setIsReplyDialogOpen(false)}>{tGeneral("cancel")}</Button>
-            <Button
-              onClick={handleSendReply}
-              disabled={replyData.isSending || replyData.replyContent.length < 5}
-            >
-              {replyData.isSending ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4 mr-2" />
-              )}
-              {t("sendReply")}
-            </Button>
-          </AlertDialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* تم حذف الكود الخاص بـ Reply Dialog هنا */}
     </div>
   );
 }

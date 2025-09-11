@@ -177,6 +177,20 @@ export async function getMessagesAction(
 
   return { messages, lastVisibleId: newLastVisibleId };
 }
+// **الدالة الجديدة المطلوبة**
+export async function getMessageById(id: string) {
+  if (!messagesCollection) return null;
+  try {
+    const doc = await messagesCollection.doc(id).get();
+    if (!doc.exists) {
+      return null;
+    }
+    return { id: doc.id, ...doc.data() } as Message;
+  } catch (error) {
+    console.error("Error fetching message by ID:", error);
+    return null;
+  }
+}
 
 // Add 'export' keyword to make the function accessible
 export async function sendContactMessageAction(data: z.infer<typeof contactSchema>) {
