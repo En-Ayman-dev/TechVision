@@ -56,7 +56,7 @@ export function ContactSectionEnhanced() {
 
                     <div className="grid lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2">
-                             {/*
+                            {/*
                                 Correction: We now pass the entire logic object as a prop.
                                 ContactFormUI no longer has its own state.
                              */}
@@ -75,13 +75,13 @@ export function ContactSectionEnhanced() {
                                     </div>
                                 </CardContent>
                             </Card>
-                             <Card>
-                                 <CardContent className="p-6">
-                                     <h3 className="font-semibold mb-4">{t("whyChooseUs")}</h3>
-                                     <ul className="space-y-2 text-sm text-muted-foreground">
-                                         <li>• {t("reason1")}</li>
-                                         <li>• {t("reason2")}</li>
-                                         <li>• {t("reason3")}</li>
+                            <Card>
+                                <CardContent className="p-6">
+                                    <h3 className="font-semibold mb-4">{t("whyChooseUs")}</h3>
+                                    <ul className="space-y-2 text-sm text-muted-foreground">
+                                        <li>• {t("reason1")}</li>
+                                        <li>• {t("reason2")}</li>
+                                        <li>• {t("reason3")}</li>
                                         <li>• {t("reason4")}</li>
                                     </ul>
                                 </CardContent>
