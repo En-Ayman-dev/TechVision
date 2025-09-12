@@ -78,7 +78,7 @@ export default async function Home() {
 
     return (
         // تم تعديل padding top ليناسب التصميم العام بشكل أفضل
-        <div className="pt-16 md:pt-20"> 
+        <div className="relative pt-16 md:pt-20"> 
             <HeroSection />
             <AboutSection />
             {/* تم إضافة مكون الخدمات هنا لتظهر البيانات التي تم جلبها */}

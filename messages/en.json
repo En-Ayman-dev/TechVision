@@ -556,6 +556,11 @@
       "graduationProject": "Graduation Project",
       "appDevelopment": "App/Website Development",
       "techConsultation": "Tech Consultation",
+      "studentService":"Student Services",
+      "technicalSupport":"Technical Support",
+      "personalProject":"Personal Project",
+      "businessInquiry":"Business Inquiry",
+      "partnership":"Partnership",
       "problemSolving": "Problem Solving"
     }
   },

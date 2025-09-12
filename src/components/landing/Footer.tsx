@@ -144,7 +144,6 @@ export default function Footer() {
                   height={32}
                   className="object-contain rounded"
                   unoptimized
-                  priority
                 />
                 <div>
                   <div className="font-semibold group-hover:text-black">{res.title}</div>

@@ -38,6 +38,7 @@ export default function AboutSection() {
               unoptimized
               className="rounded-lg shadow-xl"
               priority
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
 
           </div>
