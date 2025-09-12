@@ -8,7 +8,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/toaster";
 import { NotificationProvider } from "@/components/ui/notification";
 import { ThemeProvider } from "next-themes";
-import { AccessibilityProvider, AccessibilityToolbar } from "@/components/ui/accessibility";
+import { AccessibilityProvider, FloatingActionGroup } from "@/components/ui/accessibility"; // <-- تغيير هنا
 import { AbstractIntlMessages } from "next-intl"; // تم إضافة هذا السطر
 
 interface Props {
@@ -32,7 +32,7 @@ export default function ClientProviders({ children, locale, messages }: Props) {
                         <Toaster />
                         <SpeedInsights />
                         <Analytics />
-                        <AccessibilityToolbar />
+                        <FloatingActionGroup />
                     </AccessibilityProvider>
                 </NotificationProvider>
             </ThemeProvider>

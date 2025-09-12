@@ -37,6 +37,8 @@ const contactSchema = z.object({
   inquiry: z.string().optional().or(z.literal("")), // Allows empty string or undefined
   beneficiaryType: z.string().optional().or(z.literal("")),
   requestType: z.string().optional().or(z.literal("")),
+  preferredContactMethod: z.string().optional(),
+  contactMethodValue: z.string().optional(),
 
 });
 
@@ -49,7 +51,7 @@ const projectSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters."),
   image: z.string().url("Invalid image URL."),
   dataAiHint: z.string().optional(),
-  
+
   // New optional fields
   detailedDescription: z.string().optional(),
   githubUrl: z.string().url("Invalid GitHub URL.").optional().or(z.literal('')),
@@ -195,20 +197,33 @@ export async function getMessageById(id: string) {
 // Add 'export' keyword to make the function accessible
 export async function sendContactMessageAction(data: z.infer<typeof contactSchema>) {
   if (!messagesCollection) return { success: false, message: "Database not configured." };
+  
+  // The data is already validated in contact.actions.ts, but we re-validate here as a safeguard.
   const validatedFields = contactSchema.safeParse(data);
-  if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
+  
+  if (!validatedFields.success) {
+    return { 
+      success: false, 
+      errors: validatedFields.error.flatten().fieldErrors, 
+      message: "Validation failed on the main action." 
+    };
+  }
 
   try {
     const newMessage = {
-      ...validatedFields.data,
+      ...validatedFields.data, // This now includes ALL fields, including the new ones
       submittedAt: new Date().toISOString()
     };
+    
     await messagesCollection.add(newMessage);
+    
     revalidatePath("/[locale]/admin/messages", "page");
     revalidatePath("/[locale]/admin", "page");
+    
     return { success: true, message: "Message sent!" };
+    
   } catch (error) {
-    return { success: false, message: "An unexpected error occurred." };
+    return { success: false, message: "An unexpected error occurred while saving the message." };
   }
 }
 export async function deleteMessageAction(id: string) {
@@ -282,7 +297,7 @@ export async function getProjectsAction(): Promise<Project[]> {
 // This action is now updated to handle the new fields correctly.
 export async function addProjectAction(data: z.infer<typeof projectSchema>) {
   if (!projectsCollection) return { success: false, message: "Database not configured." };
-  
+
   const validatedFields = projectSchema.safeParse(data);
   if (!validatedFields.success) {
     return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
@@ -293,7 +308,7 @@ export async function addProjectAction(data: z.infer<typeof projectSchema>) {
     // The spread operator will automatically include them in the new project document.
     const { id, ...projectData } = validatedFields.data;
     await projectsCollection.add(projectData);
-    
+
     revalidatePath("/[locale]/admin/projects", "page");
     revalidatePath("/", "layout");
     revalidatePath("/[locale]/admin", "page");
@@ -306,7 +321,7 @@ export async function addProjectAction(data: z.infer<typeof projectSchema>) {
 // This action is now updated to handle the new fields correctly.
 export async function updateProjectAction(data: z.infer<typeof projectSchema>) {
   if (!projectsCollection) return { success: false, message: "Database not configured." };
-  
+
   const validatedFields = projectSchema.safeParse(data);
   if (!validatedFields.success) {
     return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
@@ -317,9 +332,9 @@ export async function updateProjectAction(data: z.infer<typeof projectSchema>) {
     // The spread operator + merge:true will add/update them correctly.
     const { id, ...projectData } = validatedFields.data;
     if (!id) throw new Error("Project ID is missing.");
-    
+
     await projectsCollection.doc(id).set(projectData, { merge: true });
-    
+
     revalidatePath("/[locale]/admin/projects", "page");
     revalidatePath("/", "layout");
     return { success: true, message: "Project updated successfully." };
@@ -685,7 +700,7 @@ export async function updateThemeSettingsAction(data: z.infer<typeof themeSettin
 const blogPostSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(2, "Title must be at least 2 characters."),
-  slug: z.string().optional(), 
+  slug: z.string().optional(),
   featuredImage: z.string().url("Invalid image URL.").optional().or(z.literal('')),
   content: z.string().min(10, "Content must be at least 10 characters."),
   excerpt: z.string().optional(),
@@ -702,14 +717,14 @@ const blogPostSchema = z.object({
 
 // --- UPDATED Helper function to generate a URL-friendly slug for both English and Arabic ---
 const generateSlug = (title: string) => {
-    return title
-        .toLowerCase()
-        // Remove specific punctuation marks but keep Arabic and English characters
-        .replace(/[.:,;?_&]/g, '') 
-        .replace(/[^a-z0-9\s\-\u0600-\u06FF]/g, '') // Allow Arabic characters (Unicode range)
-        .trim()
-        .replace(/\s+/g, '-') // Replace spaces with hyphens
-        .replace(/-+/g, '-'); // Remove duplicate hyphens
+  return title
+    .toLowerCase()
+    // Remove specific punctuation marks but keep Arabic and English characters
+    .replace(/[.:,;?_&]/g, '')
+    .replace(/[^a-z0-9\s\-\u0600-\u06FF]/g, '') // Allow Arabic characters (Unicode range)
+    .trim()
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-'); // Remove duplicate hyphens
 }
 
 // NEW Action to get a single post by its slug
@@ -717,9 +732,9 @@ export async function getBlogPostBySlugAction(slug: string): Promise<BlogPost | 
   try {
     // Decode the slug to handle non-English characters correctly
     const decodedSlug = decodeURIComponent(slug);
-    
+
     const snapshot = await db.collection('blogPosts').where('slug', '==', decodedSlug).limit(1).get();
-    
+
     if (snapshot.empty) {
       console.warn(`No blog post found for slug: ${decodedSlug}`);
       return null;
@@ -741,7 +756,7 @@ export async function getRelatedPostsAction(category: string, currentPostId: str
       .where('published', '==', true)
       .limit(4) // Fetch 4 to ensure we can show 3 even if one is the current post
       .get();
-      
+
     const posts = snapshot.docs
       .map(doc => ({ id: doc.id, ...doc.data() } as BlogPost))
       .filter(post => post.id !== currentPostId); // Exclude the current post from related posts
@@ -778,14 +793,14 @@ export async function addBlogPostAction(data: z.infer<typeof blogPostSchema>) {
   try {
     const { id, ...postData } = validatedFields.data;
     const slug = generateSlug(postData.title);
-    
+
     const postRef = await db.collection('blogPosts').add({
       ...postData,
       slug: slug,
       publishedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    
+
     revalidatePath("/[locale]/admin/blog", "page");
     revalidatePath("/[locale]/blog", "page");
     return { success: true, message: "Blog post added successfully." };
@@ -805,14 +820,14 @@ export async function updateBlogPostAction(data: z.infer<typeof blogPostSchema>)
   try {
     const { id, ...postData } = validatedFields.data;
     if (!id) throw new Error("Post ID is missing.");
-    
+
     const slug = generateSlug(postData.title);
     const postRef = db.collection('blogPosts').doc(id);
-    
+
     await postRef.set({
-        ...postData,
-        slug: slug,
-        updatedAt: new Date().toISOString(),
+      ...postData,
+      slug: slug,
+      updatedAt: new Date().toISOString(),
     }, { merge: true });
 
     revalidatePath("/[locale]/admin/blog", "page");
@@ -919,11 +934,11 @@ export async function generateBlogPostAction(title: string, language: 'ar' | 'en
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
-    
+
     // Clean the response to ensure it's valid JSON
     const jsonString = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
     const parsedJson = JSON.parse(jsonString);
-    
+
     // Validate the parsed JSON against our schema
     const validatedData = aiResponseSchema.safeParse(parsedJson);
 
@@ -953,9 +968,9 @@ const bilingualContentSchema = z.object({
 
 // Shared Zod schema for a single service feature
 const serviceFeatureSchema = z.object({
-    title: bilingualContentSchema,
-    description: bilingualContentSchema,
-    icon: z.string().min(1, "Feature icon is required."),
+  title: bilingualContentSchema,
+  description: bilingualContentSchema,
+  icon: z.string().min(1, "Feature icon is required."),
 });
 
 // Schema for data coming FROM THE FORM (for add/update)

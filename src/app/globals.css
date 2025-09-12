@@ -67,7 +67,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    overflow-x: hidden; /* تم إضافة هذا السطر */
+    /* overflow-x: hidden; */
   }
 }
 
@@ -335,9 +335,9 @@ html {
 .prose ol {
     @apply list-decimal list-inside;
 }
-body {
+/* body {
   @apply overflow-x-hidden;
-}
+} */
 .react-hot-footer {
   bottom: 0 !important; 
     z-index: 50;   

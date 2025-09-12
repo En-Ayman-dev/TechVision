@@ -1,7 +1,7 @@
 {
   "ServicePage": {
-  "featuresTitle": "ماذا تشمل الخدمة؟",
-  "featuresSubtitle": "إليك الميزات والفوائد الرئيسية لهذه الخدمة."
+    "featuresTitle": "ماذا تشمل الخدمة؟",
+    "featuresSubtitle": "إليك الميزات والفوائد الرئيسية لهذه الخدمة."
   },
   "Metadata": {
     "title": "تك فيجن | حلول تقنية ورقمية مبتكرة",
@@ -20,11 +20,11 @@
     "portfolio": "أعمالنا",
     "contact": "اتصل بنا",
     "getAQuote": "احصل على عرض سعر",
-    "BlogSystem":"المدونة",
+    "BlogSystem": "المدونة",
     "studentService": "خدمات الطلاب",
     "Faq": "الأسئلة الشائعة"
   },
-    "Admin": {
+  "Admin": {
     "Dashboard": "لوحة التحكم",
     "Messages": "الرسائل",
     "Projects": "المشاريع",
@@ -35,7 +35,7 @@
     "Partners": "الشركاء",
     "Site Settings": "إعدادات الموقع",
     "Theme": "السمة",
-    "logout":"تسجيل الخروج ",
+    "logout": "تسجيل الخروج ",
     "login": {
       "title": "تسجيل الدخول",
       "description": "أدخل بريدك الإلكتروني أدناه لتسجيل الدخول إلى حسابك.",
@@ -46,46 +46,49 @@
       "failedDesc": "حدث خطأ غير متوقع."
     },
     "general": {
-    "generateQuoteSuccess": "تم توليد الاقتباس",
-    "name": "الاسم",
-    "title": "العنوان",
-    "description": "الوصف",
-    "icon": "الأيقونة",
-    "actions": "الإجراءات",
-    "hint":"تلميح",
-    "edit": "تعديل",
-    "delete": "حذف",
-    "areYouSure": "هل أنت متأكد؟",
-    "deleteConfirmation": "هذا الإجراء لا يمكن التراجع عنه. سيتم حذف الخدمة بشكل دائم.",
-    "cancel": "إلغاء",
-    "continue": "متابعة",
-    "titleRequired": "العنوان مطلوب",
-    "titleRequiredDesc": "الرجاء إدخال عنوان لتوليد وصف.",
-    "generationFailed": "فشل التوليد",
-    "generationFailedDesc": "تعذر توليد الوصف في الوقت الحالي.",
-    "descriptionGenerated": "تم توليد الوصف",
-    "descriptionGeneratedDesc": "تم توليد وصف بواسطة الذكاء الاصطناعي لك.",
-    "generate": "توليد",
-    "saveChanges": "حفظ التغييرات",
-    "add": "إضافة",
-    "loading": "جارٍ التحميل...",
-    "error": "خطأ",
-    "noItemsFound": "لم يتم العثور على {item}.",
-    "category": "الفئة",
-    "image": "الصورة",
-    "validationFailed": "فشل التحقق من الصحة.",
-    "addTitle": "إضافة {item} جديد",
-    "editTitle": "تعديل {item}",
-    "addDesc": "املأ التفاصيل لإضافة {item} جديد.",
-    "editDesc": "حدث تفاصيل {item} الخاصة بك.",
-    "itemAdded": "تمت إضافة {item} بنجاح.",
-    "itemUpdated": "تم تحديث {item} بنجاح.",
-    "generateQuote": "تم توليد اقتباس بواسطة الذكاء الاصطناعي لك.",
-    "openMenu": "فتح القائمة",
-    "itemDeleted": "{item} حذف .",
-    "deleteMessage": "حذف {item}",
-    "itemDeletedDesc": "تم حذف العنصر بنجاح.",
-    "itemUpdatedDesc": "تم تحديث العنصر بنجاح."
+      "generateQuoteSuccess": "تم توليد الاقتباس",
+      "name": "الاسم",
+      "title": "العنوان",
+      "description": "الوصف",
+      "icon": "الأيقونة",
+      "actions": "الإجراءات",
+      "hint": "تلميح",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "areYouSure": "هل أنت متأكد؟",
+      "deleteConfirmation": "هذا الإجراء لا يمكن التراجع عنه. سيتم حذف الخدمة بشكل دائم.",
+      "cancel": "إلغاء",
+      "continue": "متابعة",
+      "titleRequired": "العنوان مطلوب",
+      "titleRequiredDesc": "الرجاء إدخال عنوان لتوليد وصف.",
+      "generationFailed": "فشل التوليد",
+      "generationFailedDesc": "تعذر توليد الوصف في الوقت الحالي.",
+      "descriptionGenerated": "تم توليد الوصف",
+      "descriptionGeneratedDesc": "تم توليد وصف بواسطة الذكاء الاصطناعي لك.",
+      "generate": "توليد",
+      "saveChanges": "حفظ التغييرات",
+      "add": "إضافة",
+      "loading": "جارٍ التحميل...",
+      "error": "خطأ",
+      "noItemsFound": "لم يتم العثور على {item}.",
+      "category": "الفئة",
+      "image": "الصورة",
+      "validationFailed": "فشل التحقق من الصحة.",
+      "addTitle": "إضافة {item} جديد",
+      "editTitle": "تعديل {item}",
+      "addDesc": "املأ التفاصيل لإضافة {item} جديد.",
+      "editDesc": "حدث تفاصيل {item} الخاصة بك.",
+      "itemAdded": "تمت إضافة {item} بنجاح.",
+      "itemUpdated": "تم تحديث {item} بنجاح.",
+      "generateQuote": "تم توليد اقتباس بواسطة الذكاء الاصطناعي لك.",
+      "openMenu": "فتح القائمة",
+      "itemDeleted": "{item} حذف .",
+      "deleteMessage": "حذف {item}",
+      "itemDeletedDesc": "تم حذف العنصر بنجاح.",
+      "itemUpdatedDesc": "تم تحديث العنصر بنجاح.",
+      "addNew": " إضافة جديد",
+      "deleteConfirmDesc": "هل أنت متأكد أنك تريد حذف هذا العنصر؟ هذا الإجراء لا يمكن التراجع عنه.",
+      "deleteConfirmTitle": "تأكيد الحذف"
     },
     "dashboardPage": {
       "title": "لوحة التحكم",
@@ -130,6 +133,7 @@
       "message": "الرسالة",
       "received": "تم الاستلام",
       "beneficiaryType": "نوع المستفيد",
+      "preferredContact": "طريقة التواصل المفضلة",
       "requestType": "نوع الطلب"
     },
     "projectsPage": {
@@ -168,7 +172,7 @@
       "imageHint": "تلميح صورة الذكاء الاصطناعي",
       "imageHintPlaceholder": "مثال: 'رجل أعمال محترف'",
       "item": "عضو فريق",
-      "titleRequired": "العنوان مطلوب", 
+      "titleRequired": "العنوان مطلوب",
       "titleRequiredDesc": "الرجاء إدخال عنوان لتوليد وصف.",
       "roleRequired": "الدور مطلوب",
       "roleRequiredDesc": "الرجاء إدخال الدور لتوليد وصف.",
@@ -181,15 +185,15 @@
       "role": "الدور"
     },
     "servicesPage": {
-      "ai":{
-        "titleLabel":"عنوان الخدمة",
-        "titleHint":"تلميح عنوان الخدمة",
-        "generateButton":"توليد ",
-        "successTitle":"تم إنشاء الخدمة بنجاح!",
-        "successDesc":"يمكنك الآن رؤية الخدمة في قائمة الخدمات.",
-        "titlePlaceholder":"أدخل عنوان الخدمة هنا..."
+      "ai": {
+        "titleLabel": "عنوان الخدمة",
+        "titleHint": "تلميح عنوان الخدمة",
+        "generateButton": "توليد ",
+        "successTitle": "تم إنشاء الخدمة بنجاح!",
+        "successDesc": "يمكنك الآن رؤية الخدمة في قائمة الخدمات.",
+        "titlePlaceholder": "أدخل عنوان الخدمة هنا..."
       },
-      "tabs":{
+      "tabs": {
         "ai": "توليد الذكاء الاصطناعي",
         "manual": "التعديل اليدوي"
       },
@@ -199,20 +203,20 @@
       "heroImage": "صورة للخدمة",
       "manageServices": "إدارة الخدمات",
       "servicesList": "قائمة الخدمات",
-    "servicesListDescription": "هنا جميع الخدمات التي تقدمها.",
-    "addService": "إضافة خدمة",
-    "editService": "تعديل الخدمة",
-    "deleteService": "حذف الخدمة",
-    "addServiceDescription": "املأ التفاصيل لإضافة خدمة جديدة.",
-    "editServiceDescription": "حدث تفاصيل خدمتك.",
-    "serviceAdded": "تمت إضافة الخدمة",
-    "serviceUpdated": "تم تحديث الخدمة",
-    "serviceDeleted": "تم حذف الخدمة",
-    "serviceDeletedDesc": "تم حذف الخدمة بنجاح.",
-    "noServicesFound": "لم يتم العثور على خدمات."
+      "servicesListDescription": "هنا جميع الخدمات التي تقدمها.",
+      "addService": "إضافة خدمة",
+      "editService": "تعديل الخدمة",
+      "deleteService": "حذف الخدمة",
+      "addServiceDescription": "املأ التفاصيل لإضافة خدمة جديدة.",
+      "editServiceDescription": "حدث تفاصيل خدمتك.",
+      "serviceAdded": "تمت إضافة الخدمة",
+      "serviceUpdated": "تم تحديث الخدمة",
+      "serviceDeleted": "تم حذف الخدمة",
+      "serviceDeletedDesc": "تم حذف الخدمة بنجاح.",
+      "noServicesFound": "لم يتم العثور على خدمات."
     },
     "testimonialsPage": {
-      "generate":"توليد",
+      "generate": "توليد",
       "title": "إدارة الشهادات",
       "testimonialsList": "قائمة الشهادات",
       "testimonialsListDesc": "هنا جميع شهادات العملاء.",
@@ -251,7 +255,30 @@
       "satisfaction": "رضا العملاء (٪)",
       "projects": "المشاريع المكتملة",
       "experience": "سنوات الخبرة",
-      "team": "أعضاء فريق خبراء"
+      "team": "أعضاء فريق خبراء",
+      "contactMethods": {
+        "title": "طرق التواصل",
+        "desc": "تحكم في الطرق التي يمكن للمستخدمين طلب التواصل معهم من خلالها.",
+        "item": "طريقة التواصل",
+        "addTitle": "إضافة طريقة تواصل جديدة",
+        "addDesc": "أنشئ خيارًا جديدًا ليختاره المستخدمون.",
+        "editTitle": "تعديل طريقة التواصل",
+        "editDesc": "حدث تفاصيل طريقة التواصل هذه.",
+        "noMethods": "لم يتم العثور على طرق تواصل. انقر على 'إضافة جديد' لإنشاء واحدة.",
+        "tableHeaderLabel": "الاسم المعروض",
+        "tableHeaderName": "الاسم الفريد (Slug)",
+        "tableHeaderType": "نوع الحقل",
+        "tableHeaderActions": "الإجراءات",
+        "fieldName": "الاسم الفريد (مثال: 'whatsapp'، بدون مسافات)",
+        "fieldIcon": "اسم أيقونة Lucide (اختياري)",
+        "fieldIconHint": "ابحث عن الأسماء في lucide.dev",
+        "fieldLabelEn": "الاسم (الإنجليزية)",
+        "fieldLabelAr": "الاسم (العربية)",
+        "fieldPlaceholderEn": "النص المؤقت (الإنجليزية)",
+        "fieldPlaceholderAr": "النص المؤقت (العربية)",
+        "fieldInputType": "نوع حقل الإدخال",
+        "inputTypePlaceholder": "اختر نوع حقل الإدخال"
+      }
     },
     "themePage": {
       "title": "إعدادات السمة",
@@ -269,7 +296,7 @@
       "description": "التنقل الرئيسي للوحة تحكم المسؤول."
     },
     "BlogForm": {
-      "tabs":{
+      "tabs": {
         "ai": "توليد الذكاء الاصطناعي",
         "manual": "التعديل اليدوي"
       },
@@ -281,7 +308,7 @@
         "successTitle": "تم إنشاء المقالة بنجاح!",
         "successDesc": "يمكنك الآن رؤية المقالة في قائمة المقالات.",
         "generateButton": "توليد "
-        },
+      },
       "featuredImagePlaceholder": "أدخل رابط صورة المقالة هنا...",
       "excerptPlaceholder": "أدخل مقتطف المقالة هنا...",
       "excerpt": "المقتطف",
@@ -304,21 +331,34 @@
       "content": "المحتوى",
       "publishPost": "نشر المقالة",
       "featuredPost": "مقالة مميزة"
-  },
-  "BlogSystem": {
-    "title": "إدارة المدونة",
-    "addPost": "إضافة مقالة جديدة",
-    "postsList": "قائمة المقالات",
-    "postsListDesc": "هنا جميع المقالات في مدونتك.",
-    "postTitle": "العنوان",
-    "postAuthor": "المؤلف",
-    "postCategory": "الفئة",
-    "openMenu": "فتح القائمة",
-    "deleteConfirmation": "هذا الإجراء لا يمكن التراجع عنه. سيؤدي هذا إلى حذف المقالة بشكل دائم.",
-    "noPostsFound": "لم يتم العثور على مقالات.",
-    "deleteSuccess": "تم حذف المقالة",
-    "deleteSuccessDesc": "تم حذف مقالة المدونة بنجاح."
-  }
+    },
+    "BlogSystem": {
+      "title": "إدارة المدونة",
+      "addPost": "إضافة مقالة جديدة",
+      "postsList": "قائمة المقالات",
+      "postsListDesc": "هنا جميع المقالات في مدونتك.",
+      "postTitle": "العنوان",
+      "postAuthor": "المؤلف",
+      "postCategory": "الفئة",
+      "openMenu": "فتح القائمة",
+      "deleteConfirmation": "هذا الإجراء لا يمكن التراجع عنه. سيؤدي هذا إلى حذف المقالة بشكل دائم.",
+      "noPostsFound": "لم يتم العثور على مقالات.",
+      "deleteSuccess": "تم حذف المقالة",
+      "deleteSuccessDesc": "تم حذف مقالة المدونة بنجاح."
+    },
+    "replyPage": {
+      "title": "الرد على {sender}",
+      "messageDetails": "تفاصيل الرسالة",
+      "senderName": "اسم المرسل",
+      "senderEmail": "البريد الإلكتروني للمرسل",
+      "preferredContact": "طريقة التواصل المفضلة",
+      "receivedDate": "تاريخ الاستلام",
+      "beneficiaryType": "نوع المستفيد",
+      "requestType": "نوع الطلب",
+      "messageContent": "محتوى الرسالة",
+      "inquiryContent": "الاستفسار",
+      "notProvided": "لم يتم توفيره"
+    }
   },
   "HeroSection": {
     "title": "ابتكر, أنشئ, ارتقِ.",
@@ -327,7 +367,7 @@
     "seeOurWork": "شاهد أعمالنا"
   },
   "Footer": {
-    "EnAyman":"            برمجة وتطوير المهندس أيمن الذاهبي",
+    "EnAyman": "            برمجة وتطوير المهندس أيمن الذاهبي",
     "companyName": "تك فيجن",
     "rightsReserved": "جميع الحقوق محفوظة.",
     "aboutParagraph": "نحن فريق من المطورين والمصممين والاستراتيجيين الشغوفين المكرسين لصياغة تجارب رقمية استثنائية.",
@@ -456,12 +496,16 @@
     "mondayFriday": "من الإثنين إلى الاربعاء: 4:٠٠ م - 2:٠٠ ص",
     "saturday": "السبت: ١٠:٠٠ ص - ٤:٠٠ م",
     "sunday": "الأحد: مغلق",
+    "preferredContactMethod": "طريقة التواصل المفضلة",
+    "preferredContactMethodPlaceholder": "اختر طريقة...",
     "validation": {
       "nameMin": "يجب أن يتكون الاسم من حرفين على الأقل",
       "emailInvalid": "الرجاء إدخال عنوان بريد إلكتروني صالح",
       "messageMin": "يجب أن تتكون الرسالة من 10 أحرف على الأقل",
       "projectIdeaMin": "يجب أن تتكون فكرة المشروع من 20 حرفًا على الأقل.",
       "beneficiaryTypeRequired": "نوع المستفيد مطلوب.",
+      "contactMethodRequired": "يرجى اختيار طريقة للتواصل.",
+      "contactMethodValueRequired": "هذا الحقل مطلوب.",
       "requestTypeRequired": "نوع الطلب مطلوب."
     },
     "toast": {
@@ -598,7 +642,7 @@
       "Explore_the_latest_trends_shaping_the_future_of_web_development_from_AI_integration_to_new_frameworks": "استكشف أحدث الاتجاهات التي تشكل مستقبل تطوير الويب، من دمج الذكاء الاصطناعي إلى الأطر الجديدة"
     }
   },
-    "Search": {
+  "Search": {
     "search_button": "بحث",
     "filters_button": "تصفية النتائج",
     "title": "نتائج البحث",
@@ -614,7 +658,7 @@
     "from": "من",
     "email": "البريد الإلكتروني",
     "you": "أنت",
-    "ai":" مساعد الذكاء الاصطناعي",
+    "ai": " مساعد الذكاء الاصطناعي",
     "typeMessage": "اكتب رسالتك هنا...",
     "send": "إرسال",
     "typing": "يكتب...",
@@ -624,6 +668,17 @@
     "sendTelegram": "إرسال رسالة تيليجرام",
     "copied": "تم النسخ",
     "aiError": "حدث خطأ أثناء معالجة طلبك."
-
+  },
+  "Accessibility": {
+    "title": "إمكانية الوصول",
+    "closeToolbar": "إغلاق شريط أدوات الوصول",
+    "openToolbar": "فتح شريط أدوات الوصول",
+    "fontSize": "حجم الخط",
+    "increaseFontSize": "تكبير حجم الخط",
+    "decreaseFontSize": "تصغير حجم الخط",
+    "highContrast": "تباين عالي",
+    "reduceMotion": "تقليل الحركة",
+    "screenReader": "قارئ الشاشة",
+    "contactUs": "تواصل معنا"
   }
 }

@@ -9,7 +9,7 @@ import { NotificationProvider } from "@/components/ui/notification";
 import { Header } from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import { ThemeProvider } from "next-themes";
-import { AccessibilityProvider, AccessibilityToolbar } from "@/components/ui/accessibility";
+import { AccessibilityProvider, FloatingActionGroup } from "@/components/ui/accessibility"; // <-- تغيير هنا
 import { AbstractIntlMessages } from "next-intl";
 
 interface Props {
@@ -34,7 +34,7 @@ export default function I18nProviderClient({ children, locale, messages, timeZon
           <main className="min-h-screen pt-16">
             <AccessibilityProvider>
               {children}
-              <AccessibilityToolbar />
+              <FloatingActionGroup />
             </AccessibilityProvider>
           </main>
           <Toaster />

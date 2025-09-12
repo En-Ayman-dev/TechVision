@@ -1,7 +1,7 @@
 {
   "ServicePage": {
-  "featuresTitle": "What Does the Service Include?",
-  "featuresSubtitle": "Here are the key features and benefits of this service."
+    "featuresTitle": "What Does the Service Include?",
+    "featuresSubtitle": "Here are the key features and benefits of this service."
   },
   "Metadata": {
     "title": "Tech Vision | Innovative Tech & Digital Solutions",
@@ -20,11 +20,11 @@
     "portfolio": "Portfolio",
     "contact": "Contact",
     "getAQuote": "Get a Quote",
-    "BlogSystem":"Blog",
+    "BlogSystem": "Blog",
     "studentService": "Student Services",
     "Faq": "FAQ"
   },
-    "Admin": {
+  "Admin": {
     "Dashboard": "Dashboard",
     "Messages": "Messages",
     "Projects": "Projects",
@@ -35,7 +35,7 @@
     "Partners": "Partners",
     "Site Settings": "Site Settings",
     "Theme": "Theme",
-    "logout":"Log out",
+    "logout": "Log out",
     "login": {
       "title": "Sign In",
       "description": "Enter your email below to sign in to your account.",
@@ -46,46 +46,49 @@
       "failedDesc": "An unexpected error occurred."
     },
     "general": {
-    "generateQuoteSuccess": "Quote Generated",
-    "name": "Name",
-    "title": "Title",
-    "description": "Description",
-    "icon": "Icon",
-    "actions": "Actions",
-    "hint":"Hint",
-    "edit": "Edit",
-    "delete": "Delete",
-    "areYouSure": "Are you sure?",
-    "deleteConfirmation": "This action cannot be undone. The service will be permanently deleted.",
-    "cancel": "Cancel",
-    "continue": "Continue",
-    "titleRequired": "Title is required",
-    "titleRequiredDesc": "Please enter a title to generate a description.",
-    "generationFailed": "Generation Failed",
-    "generationFailedDesc": "Could not generate the description at this time.",
-    "descriptionGenerated": "Description Generated",
-    "descriptionGeneratedDesc": "A description has been generated for you by AI.",
-    "generate": "Generate",
-    "saveChanges": "Save Changes",
-    "add": "Add",
-    "loading": "Loading...",
-    "error": "Error",
-    "noItemsFound": "No {item} found.",
-    "category": "Category",
-    "image": "Image",
-    "validationFailed": "Validation Failed.",
-    "addTitle": "Add New {item}",
-    "editTitle": "Edit {item}",
-    "addDesc": "Fill in the details to add a new {item}.",
-    "editDesc": "Update your {item} details.",
-    "itemAdded": "{item} added successfully.",
-    "itemUpdated": "{item} updated successfully.",
-    "generateQuote": "A quote has been generated for you by AI.",
-    "openMenu": "Open Menu",
-    "itemDeleted": "{item} deleted.",
-    "deleteMessage": "Delete {item}",
-    "itemDeletedDesc": "Item deleted successfully.",
-    "itemUpdatedDesc": "Item updated successfully."
+      "generateQuoteSuccess": "Quote Generated",
+      "name": "Name",
+      "title": "Title",
+      "description": "Description",
+      "icon": "Icon",
+      "actions": "Actions",
+      "hint": "Hint",
+      "edit": "Edit",
+      "delete": "Delete",
+      "areYouSure": "Are you sure?",
+      "deleteConfirmation": "This action cannot be undone. The service will be permanently deleted.",
+      "cancel": "Cancel",
+      "continue": "Continue",
+      "titleRequired": "Title is required",
+      "titleRequiredDesc": "Please enter a title to generate a description.",
+      "generationFailed": "Generation Failed",
+      "generationFailedDesc": "Could not generate the description at this time.",
+      "descriptionGenerated": "Description Generated",
+      "descriptionGeneratedDesc": "A description has been generated for you by AI.",
+      "generate": "Generate",
+      "saveChanges": "Save Changes",
+      "add": "Add",
+      "loading": "Loading...",
+      "error": "Error",
+      "noItemsFound": "No {item} found.",
+      "category": "Category",
+      "image": "Image",
+      "validationFailed": "Validation Failed.",
+      "addTitle": "Add New {item}",
+      "editTitle": "Edit {item}",
+      "addDesc": "Fill in the details to add a new {item}.",
+      "editDesc": "Update your {item} details.",
+      "itemAdded": "{item} added successfully.",
+      "itemUpdated": "{item} updated successfully.",
+      "generateQuote": "A quote has been generated for you by AI.",
+      "openMenu": "Open Menu",
+      "itemDeleted": "{item} deleted.",
+      "deleteMessage": "Delete {item}",
+      "itemDeletedDesc": "Item deleted successfully.",
+      "itemUpdatedDesc": "Item updated successfully.",
+      "deleteConfirmTitle": "Confirm Deletion",
+      "deleteConfirmDesc": "Are you sure you want to delete this item? This action cannot be undone.",
+      "addNew": "Add New"
     },
     "dashboardPage": {
       "title": "Dashboard",
@@ -130,6 +133,7 @@
       "message": "Message",
       "received": "Received",
       "beneficiaryType": "Beneficiary Type",
+      "preferredContact": "Preferred Contact Method",
       "requestType": "Request Type"
     },
     "projectsPage": {
@@ -168,7 +172,7 @@
       "imageHint": "AI Image Hint",
       "imageHintPlaceholder": "e.g., 'professional businessman'",
       "item": "Team Member",
-      "titleRequired": "Title is required", 
+      "titleRequired": "Title is required",
       "titleRequiredDesc": "Please enter a title to generate a description.",
       "roleRequired": "Role is required",
       "roleRequiredDesc": "Please enter a role to generate a description.",
@@ -181,15 +185,15 @@
       "role": "Role"
     },
     "servicesPage": {
-      "ai":{
-        "titleLabel":"Service Title",
-        "titleHint":"Service Title Hint",
-        "generateButton":"Generate",
-        "successTitle":"Service Created Successfully!",
-        "successDesc":"You can now see the service in the services list.",
-        "titlePlaceholder":"Enter service title here..."
+      "ai": {
+        "titleLabel": "Service Title",
+        "titleHint": "Service Title Hint",
+        "generateButton": "Generate",
+        "successTitle": "Service Created Successfully!",
+        "successDesc": "You can now see the service in the services list.",
+        "titlePlaceholder": "Enter service title here..."
       },
-      "tabs":{
+      "tabs": {
         "ai": "AI Generation",
         "manual": "Manual Editing"
       },
@@ -199,20 +203,20 @@
       "heroImage": "Service Image",
       "manageServices": "Manage Services",
       "servicesList": "Services List",
-    "servicesListDescription": "Here are all the services you offer.",
-    "addService": "Add Service",
-    "editService": "Edit Service",
-    "deleteService": "Delete Service",
-    "addServiceDescription": "Fill in the details to add a new service.",
-    "editServiceDescription": "Update your service details.",
-    "serviceAdded": "Service Added",
-    "serviceUpdated": "Service Updated",
-    "serviceDeleted": "Service Deleted",
-    "serviceDeletedDesc": "Service deleted successfully.",
-    "noServicesFound": "No services found."
+      "servicesListDescription": "Here are all the services you offer.",
+      "addService": "Add Service",
+      "editService": "Edit Service",
+      "deleteService": "Delete Service",
+      "addServiceDescription": "Fill in the details to add a new service.",
+      "editServiceDescription": "Update your service details.",
+      "serviceAdded": "Service Added",
+      "serviceUpdated": "Service Updated",
+      "serviceDeleted": "Service Deleted",
+      "serviceDeletedDesc": "Service deleted successfully.",
+      "noServicesFound": "No services found."
     },
     "testimonialsPage": {
-      "generate":"Generate",
+      "generate": "Generate",
       "title": "Testimonials Management",
       "testimonialsList": "Testimonials List",
       "testimonialsListDesc": "Here are all customer testimonials.",
@@ -251,7 +255,30 @@
       "satisfaction": "Customer Satisfaction (%)",
       "projects": "Completed Projects",
       "experience": "Years of Experience",
-      "team": "Expert Team Members"
+      "team": "Expert Team Members",
+      "contactMethods": {
+        "title": "Contact Methods",
+        "desc": "Manage the ways users can ask you to contact them back.",
+        "item": "Contact Method",
+        "addTitle": "Add New Contact Method",
+        "addDesc": "Create a new option for users to choose from.",
+        "editTitle": "Edit Contact Method",
+        "editDesc": "Update the details of this contact method.",
+        "noMethods": "No contact methods found. Click 'Add New' to create one.",
+        "tableHeaderLabel": "Display Label",
+        "tableHeaderName": "Unique Name (Slug)",
+        "tableHeaderType": "Input Type",
+        "tableHeaderActions": "Actions",
+        "fieldName": "Unique Name (e.g., 'whatsapp', no spaces)",
+        "fieldIcon": "Lucide Icon Name (Optional)",
+        "fieldIconHint": "Find names at lucide.dev",
+        "fieldLabelEn": "Label (English)",
+        "fieldLabelAr": "Label (Arabic)",
+        "fieldPlaceholderEn": "Placeholder (English)",
+        "fieldPlaceholderAr": "Placeholder (Arabic)",
+        "fieldInputType": "Input Type",
+        "inputTypePlaceholder": "Select an input type"
+      }
     },
     "themePage": {
       "title": "Theme Settings",
@@ -269,7 +296,7 @@
       "description": "Main navigation for the admin dashboard."
     },
     "BlogForm": {
-      "tabs":{
+      "tabs": {
         "ai": "AI Generation",
         "manual": "Manual Editing"
       },
@@ -281,7 +308,7 @@
         "successTitle": "Article Created Successfully!",
         "successDesc": "You can now see the article in the articles list.",
         "generateButton": "Generate"
-        },
+      },
       "featuredImagePlaceholder": "Enter article image URL here...",
       "excerptPlaceholder": "Enter article excerpt here...",
       "excerpt": "Excerpt",
@@ -304,21 +331,34 @@
       "content": "Content",
       "publishPost": "Publish Article",
       "featuredPost": "Featured Article"
-  },
-  "BlogSystem": {
-    "title": "Blog Management",
-    "addPost": "Add New Article",
-    "postsList": "Articles List",
-    "postsListDesc": "Here are all the articles in your blog.",
-    "postTitle": "Title",
-    "postAuthor": "Author",
-    "postCategory": "Category",
-    "openMenu": "Open Menu",
-    "deleteConfirmation": "This action cannot be undone. This will permanently delete the article.",
-    "noPostsFound": "No articles found.",
-    "deleteSuccess": "Article Deleted",
-    "deleteSuccessDesc": "Blog article deleted successfully."
-  }
+    },
+    "BlogSystem": {
+      "title": "Blog Management",
+      "addPost": "Add New Article",
+      "postsList": "Articles List",
+      "postsListDesc": "Here are all the articles in your blog.",
+      "postTitle": "Title",
+      "postAuthor": "Author",
+      "postCategory": "Category",
+      "openMenu": "Open Menu",
+      "deleteConfirmation": "This action cannot be undone. This will permanently delete the article.",
+      "noPostsFound": "No articles found.",
+      "deleteSuccess": "Article Deleted",
+      "deleteSuccessDesc": "Blog article deleted successfully."
+    },
+ "replyPage": {
+        "title": "Reply to {sender}",
+        "messageDetails": "Message Details",
+        "senderName": "Sender Name",
+        "senderEmail": "Sender Email",
+        "preferredContact": "Preferred Contact Method",
+        "receivedDate": "Received Date",
+        "beneficiaryType": "Beneficiary Type",
+        "requestType": "Request Type",
+        "messageContent": "Message Content",
+        "inquiryContent": "Inquiry",
+        "notProvided": "Not provided"
+    }
   },
   "HeroSection": {
     "title": "Innovate, Create, Elevate.",
@@ -327,7 +367,7 @@
     "seeOurWork": "See Our Work"
   },
   "Footer": {
-    "EnAyman":"            Programmed and Developed by Engineer Ayman Al-Zahabi",
+    "EnAyman": "            Programmed and Developed by Engineer Ayman Al-Zahabi",
     "companyName": "Tech Vision",
     "rightsReserved": "All rights reserved.",
     "aboutParagraph": "We are a team of passionate developers, designers, and strategists dedicated to crafting exceptional digital experiences.",
@@ -456,13 +496,17 @@
     "mondayFriday": "Monday - Wednesday: 4:00 PM - 2:00 AM",
     "saturday": "Saturday: 10:00 AM - 4:00 PM",
     "sunday": "Sunday: Closed",
+    "preferredContactMethod": "Preferred Contact Method",
+    "preferredContactMethodPlaceholder": "Select a method...",
     "validation": {
       "nameMin": "Name must be at least 2 characters",
       "emailInvalid": "Please enter a valid email address",
       "messageMin": "Message must be at least 10 characters",
       "projectIdeaMin": "Project idea must be at least 20 characters.",
       "beneficiaryTypeRequired": "Beneficiary type is required.",
-      "requestTypeRequired": "Request type is required."
+      "requestTypeRequired": "Request type is required.",
+      "contactMethodRequired": "Please select a contact method.",
+      "contactMethodValueRequired": "This field is required."
     },
     "toast": {
       "aiSuggestionsTitle": "AI Suggestions",
@@ -598,7 +642,7 @@
       "Explore_the_latest_trends_shaping_the_future_of_web_development_from_AI_integration_to_new_frameworks": "Explore the latest trends shaping the future of web development from AI integration to new frameworks"
     }
   },
-    "Search": {
+  "Search": {
     "search_button": "Search",
     "filters_button": "Filter Results",
     "title": "Search Results",
@@ -609,12 +653,12 @@
     "noResultsMessage": "There are no results that match your search query."
   },
   "AdminMessages": {
-    "replySubject":"",
+    "replySubject": "",
     "replyToMessage": "رد على رسالتك",
     "from": "من",
     "email": "البريد الإلكتروني",
     "you": "أنت",
-    "ai":" مساعد الذكاء الاصطناعي",
+    "ai": " مساعد الذكاء الاصطناعي",
     "typeMessage": "اكتب رسالتك هنا...",
     "send": "إرسال",
     "typing": "يكتب...",
@@ -624,6 +668,17 @@
     "sendTelegram": "إرسال رسالة تيليجرام",
     "copied": "تم النسخ",
     "aiError": "حدث خطأ أثناء معالجة طلبك."
-
+  },
+  "Accessibility": {
+    "title": "Accessibility",
+    "closeToolbar": "Close accessibility toolbar",
+    "openToolbar": "Open accessibility toolbar",
+    "fontSize": "Font Size",
+    "increaseFontSize": "Increase font size",
+    "decreaseFontSize": "Decrease font size",
+    "highContrast": "High Contrast",
+    "reduceMotion": "Reduce Motion",
+    "screenReader": "Screen Reader",
+    "contactUs": "Contact Us"
   }
 }

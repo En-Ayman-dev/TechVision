@@ -7,6 +7,7 @@ export interface NavItem {
 
 // An object to hold content that exists in both English and Arabic
 export interface BilingualContent {
+  toLowerCase: any;
   en: string;
   ar: string;
 }
@@ -22,16 +23,16 @@ export interface Service {
   id: string;
   slug: string; // For the URL, e.g., "web-development"
   icon: string; // Icon for the main service card
-  
+
   // Bilingual fields
   title: BilingualContent;
   description: BilingualContent; // This is the short description for the card
   detailedContent: BilingualContent; // This is the rich HTML content for the service page
-  
+
   heroImage?: string; // Optional hero image for the service page
-  
+
   features?: ServiceFeature[]; // Array of features for the service
-  
+
   dataAiHint?: string;
 }
 
@@ -91,6 +92,8 @@ export interface Message {
   inquiry?: string; // NEW: New inquiry field
   beneficiaryType?: string; // NEW: Beneficiary type field
   requestType?: string; // NEW: Request type field
+  preferredContactMethod?: string;
+  contactMethodValue?: string;
 
 }
 
@@ -101,7 +104,7 @@ export interface Project {
   category: string;
   image: string;
   dataAiHint?: string;
-  
+
   // --- Fields Added as per your request ---
   githubUrl?: string;
   liveUrl?: string;
@@ -147,3 +150,23 @@ export interface BlogPost {
   featured: boolean;
   published: boolean;
 }
+// ========= START: الإضافة الجديدة هنا =========
+export type ContactMethodInputType = 'text' | 'tel' | 'email' | 'url';
+
+export interface ContactMethod {
+  id: string; // Firestore document ID
+  name: string; // A unique name/slug like "whatsapp" or "telegram"
+
+  // Admin-facing labels (bilingual)
+  label_en: string;
+  label_ar: string;
+
+  // User-facing placeholder (bilingual)
+  placeholder_en: string;
+  placeholder_ar: string;
+
+  // Technical details
+  inputType: ContactMethodInputType; // Type of the HTML input
+  icon?: string; // Optional: Lucide icon name
+}
+// ========= END: الإضافة الجديدة هنا =========
