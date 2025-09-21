@@ -1,7 +1,5 @@
 import { getMessageById } from "@/app/actions";
 import AIChat from "@/components/admin/AIChat";
-// import { getMessageById } from "@/src/app/actions"; // سيتم تعديل هذا
-// import AIChat from "@/src/components/admin/AIChat";
 import { notFound } from "next/navigation";
 
 interface ReplyPageProps {
@@ -20,7 +18,7 @@ export default async function ReplyPage({ params }: ReplyPageProps) {
     }
 
     return (
-        <div className="h-full flex flex-col">
+        <div className="h-[calc(100vh-8rem)] flex flex-col">
             <AIChat originalMessage={message} />
         </div>
     );

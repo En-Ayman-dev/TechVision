@@ -34,7 +34,6 @@ function AdminAuthenticatedLayout({ children }: { children: React.ReactNode }) {
 
 export default function AdminLayout({
   children,
-  // params: {locale}
 }: {
   children: React.ReactNode;
 

@@ -17,6 +17,7 @@ import { firestore } from "firebase-admin";
 
 import nodemailer from 'nodemailer';
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { verifyIsAdmin } from './admin.actions';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail', // Use your email service provider, e.g., 'gmail'
@@ -69,31 +70,6 @@ const teamMemberSchema = z.object({
   }),
   dataAiHint: z.string().optional(),
 });
-
-// // --- 1. Define the UPDATED schema for bilingual content ---
-// const bilingualContentSchema = z.object({
-//   en: z.string().min(1, "English content is required."),
-//   ar: z.string().min(1, "Arabic content is required."),
-// });
-
-// const serviceFeatureSchema = z.object({
-//     title: bilingualContentSchema,
-//     description: bilingualContentSchema,
-//     icon: z.string().min(1, "Feature icon is required."),
-// });
-
-// const serviceSchema = z.object({
-//   id: z.string().optional(),
-//   slug: z.string().optional(),
-//   icon: z.string().min(2, "Icon name is required."),
-//   title: bilingualContentSchema,
-//   description: bilingualContentSchema,
-//   detailedContent: bilingualContentSchema,
-//   heroImage: z.string().url("Invalid URL.").optional().or(z.literal('')),
-//   features: z.array(serviceFeatureSchema).optional(),
-//   dataAiHint: z.string().optional(),
-// });
-
 
 const testimonialSchema = z.object({
   id: z.string().optional(),
@@ -183,6 +159,7 @@ export async function getMessagesAction(
 export async function getMessageById(id: string) {
   if (!messagesCollection) return null;
   try {
+    await verifyIsAdmin();
     const doc = await messagesCollection.doc(id).get();
     if (!doc.exists) {
       return null;
@@ -197,15 +174,15 @@ export async function getMessageById(id: string) {
 // Add 'export' keyword to make the function accessible
 export async function sendContactMessageAction(data: z.infer<typeof contactSchema>) {
   if (!messagesCollection) return { success: false, message: "Database not configured." };
-  
+
   // The data is already validated in contact.actions.ts, but we re-validate here as a safeguard.
   const validatedFields = contactSchema.safeParse(data);
-  
+
   if (!validatedFields.success) {
-    return { 
-      success: false, 
-      errors: validatedFields.error.flatten().fieldErrors, 
-      message: "Validation failed on the main action." 
+    return {
+      success: false,
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Validation failed on the main action."
     };
   }
 
@@ -214,14 +191,14 @@ export async function sendContactMessageAction(data: z.infer<typeof contactSchem
       ...validatedFields.data, // This now includes ALL fields, including the new ones
       submittedAt: new Date().toISOString()
     };
-    
+
     await messagesCollection.add(newMessage);
-    
+
     revalidatePath("/[locale]/admin/messages", "page");
     revalidatePath("/[locale]/admin", "page");
-    
+
     return { success: true, message: "Message sent!" };
-    
+
   } catch (error) {
     return { success: false, message: "An unexpected error occurred while saving the message." };
   }
@@ -229,6 +206,7 @@ export async function sendContactMessageAction(data: z.infer<typeof contactSchem
 export async function deleteMessageAction(id: string) {
   if (!messagesCollection) return { success: false, message: "Database not configured." };
   try {
+    await verifyIsAdmin();
     await messagesCollection.doc(id).delete();
     revalidatePath("/[locale]/admin/messages", "page");
     revalidatePath("/[locale]/admin", "page");
@@ -304,6 +282,7 @@ export async function addProjectAction(data: z.infer<typeof projectSchema>) {
   }
 
   try {
+    await verifyIsAdmin();
     // The validated data now includes the new optional fields.
     // The spread operator will automatically include them in the new project document.
     const { id, ...projectData } = validatedFields.data;
@@ -328,6 +307,7 @@ export async function updateProjectAction(data: z.infer<typeof projectSchema>) {
   }
 
   try {
+    await verifyIsAdmin();
     // The validated data now includes the new optional fields.
     // The spread operator + merge:true will add/update them correctly.
     const { id, ...projectData } = validatedFields.data;
@@ -347,6 +327,7 @@ export async function updateProjectAction(data: z.infer<typeof projectSchema>) {
 export async function deleteProjectAction(id: string) {
   if (!projectsCollection) return { success: false, message: "Database not configured." };
   try {
+    await verifyIsAdmin();
     await projectsCollection.doc(id).delete();
     revalidatePath("/[locale]/admin/projects", "page");
     revalidatePath("/", "layout");
@@ -371,6 +352,7 @@ export async function addTeamMemberAction(data: z.infer<typeof teamMemberSchema>
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
+    await verifyIsAdmin();
     const { id, ...memberData } = validatedFields.data;
     await teamCollection.add(memberData);
     revalidatePath("/[locale]/admin/team", "page");
@@ -388,6 +370,7 @@ export async function updateTeamMemberAction(data: z.infer<typeof teamMemberSche
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
+    await verifyIsAdmin();
     const { id, ...memberData } = validatedFields.data;
     if (!id) throw new Error("Team member ID is missing.");
     await teamCollection.doc(id).set(memberData, { merge: true });
@@ -402,6 +385,7 @@ export async function updateTeamMemberAction(data: z.infer<typeof teamMemberSche
 export async function deleteTeamMemberAction(id: string) {
   if (!teamCollection) return { success: false, message: "Database not configured." };
   try {
+    await verifyIsAdmin();
     await teamCollection.doc(id).delete();
     revalidatePath("/[locale]/admin/team", "page");
     revalidatePath("/", "layout");
@@ -411,86 +395,6 @@ export async function deleteTeamMemberAction(id: string) {
     return { success: false, message: "Failed to delete team member." };
   }
 }
-
-// // --- 2. NEW Action to get a single service by its slug ---
-// export async function getServiceBySlugAction(slug: string): Promise<Service | null> {
-//   // FIX: Added null check for servicesCollection
-//   if (!servicesCollection) {
-//     console.error("Services collection is not configured.");
-//     return null;
-//   }
-//   try {
-//     const decodedSlug = decodeURIComponent(slug);
-//     const snapshot = await servicesCollection.where('slug', '==', decodedSlug).limit(1).get();
-//     if (snapshot.empty) {
-//       return null;
-//     }
-//     const doc = snapshot.docs[0];
-//     return { id: doc.id, ...doc.data() } as Service;
-//   } catch (error) {
-//     console.error(`Failed to fetch service by slug "${slug}":`, error);
-//     return null;
-//   }
-// }
-
-// // Service Actions
-// export async function getServicesAction(): Promise<Service[]> {
-//   if (!servicesCollection) return [];
-//   const snapshot = await servicesCollection.get();
-//   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as unknown as Service));
-// }
-
-// // --- 3. UPDATED Action to handle new structure ---
-// export async function addServiceAction(data: z.infer<typeof serviceSchema>) {
-//   if (!servicesCollection) return { success: false, message: "Database not configured." };
-//   const validatedFields = serviceSchema.safeParse(data);
-//   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
-
-//   try {
-//     const { id, ...serviceData } = validatedFields.data;
-//     const slug = generateSlug(serviceData.title.en); // Generate slug from English title
-
-//     await servicesCollection.add({ ...serviceData, slug });
-//     revalidatePath("/[locale]/admin/services", "page");
-//     revalidatePath("/", "layout");
-//     return { success: true, message: "Service added successfully." };
-//   } catch (error) {
-//     return { success: false, message: "Failed to add service." };
-//   }
-// }
-
-// // --- 4. UPDATED Action to handle new structure ---
-// export async function updateServiceAction(data: z.infer<typeof serviceSchema>) {
-//   if (!servicesCollection) return { success: false, message: "Database not configured." };
-//   const validatedFields = serviceSchema.safeParse(data);
-//   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
-
-//   try {
-//     const { id, ...serviceData } = validatedFields.data;
-//     if (!id) throw new Error("Service ID is missing.");
-//     const slug = generateSlug(serviceData.title.en); // Re-generate slug in case title changes
-
-//     await servicesCollection.doc(id).set({ ...serviceData, slug }, { merge: true });
-//     revalidatePath("/[locale]/admin/services", "page");
-//     revalidatePath("/", "layout");
-//     revalidatePath(`/[locale]/services/${slug}`, "page"); // Revalidate the specific service page
-//     return { success: true, message: "Service updated successfully." };
-//   } catch (error) {
-//     return { success: false, message: "Failed to update service." };
-//   }
-// }
-
-// export async function deleteServiceAction(id: string) {
-//   if (!servicesCollection) return { success: false, message: "Database not configured." };
-//   try {
-//     await servicesCollection.doc(id).delete();
-//     revalidatePath("/[locale]/admin/services", "page");
-//     revalidatePath("/", "layout");
-//     return { success: true, message: "Service deleted." };
-//   } catch (error) {
-//     return { success: false, message: "Failed to delete service." };
-//   }
-// }
 
 // Testimonial Actions
 export async function getTestimonialsAction(): Promise<Testimonial[]> {
@@ -505,6 +409,7 @@ export async function addTestimonialAction(data: z.infer<typeof testimonialSchem
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
+    await verifyIsAdmin();
     const { id, ...testimonialData } = validatedFields.data;
     await testimonialsCollection.add(testimonialData);
     revalidatePath("/[locale]/admin/testimonials", "page");
@@ -521,6 +426,7 @@ export async function updateTestimonialAction(data: z.infer<typeof testimonialSc
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
+    await verifyIsAdmin();
     const { id, ...testimonialData } = validatedFields.data;
     if (!id) throw new Error("Testimonial ID is missing.");
     await testimonialsCollection.doc(id).set(testimonialData, { merge: true });
@@ -535,6 +441,7 @@ export async function updateTestimonialAction(data: z.infer<typeof testimonialSc
 export async function deleteTestimonialAction(id: string) {
   if (!testimonialsCollection) return { success: false, message: "Database not configured." };
   try {
+    await verifyIsAdmin();
     await testimonialsCollection.doc(id).delete();
     revalidatePath("/[locale]/admin/testimonials", "page");
     revalidatePath("/", "layout");
@@ -568,6 +475,7 @@ export async function updateSiteSettingsAction(data: z.infer<typeof siteSettings
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
+    await verifyIsAdmin();
     await settingsCollection.doc('main').set(validatedFields.data, { merge: true });
     revalidatePath("/[locale]/admin/settings", "page");
     revalidatePath("/", "layout");
@@ -590,6 +498,7 @@ export async function addPartnerAction(data: z.infer<typeof partnerSchema>) {
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
+    await verifyIsAdmin();
     const { id, ...partnerData } = validatedFields.data;
     await partnersCollection.add(partnerData);
     revalidatePath("/[locale]/admin/partners", "page");
@@ -606,6 +515,7 @@ export async function updatePartnerAction(data: z.infer<typeof partnerSchema>) {
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
+    await verifyIsAdmin();
     const { id, ...partnerData } = validatedFields.data;
     if (!id) throw new Error("Partner ID is missing.");
     await partnersCollection.doc(id).set(partnerData, { merge: true });
@@ -620,6 +530,7 @@ export async function updatePartnerAction(data: z.infer<typeof partnerSchema>) {
 export async function deletePartnerAction(id: string) {
   if (!partnersCollection) return { success: false, message: "Database not configured." };
   try {
+    await verifyIsAdmin();
     await partnersCollection.doc(id).delete();
     revalidatePath("/[locale]/admin/partners", "page");
     revalidatePath("/", "layout");
@@ -673,6 +584,7 @@ export async function updateThemeSettingsAction(data: z.infer<typeof themeSettin
   }
 
   try {
+
     let cssContent = await fs.readFile(globalsCssPath, 'utf8');
     const { light, dark } = validatedFields.data;
 
@@ -791,6 +703,7 @@ export async function addBlogPostAction(data: z.infer<typeof blogPostSchema>) {
   }
 
   try {
+    await verifyIsAdmin();
     const { id, ...postData } = validatedFields.data;
     const slug = generateSlug(postData.title);
 
@@ -818,6 +731,7 @@ export async function updateBlogPostAction(data: z.infer<typeof blogPostSchema>)
   }
 
   try {
+    await verifyIsAdmin();
     const { id, ...postData } = validatedFields.data;
     if (!id) throw new Error("Post ID is missing.");
 
@@ -842,6 +756,7 @@ export async function updateBlogPostAction(data: z.infer<typeof blogPostSchema>)
 
 export async function deleteBlogPostAction(id: string) {
   try {
+    await verifyIsAdmin();
     await db.collection('blogPosts').doc(id).delete();
     revalidatePath("/[locale]/admin/blog", "page");
     revalidatePath("/[locale]/blog", "page");
@@ -1071,6 +986,7 @@ export async function addServiceAction(data: z.infer<typeof serviceFormSchema>) 
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
+    await verifyIsAdmin();
     const { id, ...serviceData } = validatedFields.data;
     const slug = generateSlug(serviceData.title.en);
     await servicesCollection.add({ ...serviceData, slug });
@@ -1089,6 +1005,7 @@ export async function updateServiceAction(data: z.infer<typeof serviceFormSchema
   if (!validatedFields.success) return { success: false, errors: validatedFields.error.flatten().fieldErrors, message: "Validation failed." };
 
   try {
+    await verifyIsAdmin();
     const { id, ...serviceData } = validatedFields.data;
     if (!id) throw new Error("Service ID is missing.");
     const slug = generateSlug(serviceData.title.en);
@@ -1106,6 +1023,7 @@ export async function updateServiceAction(data: z.infer<typeof serviceFormSchema
 export async function deleteServiceAction(id: string) {
   if (!servicesCollection) return { success: false, message: "Database not configured." };
   try {
+    await verifyIsAdmin();
     await servicesCollection.doc(id).delete();
     revalidatePath("/[locale]/admin/services", "page");
     revalidatePath("/", "layout");

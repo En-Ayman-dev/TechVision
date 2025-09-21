@@ -13,7 +13,7 @@ export default async function BlogPage() {
           <BlogSystem posts={posts} />
         </FadeIn>
       </div>
-        <CtaSection />
+      <CtaSection />
     </div>
   )
 }

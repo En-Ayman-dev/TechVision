@@ -110,7 +110,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                         </div>
                     </section>
                 )}
-                
+
                 <CtaSection />
             </div>
         </div>

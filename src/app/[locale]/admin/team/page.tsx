@@ -77,7 +77,7 @@ export default function TeamPage() {
   };
 
   const handleDelete = (id: string) => {
-     startTransition(async () => {
+    startTransition(async () => {
       const result = await deleteTeamMemberAction(id);
       if (result.success) {
         fetchTeamMembers();
@@ -109,7 +109,7 @@ export default function TeamPage() {
           {t("addMember")}
         </Button>
       </div>
-      
+
       <TeamMemberForm
         isOpen={isFormOpen}
         onOpenChange={setIsFormOpen}
@@ -138,16 +138,16 @@ export default function TeamPage() {
             </TableHeader>
             <TableBody>
               {isPending ? (
-                 Array.from({ length: 4 }).map((_, i) => (
-                    <TableRow key={i}>
-                        <TableCell className="hidden sm:table-cell">
-                            <Skeleton className="h-16 w-16 rounded-md" />
-                        </TableCell>
-                        <TableCell><Skeleton className="h-5 w-32" /></TableCell>
-                        <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                        <TableCell className="text-right"><Skeleton className="h-8 w-8" /></TableCell>
-                    </TableRow>
-                 ))
+                Array.from({ length: 4 }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell className="hidden sm:table-cell">
+                      <Skeleton className="h-16 w-16 rounded-md" />
+                    </TableCell>
+                    <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                    <TableCell className="text-right"><Skeleton className="h-8 w-8" /></TableCell>
+                  </TableRow>
+                ))
               ) : teamMembers.length > 0 ? (
                 teamMembers.map((member) => (
                   <TableRow key={member.id}>
@@ -181,12 +181,12 @@ export default function TeamPage() {
                             <FilePen className="mr-2 h-4 w-4" />
                             {tGeneral("edit")}
                           </DropdownMenuItem>
-                           <AlertDialog>
-                             <AlertDialogTrigger asChild>
-                                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  {tGeneral("delete")}
-                                </DropdownMenuItem>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                {tGeneral("delete")}
+                              </DropdownMenuItem>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>

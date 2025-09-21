@@ -57,7 +57,7 @@ export default function ProjectsPage() {
 
 
   const fetchProjects = () => {
-     startTransition(async () => {
+    startTransition(async () => {
       const fetchedProjects = await getProjectsAction();
       setProjects(fetchedProjects);
     });
@@ -78,7 +78,7 @@ export default function ProjectsPage() {
   };
 
   const handleDelete = (id: string) => {
-     startTransition(async () => {
+    startTransition(async () => {
       const result = await deleteProjectAction(id);
       if (result.success) {
         fetchProjects();
@@ -117,7 +117,7 @@ export default function ProjectsPage() {
         project={selectedProject}
         onSubmit={onFormSubmit}
       />
-      
+
       <Card>
         <CardHeader>
           <CardTitle>{t("projectsList")}</CardTitle>
@@ -139,16 +139,16 @@ export default function ProjectsPage() {
             </TableHeader>
             <TableBody>
               {isPending ? (
-                 Array.from({ length: 5 }).map((_, i) => (
-                    <TableRow key={i}>
-                        <TableCell className="hidden sm:table-cell">
-                            <Skeleton className="h-16 w-16 rounded-md" />
-                        </TableCell>
-                        <TableCell><Skeleton className="h-5 w-32" /></TableCell>
-                        <TableCell><Skeleton className="h-5 w-20" /></TableCell>
-                        <TableCell className="text-right"><Skeleton className="h-8 w-8" /></TableCell>
-                    </TableRow>
-                 ))
+                Array.from({ length: 5 }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell className="hidden sm:table-cell">
+                      <Skeleton className="h-16 w-16 rounded-md" />
+                    </TableCell>
+                    <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                    <TableCell className="text-right"><Skeleton className="h-8 w-8" /></TableCell>
+                  </TableRow>
+                ))
               ) : projects.length > 0 ? (
                 projects.map((project) => (
                   <TableRow key={project.id}>
@@ -185,11 +185,11 @@ export default function ProjectsPage() {
                             {tGeneral("edit")}
                           </DropdownMenuItem>
                           <AlertDialog>
-                             <AlertDialogTrigger asChild>
-                                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  {tGeneral("delete")}
-                                </DropdownMenuItem>
+                            <AlertDialogTrigger asChild>
+                              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                {tGeneral("delete")}
+                              </DropdownMenuItem>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>

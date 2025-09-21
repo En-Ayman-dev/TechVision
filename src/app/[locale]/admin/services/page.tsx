@@ -2,60 +2,60 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+    CardContent,
 } from "@/components/ui/card";
 import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
+    Table,
+    TableHeader,
+    TableRow,
+    TableHead,
+    TableBody,
+    TableCell,
 } from "@/components/ui/table";
 import { deleteServiceAction, getServicesAction } from "@/app/actions";
 import { PlusCircle, MoreHorizontal, FilePen, Trash2, Code, Cloud, PenTool, Database, Shield, LineChart } from "lucide-react";
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useEffect, useState, useTransition } from "react";
 import type { Service } from "@/lib/types";
 import { ServiceForm } from "@/components/admin/ServiceForm";
 import { useToast } from "@/hooks/use-toast";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslations, useLocale } from "next-intl"; // 1. Import useLocale
 
 const iconMap: { [key: string]: React.ElementType } = {
-  Code,
-  Cloud,
-  PenTool,
-  Database,
-  Shield,
-  LineChart,
+    Code,
+    Cloud,
+    PenTool,
+    Database,
+    Shield,
+    LineChart,
 };
 
 export default function ServicesPage() {
     const t = useTranslations('Admin.servicesPage');
-    const tg = useTranslations('Admin.general'); 
+    const tg = useTranslations('Admin.general');
     const locale = useLocale() as 'en' | 'ar'; // 2. Get the current locale
     const [services, setServices] = useState<Service[]>([]);
     const [isPending, startTransition] = useTransition();
@@ -129,7 +129,7 @@ export default function ServicesPage() {
                 <CardHeader>
                     <CardTitle>{t('servicesList')}</CardTitle>
                     <CardDescription>
-                       {t('servicesListDescription')}
+                        {t('servicesListDescription')}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
